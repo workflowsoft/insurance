@@ -6,7 +6,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<title>Esurance, bitch!</title>
+		<title>Insurance, bitch!</title>
 		<meta name="description" content="">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,600,700' rel='stylesheet' type='text/css'>
@@ -23,26 +23,28 @@
 			<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 		<![endif]-->
 
-		<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-		<script>
-			(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-			function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-			e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-			e.src='//www.google-analytics.com/analytics.js';
-			r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-			ga('create','UA-XXXXX-X');ga('send','pageview');
-		</script>
+		
 
 		<div class="l-wrapper">
+
 			<div class="b-header">
+				<div class="b-header-logo"><i class="b-icon b-icon--logo"></i></div>
 			</div>
 
 			<div class="l-content">
+				<div id="mainInfo" class="b-main_info">
+					
+				</div>
 			</div>
 
 			<div class="b-footer">
 			</div>
 		</div>
+
+		<script id='mainInfoTemplate' type='text/ractive'>
+			<div class="b-header-ingroup_info">В группе {{groupMembersCount}} человек</div>
+    	</script>
+
 		<script src="js/core/Ractive.js"></script>
 		<script src="js/main.js"></script>
 	</body>

@@ -1,4 +1,4 @@
-# [Esurance, bitches!]()
+# [Insurance, bitches!]()
 
 ## Static only
 
