@@ -3,6 +3,7 @@ $(function () {
 	insurance = {
 		init: function() {
 			this.initTemplateEngine();
+			this.initBindings();
 		},
 
 		// Заводим инстансы Ractive.js
@@ -14,6 +15,10 @@ $(function () {
 					groupMembersCount: 100500
 				}
 			});
+		},
+
+		initBindings: function() {
+			
 		}
 	}
 
