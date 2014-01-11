@@ -1,0 +1,17 @@
+{
+  "name": "Esurance",
+  "jsPath": "js",
+  "cssPath": "css",
+  "imgPath": "img",
+  "sassPath": "styles",
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-clean": ">=0.1",
+    "grunt-contrib-jshint": ">=0.3",
+    "grunt-contrib-watch": ">=0.2",
+    "grunt-contrib-uglify": ">=0.2",
+    "grunt-contrib-cssmin": ">=0.2",
+    "grunt-contrib-compass": ">=0.4"
+  },
+  "version": "0.0.1"
+}
