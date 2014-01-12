@@ -164,6 +164,16 @@ body {
   font-weight: bold;
 }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/static\/styles\/_blocks\.scss}line{font-family:\000033}}
+.l-wrapper {
+  width: 960px;
+  position: relative;
+  margin: 0 auto;
+  -webkit-box-shadow: 0 0 4px 0 #aeaeae;
+  -moz-box-shadow: 0 0 4px 0 #aeaeae;
+  box-shadow: 0 0 4px 0 #aeaeae;
+}
+
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/static\/styles\/_header\.scss}line{font-family:\000031}}
 .b-header {
   position: relative;
@@ -182,19 +192,27 @@ body {
   margin: 0px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/static\/styles\/_blocks\.scss}line{font-family:\000031}}
-.l-wrapper {
-  width: 960px;
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/static\/styles\/_header\.scss}line{font-family:\0000317}}
+.b-header-ingroup_info {
   position: relative;
-  margin: 0 auto;
-  -webkit-box-shadow: 0 0 4px 0 #aeaeae;
-  -moz-box-shadow: 0 0 4px 0 #aeaeae;
-  box-shadow: 0 0 4px 0 #aeaeae;
+  margin: 8px 0;
+  color: #31708f;
 }
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/static\/styles\/_calc\.scss}line{font-family:\000031}}
 .b-calc {
   padding: 0 16px;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/static\/styles\/_footer\.scss}line{font-family:\000031}}
+.b-footer {
+  position: relative;
+  height: 40px;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/static\/styles\/_main_info\.scss}line{font-family:\000031}}
+.b-main_info {
+  padding: 16px;
 }
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/static\/styles\/_icons\.scss}line{font-family:\000031}}

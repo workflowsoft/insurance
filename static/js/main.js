@@ -12,13 +12,19 @@ $(function () {
 			el: 'mainInfo',
 			template: '#mainInfoTemplate',
 			data: {
-					groupMembersCount: 100500
+					groupMembersCount: 5,
+					progressPercent: 45
 				}
 			});
+
+			MainInfoTemplate.on({
+				showDatepickerModal: function(event, container) {
+					
+			}});
 		},
 
 		initBindings: function() {
-			
+
 		}
 	}
 

@@ -32,11 +32,31 @@
 		</div>
 	</div>
 	<div class="l-content">
+		<!-- Контейнер шаблона с общей информацией -->
 		<div id="mainInfo" class="b-main_info">
 		</div>
+
+		<!-- Modal -->
+		<div class="modal fade" id="datepickerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">Выберите дату</h4>
+					</div>
+					<div class="modal-body">
+					...
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary">OK</button>
+					</div>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+
 		<div id="calc" class="b-calc">
 			<h2><small>Калькулятор тарифов по страхованию средств наземного транспорта</small></h2>
-			<form role="form">
+			<form role="form" class="g-clrfix">
 				<div class="panel panel-info">
 					<div class="panel-heading">
 						<h3 class="panel-title">Сведения о транспортном средстве</h3>
@@ -82,22 +102,20 @@
 						<div class="form-group g-clrfix">
 							<div class="col-lg-12">
 								<label class=" control-label">Категория ТС</label>
-								<div class="">
-									<select class="form-control" name="tsCategory">
-										<option disabled selected>Выберите категорию</option>
-										<option value="1">1.3. ВАЗ Приора, Калина, 2110, 2111, 2112, 2113, 2114, 2115 и модификации, Шевроле Нива, Шевроле Вива, УАЗ, ЗАЗ</option>
-										<option value="2">2.2.1. Импортные легковые автомобили со страховой суммой: до 400 000 руб</option>
-										<option value="3">2.2.2. Импортные легковые автомобили со страховой суммой: от 400 001 до 800 000 руб</option>
-										<option value="4">2.2.3. Импортные легковые автомобили со страховой суммой: от 800 001 до 1 200 000 руб</option>
-										<option value="5">2.2.4. Импортные легковые автомобили со страховой суммой: от 1 200 001 до 2 000 000 руб</option>
-										<option value="6">2.2.5. Импортные легковые автомобили со страховой суммой: от 2 000 001 руб</option>
-										<option value="6">1.1. Классика (ВАЗ 2104, 05, 06, 07, 08, 09 и модификации) и прочие легковые ТС отечественного производства, не вошедшие в группы 1-3</option>
-										<option value="7">"1.3. ВАЗ Приора, Калина, 2110, 2111, 2112, 2113, 2114, 2115 и модификации, Шевроле Нива, Шевроле Вива, УАЗ, ЗАЗ</option>
-										<option value="8">3.2. Мото - транспорт</option>
-										<option value="9">3.3. Автобусы</option>
-										<option value="10">3.5 Грузовики</option>
-									</select>
-								</div>
+								<select class="form-control" name="tsCategory">
+									<option disabled selected>Выберите категорию</option>
+									<option value="1">1.3. ВАЗ Приора, Калина, 2110, 2111, 2112, 2113, 2114, 2115 и модификации, Шевроле Нива, Шевроле Вива, УАЗ, ЗАЗ</option>
+									<option value="2">2.2.1. Импортные легковые автомобили со страховой суммой: до 400 000 руб</option>
+									<option value="3">2.2.2. Импортные легковые автомобили со страховой суммой: от 400 001 до 800 000 руб</option>
+									<option value="4">2.2.3. Импортные легковые автомобили со страховой суммой: от 800 001 до 1 200 000 руб</option>
+									<option value="5">2.2.4. Импортные легковые автомобили со страховой суммой: от 1 200 001 до 2 000 000 руб</option>
+									<option value="6">2.2.5. Импортные легковые автомобили со страховой суммой: от 2 000 001 руб</option>
+									<option value="6">1.1. Классика (ВАЗ 2104, 05, 06, 07, 08, 09 и модификации) и прочие легковые ТС отечественного производства, не вошедшие в группы 1-3</option>
+									<option value="7">"1.3. ВАЗ Приора, Калина, 2110, 2111, 2112, 2113, 2114, 2115 и модификации, Шевроле Нива, Шевроле Вива, УАЗ, ЗАЗ</option>
+									<option value="8">3.2. Мото - транспорт</option>
+									<option value="9">3.3. Автобусы</option>
+									<option value="10">3.5 Грузовики</option>
+								</select>
 							</div>
 							<!-- /.col-lg-12 -->
 						</div>
@@ -197,9 +215,17 @@
 							<div class="col-lg-4"><label for="">Дополнительный коэффициент</label><input type="text" class="form-control"></div>
 							<div class="col-lg-4"><label for="">Коэф. страхового продукта</label><input type="text" class="form-control"></div>
 						</div>
+						<div class="form-group g-clrfix">
+							<div class="col-lg-12">
+								<label class=" control-label">Определение размера ущерба</label>
+								<select class="form-control" name="damageValue">
+									<option value="1">По калькуляции страховщика</option>
+								</select>
+							</div>
+						</div>
 					</div>
 				</div>
-				<button type="button" class="btn btn-info">Рассчитать</button>
+				<button type="button" class="btn btn-lg btn-info pull-right">Рассчитать</button>
 			</form>
 		</div>
 	</div>
@@ -207,7 +233,13 @@
 	</div>
 </div>
 <script id='mainInfoTemplate' type='text/ractive'>
-	<!--div class="b-header-ingroup_info">В группе {{groupMembersCount}} человек</div!-->
+	<div class="b-header-ingroup_info"><h5>Сейчас в группе {{groupMembersCount}} человек</h5></div>
+	<div class="progress progress-striped active">
+		<div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{progressPercent}}" aria-valuemin="0" aria-valuemax="100" style="width: {{progressPercent}}%">
+			<span class="sr-only">Осталось {{progressPercent}}%</span>
+		</div>
+	</div>
+	<button type="button" class="btn btn-default" on-click="showDatepickerModal" data-toggle="modal" data-target="#datepickerModal">Хочу другую дату!</button>
 </script>
 <script src="js/core/Ractive.js"></script>
 <script src="js/main.js"></script>
