@@ -1,3 +1,41 @@
-<script id='mainInfoTemplate' type='text/ractive'>
-	<div class="b-header-ingroup_info">В группе {{groupMembersCount}} человек</div>			
-</script>
+
+<button type="button" class="btn btn-default" on-click="showDatepickerModal" data-toggle="modal" data-target="#datepickerModal">Хочу другую дату!</button>
+
+<div id="carousel-example-generic" class="carousel slide">
+	<ol class="carousel-indicators">
+		<li data-target="#carousel-example-generic" data-slide-to="0" class=""></li>
+		<li data-target="#carousel-example-generic" data-slide-to="1" class="active"></li>
+		<li data-target="#carousel-example-generic" data-slide-to="2" class=""></li>
+	</ol>
+	<div class="carousel-inner">
+		<div class="item">
+			<div class="b-header-ingroup_info">
+				<h5>За предыдущий период что-то там все 10 человек</h5>
+			</div>
+			<div class="progress progress-striped">
+				<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+					<span class="sr-only">и теперь охуеть</span>
+				</div>
+			</div>
+		</div>
+		<div class="item active">
+			<div class="b-header-ingroup_info">
+			<h5>Сейчас в группе {{groupMembersCount}} человек</h5>
+			</div>
+			<div class="progress progress-striped active">
+				<div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{progressPercent}}" aria-valuemin="0" aria-valuemax="100" style="width: {{progressPercent}}%">
+					<span class="sr-only">Осталось {{progressPercent}}%</span>
+				</div>
+			</div>
+		</div>
+		<div class="item">
+		3rd slide
+		</div>
+	</div>
+	<a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+		<span class="glyphicon glyphicon-chevron-left"></span>
+	</a>
+	<a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+		<span class="glyphicon glyphicon-chevron-right"></span>
+	</a>
+</div>

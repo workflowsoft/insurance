@@ -1,0 +1,54 @@
+.b-loader-backdrop {
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	@include opacity(.4);
+	background: #005BA3;
+}
+
+.b-loading {
+	position: relative;
+	left: 50%;
+	top: 50%;
+	margin: -60px 0 0 -60px;
+	background: #fff;
+	width: 100px;
+	height: 100px;
+	border-radius: 100%;
+	border: 10px solid #19bee1;
+}
+
+.b-loading:after {
+	content: '';
+	background: trasparent;
+	width: 140%;
+	height: 140%;
+	position: absolute;
+	border-radius: 100%;
+	top: -20%;
+	left: -20%;
+	opacity: 0.7;
+	box-shadow: rgba(255, 255, 255, 0.6) -4px -5px 3px -3px;
+	animation: rotate 2s infinite linear;
+	-webkit-animation: rotate 2s infinite linear;
+}
+
+@keyframes rotate {
+	0% {
+		transform: rotateZ(0deg);
+	}
+	100% {
+		transform: rotateZ(360deg);
+	}
+}
+
+@-webkit-keyframes rotate {
+  0% {
+    -webkit-transform: rotateZ(0deg);
+  }
+  100% {
+    -webkit-transform: rotateZ(360deg);
+  }
+}
