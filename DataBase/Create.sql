@@ -243,12 +243,12 @@ CREATE TABLE IF NOT EXISTS `tariff_coefficients` (
   `TS_Modification_Id` int(10) DEFAULT NULL,
   `Tariff_Program_Id` int(10) NOT NULL,
   `TS_Age` int(10) NOT NULL,
-  `TS_Sum_Up` int(10) NOT NULL,
-  `TS_Sum_Down` int(10) NOT NULL,
+  `TS_Sum_Up` int(10) NULL,
+  `TS_Sum_Down` int(10) NULL,
   `Risk_Id` int(10) NOT NULL,
-  `Damage_Det_Type_Id` int(10) NOT NULL,
-  `Amortisation` bit(1) DEFAULT NULL,
-  `Value` int(10) NOT NULL,
+  `Damage_Det_Type_Id` int(10),
+  `Amortisation` bit(1),
+  `Value` DOUBLE NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Коэффициенты базового тарифа';
 
@@ -262,17 +262,9 @@ DROP TABLE IF EXISTS `tariff_def_damage_type`;
 CREATE TABLE IF NOT EXISTS `tariff_def_damage_type` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(128) COLLATE utf8_bin NOT NULL,
+  `code` varchar(5) COLLATE utf8_bin,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Определение размера страхового возмещения';
-
--- Дамп данных таблицы ubercalc.tariff_def_damage_type: ~3 rows (приблизительно)
-/*!40000 ALTER TABLE `tariff_def_damage_type` DISABLE KEYS */;
-INSERT INTO `tariff_def_damage_type` (`id`, `name`) VALUES
-	(1, 'По калькуляции страховщика'),
-	(2, 'По калькуляции страховщика / По счетам СТОА из перечня'),
-	(3, 'По калькуляции страховщика / По счетам СТОА из перечня / По счетам СТОА по выбору');
-/*!40000 ALTER TABLE `tariff_def_damage_type` ENABLE KEYS */;
-
 
 -- Дамп структуры для таблица ubercalc.tariff_program
 DROP TABLE IF EXISTS `tariff_program`;
@@ -282,17 +274,6 @@ CREATE TABLE IF NOT EXISTS `tariff_program` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Значения для выбора программы страхования';
 
--- Дамп данных таблицы ubercalc.tariff_program: ~6 rows (приблизительно)
-/*!40000 ALTER TABLE `tariff_program` DISABLE KEYS */;
-INSERT INTO `tariff_program` (`id`, `name`) VALUES
-	(1, 'Бизнес'),
-	(2, 'Стандарт'),
-	(3, 'Оптимал'),
-	(4, 'Эконом 50/50'),
-	(5, 'Эконом до 1 страхового случая'),
-	(6, 'Универсал');
-/*!40000 ALTER TABLE `tariff_program` ENABLE KEYS */;
-
 
 -- Дамп структуры для таблица ubercalc.tariff_risks
 DROP TABLE IF EXISTS `tariff_risks`;
@@ -301,14 +282,6 @@ CREATE TABLE IF NOT EXISTS `tariff_risks` (
   `name` varchar(50) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Список рисков';
-
--- Дамп данных таблицы ubercalc.tariff_risks: ~2 rows (приблизительно)
-/*!40000 ALTER TABLE `tariff_risks` DISABLE KEYS */;
-INSERT INTO `tariff_risks` (`id`, `name`) VALUES
-	(1, 'ХИЩЕНИЕ + УЩЕРБ'),
-	(3, 'УЩЕРБ');
-/*!40000 ALTER TABLE `tariff_risks` ENABLE KEYS */;
-
 
 -- Дамп структуры для таблица ubercalc.ts_group
 DROP TABLE IF EXISTS `ts_group`;
@@ -399,40 +372,8 @@ CREATE TABLE IF NOT EXISTS `ts_type` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `Name` varchar(50) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Тип ТС';
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_bin COMMENT='Тип ТС';
 
 -- Дамп данных таблицы ubercalc.ts_type: ~0 rows (приблизительно)
 /*!40000 ALTER TABLE `ts_type` DISABLE KEYS */;
 /*!40000 ALTER TABLE `ts_type` ENABLE KEYS */;
-
-
--- Дамп структуры для таблица ubercalc.vehicle_category
-DROP TABLE IF EXISTS `vehicle_category`;
-CREATE TABLE IF NOT EXISTS `vehicle_category` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `Cat_title_n` text COLLATE utf8_bin,
-  `Cat_title` text COLLATE utf8_bin,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Категории транспортных средств';
-
--- Дамп данных таблицы ubercalc.vehicle_category: ~14 rows (приблизительно)
-/*!40000 ALTER TABLE `vehicle_category` DISABLE KEYS */;
-INSERT INTO `vehicle_category` (`id`, `Cat_title_n`, `Cat_title`) VALUES
-	(1, '1.1.', 'Классика (ВАЗ 2104, 05, 06, 07, 08, 09 и модификации) и прочие легковые ТС отечественного производства, не вошедшие в группы 1-3'),
-	(2, '1.2.', 'ВАЗ 11114 (ОКА), ИЖ 2126, 2717 и модификации, легковые ГАЗ'),
-	(3, '1.3.', 'ВАЗ Приора, Калина, 2110, 2111, 2112, 2113, 2114, 2115 и модификации, Шевроле Нива, Шевроле Вива, УАЗ, ЗАЗ'),
-	(4, '2.2.1.', 'Импортные легковые автомобили со страховой суммой: до 400 000 руб'),
-	(5, '2.2.2.', 'Импортные легковые автомобили со страховой суммой: от 400 001 до 800 000 руб'),
-	(6, '2.2.3.', 'Импортные легковые автомобили со страховой суммой: от 800 001 до 1 200 000 руб'),
-	(7, '2.2.4.', 'Импортные легковые автомобили со страховой суммой: от 1 200 001 до 2 000 000 руб'),
-	(8, '2.2.5.', 'Импортные легковые автомобили со страховой суммой: от 2 000 001 руб'),
-	(9, '3.1.', 'Микроавтобусы, фургоны и мини-грузовики на их базе до 3,5т, в т.ч. ""Газели"" - ГАЗ 3302, 3221, 2217, 2751'),
-	(10, '3.2.', 'Мото транспорт'),
-	(11, '3.3.', 'Автобусы'),
-	(12, '3.4.', 'Грузовики'),
-	(13, '3.5.', 'Спецтехника (сельхозтехника, бетономешалки, экскаваторы, тракторы, краны и т.п.)'),
-	(14, '3.6.', 'Прочие ТС прицепы, полуприцепы');
-/*!40000 ALTER TABLE `vehicle_category` ENABLE KEYS */;
-/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
-/*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
