@@ -89,23 +89,123 @@ HEAD: Retrieve the meta information relative to a sibling.&#13;
    <hash>29e39f311db4ca2ef7dacf8d8c493ef69aa29b61</hash>
   </action>
   <action>
-   <name>Calc</name>
+   <name>Calculate</name>
    <enabled>1</enabled>
    <public>1</public>
    <description>Выполняет вычисление стоимости страховки исходя из всех введенных пользователем данных</description>
-   <route>/calc/web/v1</route>
+   <route>/calculate/web/v1</route>
    <hash>91e7163f6af4f35ed5b43f490809979749cd0fad</hash>
    <parameters>
     <parameter>
-     <name>title1</name>
-     <required>1</required>
+     <name>ksp_value</name>
+     <required>0</required>
     </parameter>
     <parameter>
-     <name>title2</name>
-     <required>1</required>
+     <name>tariff_program</name>
+     <required>0</required>
     </parameter>
     <parameter>
-     <name>totle3</name>
+     <name>ldu_quantity</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>driver_age</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>driver_exp</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>ki_value</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>no_defend_flag</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>satellite_flag</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>have_electronic_alarm</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>risks</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>ksd_description</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>kp_description</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>kp_flag</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>ko_is_checked</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>regres_limit_factor</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>tariff_def_damage_type</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>klv_value</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>payments_without_references</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>b_ts_group</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>b_ts_producer</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>b_ts_model</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>b_ts_modification</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>b_tariff_program</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>b_ts_age</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>b_ts_sum</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>b_risk</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>b_damage_det_type</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>b_amortisation</name>
      <required>0</required>
     </parameter>
    </parameters>
@@ -130,14 +230,120 @@ HEAD: Retrieve the meta information relative to a sibling.&#13;
      <name>ppp</name>
      <required>0</required>
     </parameter>
+    <parameter>
+     <name>a1</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>a2</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>a3</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>a4</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>b1</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>b2</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>b3</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>b4</name>
+     <required>0</required>
+    </parameter>
    </parameters>
   </action>
   <action>
-   <name>Calculationresult1</name>
+   <name>Datarequest</name>
    <enabled>1</enabled>
    <public>1</public>
-   <route>/calc/result_test</route>
-   <hash>5f63b8df03a8853aed3eb3bc761e22c4bc59d076</hash>
+   <route>/datarequest/web/v1</route>
+   <hash>175848526e2d040778c06a44d7543b345c7930af</hash>
+   <parameters>
+    <parameter>
+     <name>ksp_value</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>tariff_program</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>ldu_quantity</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>driver_age</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>driver_exp</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>ki_value</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>no_defend_flag</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>satellite_flag</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>have_electronic_alarm</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>risks</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>ksd_description</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>kp_description</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>kp_flag</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>ko_is_checked</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>regres_limit_factor</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>tariff_def_damage_type</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>klv_value</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>payments_without_references</name>
+     <required>0</required>
+    </parameter>
+   </parameters>
   </action>
  </actions>
 </frapi-config>
