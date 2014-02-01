@@ -16,6 +16,9 @@ class References
         'all_factors',
     );
 
+    /**
+     * @return array
+     */
     public static function get()
     {
         $results = array();
@@ -25,6 +28,10 @@ class References
         return $results;
     }
 
+    /**
+     * @param string $table
+     * @return array
+     */
     public static function getByTable($table)
     {
         $db = Frapi_Database::getInstance();
