@@ -58,5 +58,14 @@
     </parameter>
    </parameters>
   </action>
+  <action>
+   <name>References</name>
+   <enabled>1</enabled>
+   <public>1</public>
+   <description>Получение справочников</description>
+   <route>/references</route>
+   <parameters></parameters>
+   <hash>0a408adf5844a3c974d0970f106079077f0c969a</hash>
+  </action>
  </actions>
 </frapi-config>

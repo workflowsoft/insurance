@@ -19,7 +19,7 @@
   </configuration>
   <configuration>
    <key>api_url</key>
-   <value>api.frapi</value>
+   <value>insurance</value>
   </configuration>
   <configuration>
    <key>cache</key>
@@ -42,7 +42,7 @@
   </configuration>
   <configuration>
    <key>locale</key>
-   <value>en</value>
+   <value>ru</value>
    <hash>91d43f223af56f691f4fbadb08313a885aeb088c</hash>
   </configuration>
  </configurations>
