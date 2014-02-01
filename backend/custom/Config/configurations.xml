@@ -11,11 +11,11 @@
   </configuration>
   <configuration>
    <key>db_password</key>
-   <value>password</value>
+   <value>mysql12345</value>
   </configuration>
   <configuration>
    <key>db_database</key>
-   <value>example</value>
+   <value>ubercalc</value>
   </configuration>
   <configuration>
    <key>api_url</key>

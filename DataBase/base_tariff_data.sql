@@ -1,10 +1,10 @@
 -- Дамп данных таблицы ubercalc.tariff_def_damage_type: ~3 rows (приблизительно)
 /*!40000 ALTER TABLE `tariff_def_damage_type` DISABLE KEYS */;
-INSERT INTO `tariff_def_damage_type` (`name`, `code`) VALUES('По калькуляции страховщика', '1C');
+INSERT INTO `tariff_def_damage_type` (`name`) VALUES('По калькуляции страховщика');
 SET @1C = LAST_INSERT_ID();
-INSERT INTO `tariff_def_damage_type` (`name`, `code`) VALUES('По калькуляции страховщика / По счетам СТОА из перечня', '2C');
+INSERT INTO `tariff_def_damage_type` (`name`) VALUES('По калькуляции страховщика / По счетам СТОА из перечня');
 SET @2C = LAST_INSERT_ID();
-INSERT INTO `tariff_def_damage_type` (`name`, `code`) VALUES('По калькуляции страховщика / По счетам СТОА из перечня / По счетам СТОА по выбору', '3C');
+INSERT INTO `tariff_def_damage_type` (`name`) VALUES('По калькуляции страховщика / По счетам СТОА из перечня / По счетам СТОА по выбору');
 SET @3C = LAST_INSERT_ID();
 
 /*!40000 ALTER TABLE `tariff_def_damage_type` ENABLE KEYS */;
@@ -24,30 +24,31 @@ SET @Econom = LAST_INSERT_ID();
 INSERT INTO `tariff_program` (`name`) VALUES ('Универсал');
 SET @Universal = LAST_INSERT_ID();
 
-INSERT INTO `tariff_risks` (`name`) VALUES ('ХИЩЕНИЕ + УЩЕРБ');
+INSERT INTO `risks` (`name`) VALUES ('ХИЩЕНИЕ + УЩЕРБ');
 SET @Ins_Full = LAST_INSERT_ID();
-INSERT INTO `tariff_risks` (`name`) VALUES ('УЩЕРБ');
+INSERT INTO `risks` (`name`) VALUES ('УЩЕРБ');
 SET @Damage = LAST_INSERT_ID();
-/*!40000 ALTER TABLE `tariff_risks` ENABLE KEYS */;
 
-INSERT INTO `tariff_program`(`name`) VALUES ('Классика (ВАЗ 2104, 05, 06, 07, 08, 09 и модификации) и прочие легковые ТС отечественного производства, не вошедшие в группы 1-3');
+INSERT INTO `ts_group`(`name`) VALUES ('Классика (ВАЗ 2104, 05, 06, 07, 08, 09 и модификации) и прочие легковые ТС отечественного производства, не вошедшие в группы 1-3');
 SET @Russian_Classics = LAST_INSERT_ID();
-INSERT INTO `tariff_program`(`name`) VALUES ('ВАЗ 11114 (ОКА), ИЖ 2126, 2717 и модификации, легковые ГАЗ');
+INSERT INTO `ts_group`(`name`) VALUES ('ВАЗ 11114 (ОКА), ИЖ 2126, 2717 и модификации, легковые ГАЗ');
 SET @Russian_LowCost = LAST_INSERT_ID();
-INSERT INTO `tariff_program`(`name`) VALUES ('ВАЗ Приора, Калина, 2110, 2111, 2112, 2113, 2114, 2115 и модификации, Шевроле Нива, Шевроле Вива, УАЗ, ЗАЗ');
+INSERT INTO `ts_group`(`name`) VALUES ('ВАЗ Приора, Калина, 2110, 2111, 2112, 2113, 2114, 2115 и модификации, Шевроле Нива, Шевроле Вива, УАЗ, ЗАЗ');
 SET @Russian_MidLevel = LAST_INSERT_ID();
-INSERT INTO `tariff_program`(`name`) VALUES ('Микроавтобусы, фургоны и мини-грузовики на их базе до 3,5т, в т.ч. ""Газели"" - ГАЗ 3302, 3221, 2217, 2751');
+INSERT INTO `ts_group`(`name`) VALUES ('Микроавтобусы, фургоны и мини-грузовики на их базе до 3,5т, в т.ч. ""Газели"" - ГАЗ 3302, 3221, 2217, 2751');
 SET @Other_Miniven = LAST_INSERT_ID();
-INSERT INTO `tariff_program`(`name`) VALUES ('Мото транспорт');
+INSERT INTO `ts_group`(`name`) VALUES ('Мото транспорт');
 SET @Other_Moto = LAST_INSERT_ID();
-INSERT INTO `tariff_program`(`name`) VALUES ('Автобусы');
+INSERT INTO `ts_group`(`name`) VALUES ('Автобусы');
 SET @Other_Bus = LAST_INSERT_ID();
-INSERT INTO `tariff_program`(`name`) VALUES ('Грузовики');
+INSERT INTO `ts_group`(`name`) VALUES ('Грузовики');
 SET @Other_Truck = LAST_INSERT_ID();
-INSERT INTO `tariff_program`(`name`) VALUES ('Спецтехника (сельхозтехника, бетономешалки, экскаваторы, тракторы, краны и т.п.)');
+INSERT INTO `ts_group`(`name`) VALUES ('Спецтехника (сельхозтехника, бетономешалки, экскаваторы, тракторы, краны и т.п.)');
 SET @Other_Specialized = LAST_INSERT_ID();
-INSERT INTO `tariff_program`(`name`) VALUES ('Прочие ТС прицепы, полуприцепы');
+INSERT INTO `ts_group`(`name`) VALUES ('Прочие ТС прицепы, полуприцепы');
 SET @Other_Other_Trailers = LAST_INSERT_ID();
+INSERT INTO `ts_group`(`name`) VALUES ('Импортные леговые автомобили');
+SET @Foreign = LAST_INSERT_ID();
 
 INSERT INTO `tariff_coefficients` (`TS_Group_Id`, `Tariff_Program_Id`, `TS_Age`, `Risk_Id`,`Damage_Det_Type_Id`, `Value`) VALUES (@Russian_Classics, @Buisness, 0, @Ins_Full, @1C, 6.1);
 INSERT INTO `tariff_coefficients` (`TS_Group_Id`, `Tariff_Program_Id`, `TS_Age`, `Risk_Id`,`Damage_Det_Type_Id`, `Value`) VALUES (@Russian_Classics, @Buisness, 1, @Ins_Full, @1C, 6.3);

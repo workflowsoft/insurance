@@ -2,86 +2,6 @@
 <frapi-config>
  <actions>
   <action>
-   <name>Collection</name>
-   <enabled>1</enabled>
-   <public>1</public>
-   <description>This is an example of a collection. A collection is a bucket of resources. In this case, you can only POST and DELETE this collection.&#13;
-&#13;
-POST: A post will add a new resource to a collection. You have to pass a &quot;name&quot; parameter.&#13;
-&#13;
-DELETE: Delete collection will remove the collection of resources from the system.&#13;
-&#13;
-Try it with &quot;curl -X POST http://api.frapi/collection -d '{&quot;name&quot;:&quot;new&quot;}' -H 'Content-Type: application/json'&#13;
-&#13;
-</description>
-   <route>/collection</route>
-   <hash>a0caa1c9f6c5ba636005b312918e7ce6acf70ccb</hash>
-   <parameters>
-    <parameter>
-     <name>name</name>
-     <required>0</required>
-    </parameter>
-   </parameters>
-  </action>
-  <action>
-   <name>Resource</name>
-   <enabled>1</enabled>
-   <public>1</public>
-   <description>This is the resource contained in a certain collection group. &#13;
-&#13;
-PUT: A put with the &quot;name&quot; parameter will update the name of the resource&#13;
-&#13;
-DELETE: Deletes the resource.&#13;
-&#13;
-GET: This retrieves the information relative to the resource contained in the collection</description>
-   <route>/collection/:resource</route>
-   <hash>3ecc1f98f5c2292d41150143083df87ea81dca08</hash>
-   <parameters>
-    <parameter>
-     <name>name</name>
-     <required>0</required>
-    </parameter>
-   </parameters>
-  </action>
-  <action>
-   <name>Siblings</name>
-   <enabled>1</enabled>
-   <public>1</public>
-   <description>This is a collection of sibling for a resource. This only accepts POST, DELETE, GET and HEAD. &#13;
-&#13;
-POST: A post will add a new sibling using the name parameter&#13;
-&#13;
-DELETE: This deletes the siblings connections, it removes all siblings in the collection&#13;
-&#13;
-GET: Retrieve a list of siblings and the relative information.&#13;
-&#13;
-HEAD: Fetch the meta information for the siblings.</description>
-   <route>/collection/:resource/siblings</route>
-   <hash>2f4d1cefc3bbb184dda9da882fac349558b8bb70</hash>
-   <parameters>
-    <parameter>
-     <name>name</name>
-     <required>0</required>
-    </parameter>
-   </parameters>
-  </action>
-  <action>
-   <name>Sibling</name>
-   <enabled>1</enabled>
-   <public>1</public>
-   <description>This is used to execute operations on a sibling resource. &#13;
-&#13;
-GET: Retrieve the information relative to a sibling&#13;
-&#13;
-DELETE: Remove a sibling for this resource&#13;
-&#13;
-HEAD: Retrieve the meta information relative to a sibling.&#13;
-&#13;
-</description>
-   <route>/collection/:resource/siblings/:sibling</route>
-   <hash>836d88aacf5906048737893dd4dc0469e353dc33</hash>
-  </action>
-  <action>
    <name>Introduction</name>
    <enabled>1</enabled>
    <public>1</public>
@@ -93,254 +13,47 @@ HEAD: Retrieve the meta information relative to a sibling.&#13;
    <enabled>1</enabled>
    <public>1</public>
    <description>Выполняет вычисление стоимости страховки исходя из всех введенных пользователем данных</description>
-   <route>/calculate/web/v1</route>
+   <route>/calculate/v1</route>
    <hash>91e7163f6af4f35ed5b43f490809979749cd0fad</hash>
    <parameters>
     <parameter>
-     <name>ksp_value</name>
+     <name>ts_make_id</name>
      <required>0</required>
     </parameter>
     <parameter>
-     <name>tariff_program</name>
+     <name>ts_model_id</name>
      <required>0</required>
     </parameter>
     <parameter>
-     <name>ldu_quantity</name>
+     <name>ts_modification_id</name>
      <required>0</required>
     </parameter>
     <parameter>
-     <name>driver_age</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>driver_exp</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>ki_value</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>no_defend_flag</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>satellite_flag</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>have_electronic_alarm</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>risks</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>ksd_description</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>kp_description</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>kp_flag</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>ko_is_checked</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>regres_limit_factor</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>tariff_def_damage_type</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>klv_value</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>payments_without_references</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>b_ts_group</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>b_ts_producer</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>b_ts_model</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>b_ts_modification</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>b_tariff_program</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>b_ts_age</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>b_ts_sum</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>b_risk</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>b_damage_det_type</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>b_amortisation</name>
-     <required>0</required>
-    </parameter>
-   </parameters>
-  </action>
-  <action>
-   <name>Test1</name>
-   <enabled>1</enabled>
-   <public>1</public>
-   <description>test_description</description>
-   <route>/test_url_1</route>
-   <hash>cdd768290985ce24e23a297da825db058a933c77</hash>
-   <parameters>
-    <parameter>
-     <name>id</name>
+     <name>ts_group_id</name>
      <required>1</required>
     </parameter>
     <parameter>
-     <name>ttt</name>
+     <name>tariff_program_id</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>risks_id</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>tariff_def_damage_type_id</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>ts_age</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>ts_sum</name>
      <required>0</required>
     </parameter>
     <parameter>
-     <name>ppp</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>a1</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>a2</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>a3</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>a4</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>b1</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>b2</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>b3</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>b4</name>
-     <required>0</required>
-    </parameter>
-   </parameters>
-  </action>
-  <action>
-   <name>Datarequest</name>
-   <enabled>1</enabled>
-   <public>1</public>
-   <route>/datarequest/web/v1</route>
-   <hash>175848526e2d040778c06a44d7543b345c7930af</hash>
-   <parameters>
-    <parameter>
-     <name>ksp_value</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>tariff_program</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>ldu_quantity</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>driver_age</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>driver_exp</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>ki_value</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>no_defend_flag</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>satellite_flag</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>have_electronic_alarm</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>risks</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>ksd_description</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>kp_description</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>kp_flag</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>ko_is_checked</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>regres_limit_factor</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>tariff_def_damage_type</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>klv_value</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>payments_without_references</name>
+     <name>amortisation</name>
      <required>0</required>
     </parameter>
    </parameters>
