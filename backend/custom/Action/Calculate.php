@@ -76,10 +76,31 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
             throw $valid;
         }
 
+        //Сначала заберем обязательные коэфициенты и соберем с ними основную часть WHERE
+        $whereStr =
+            sprintf(
+                'WHERE TS_Group_Id = %s AND Tariff_Program_Id = %s AND Risk_Id = %s AND Damage_Det_Type_Id = %s AND TS_Age = %s',
+                $this->getParam('ts_group_id', self::TYPE_INT),
+                $this->getParam('tariff_program_id', self::TYPE_INT),
+                $this->getParam('risks_id', self::TYPE_INT),
+                $this->getParam('tariff_def_damage_type_id', self::TYPE_INT),
+                $this->getParam('ts_age', self::TYPE_INT)
+            );
+        //Далее берем необязательные и для них добиваем
+        if (!empty($this->params['ts_sum']))
+        {
+            $sum = $this->getParam('ts_sum', self::TYPE_DOUBLE);
+            $whereStr = $whereStr.sprintf(
+                        ' AND (TS_Sum_Down IS NULL OR TS_Sum_Down<=%u) AND (TS_Sum_Up IS NULL OR TS_Sum_Up>=%u)',
+                    $sum,$sum);
+        }
+
         $db = Frapi_Database::getInstance();
-        $query = 'SELECT * FROM all_factors';
+        $query = 'SELECT value as base_tariff FROM tariff_coefficients '.$whereStr;
         $sth = $db->query($query);
-        $results = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $results = $sth->fetch(PDO::FETCH_ASSOC);
+        if (!$results || $sth->rowCount()>1)
+            throw new Frapi_Error('CANT_CALC_BASET');
         $this->data['Result'] = $results;
         return $this->toArray();
     }

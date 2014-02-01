@@ -47,6 +47,8 @@ INSERT INTO `ts_group`(`name`) VALUES ('Спецтехника (сельхозт
 SET @Other_Specialized = LAST_INSERT_ID();
 INSERT INTO `ts_group`(`name`) VALUES ('Прочие ТС прицепы, полуприцепы');
 SET @Other_Other_Trailers = LAST_INSERT_ID();
+INSERT INTO `ts_group`(`name`) VALUES ('Импортные леговые автомобили');
+SET @Foreign = LAST_INSERT_ID();
 
 INSERT INTO `tariff_coefficients` (`TS_Group_Id`, `Tariff_Program_Id`, `TS_Age`, `Risk_Id`,`Damage_Det_Type_Id`, `Value`) VALUES (@Russian_Classics, @Buisness, 0, @Ins_Full, @1C, 6.1);
 INSERT INTO `tariff_coefficients` (`TS_Group_Id`, `Tariff_Program_Id`, `TS_Age`, `Risk_Id`,`Damage_Det_Type_Id`, `Value`) VALUES (@Russian_Classics, @Buisness, 1, @Ins_Full, @1C, 6.3);
