@@ -1,23 +1,15 @@
 <?php
 
 /**
- * Action Sibling
+ * Action References
  *
- * This is used to execute operations on a sibling resource. 
- * 
- * GET: Retrieve the information relative to a sibling
- * 
- * DELETE: Remove a sibling for this resource
- * 
- * HEAD: Retrieve the meta information relative to a sibling.
- * 
- *
+ * Получение справочников
  *
  * @link http://getfrapi.com
  * @author Frapi <frapi@getfrapi.com>
- * @link /collection/:resource/siblings/:sibling
+ * @link /custom/route/:var
  */
-class Action_Sibling extends Frapi_Action implements Frapi_Action_Interface
+class Action_References extends Frapi_Action implements Frapi_Action_Interface
 {
 
     /**
@@ -56,7 +48,7 @@ class Action_Sibling extends Frapi_Action implements Frapi_Action_Interface
      */
     public function executeAction()
     {
-        throw new Frapi_Error('NO_POST_NOR_PUT');
+        return $this->toArray();
     }
 
     /**
@@ -68,16 +60,31 @@ class Action_Sibling extends Frapi_Action implements Frapi_Action_Interface
      */
     public function executeGet()
     {
-        $this->data = array(
-            'meta' => array(
-                'total' => '1',
-             ),
-             'res1' => array(
-                 'name' => 'res1',
-                 'href' => '/collection/res1'
-             )
-         );
+        $this->data = References::get();
+        return $this->toArray();
+    }
 
+    /**
+     * Post Request Handler
+     *
+     * This method is called when a request is a POST
+     *
+     * @return array
+     */
+    public function executePost()
+    {
+        return $this->toArray();
+    }
+
+    /**
+     * Put Request Handler
+     *
+     * This method is called when a request is a PUT
+     *
+     * @return array
+     */
+    public function executePut()
+    {
         return $this->toArray();
     }
 
@@ -90,13 +97,6 @@ class Action_Sibling extends Frapi_Action implements Frapi_Action_Interface
      */
     public function executeDelete()
     {
-        $this->data = array(
-            'success' => 1,
-            'meta'    => array(
-                'message' => 'The sibling has been deleted..'
-            ),
-        );
-
         return $this->toArray();
     }
 
@@ -109,11 +109,6 @@ class Action_Sibling extends Frapi_Action implements Frapi_Action_Interface
      */
     public function executeHead()
     {
-        $this->data = array(
-            'meta' => array(
-                'total' => '1',
-            ),
-        );
         return $this->toArray();
     }
 

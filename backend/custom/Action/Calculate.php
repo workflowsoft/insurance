@@ -13,34 +13,7 @@
  */
 class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
 {
-
-
-    /**
-     * Поправочные коэффициенты
-
-     */
-    public
-    $ksd, //
-    $kkv, //
-    $ka,  //
-    $dop_salary_value, //
-    $ts_additional_flag, //
-    $tariff; //
-
-
-
-
-
-
-
-
-
-    /**
-     * Required parameters
-     * 
-     * @var An array of required parameters.
-     */
-    protected $requiredParams = array();
+    protected $requiredParams = array('ts_group_id', 'tariff_program_id', 'risks_id', 'tariff_def_damage_type_id', 'ts_age');
 
     /**
      * The data container to use in toArray()
@@ -59,7 +32,19 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
      */
     public function toArray()
     {
-        return $this->data;
+        $this->data['inputParams'] = array(
+            'ts_make_id' => $this->getParam('ts_make_id', self::TYPE_OUTPUT),
+            'ts_model_id' => $this->getParam('ts_model_id', self::TYPE_OUTPUT),
+            'ts_modification_id' => $this->getParam('ts_modification_id', self::TYPE_OUTPUT),
+            'ts_group_id' => $this->getParam('ts_group_id', self::TYPE_OUTPUT),
+            'tariff_program_id' => $this->getParam('tariff_program_id', self::TYPE_OUTPUT),
+            'risks_id' => $this->getParam('risks_id', self::TYPE_OUTPUT),
+            'tariff_def_damage_type_id' => $this->getParam('tariff_def_damage_type_id', self::TYPE_OUTPUT),
+            'ts_age' => $this->getParam('ts_age', self::TYPE_OUTPUT),
+            'ts_sum' => $this->getParam('ts_sum', self::TYPE_OUTPUT),
+            'amortisation' => $this->getParam('amortisation', self::TYPE_OUTPUT),
+    );
+    return $this->data;
     }
 
     /**
@@ -71,32 +56,63 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
      */
     public function executeAction()
     {
+        $valid = $this->hasRequiredParameters($this->requiredParams);
+        if ($valid instanceof Frapi_Error) {
+            throw $valid;
+        }
         return $this->toArray();
     }
 
     /**
-     * Get Request Handler
-     * 
-     * This method is called when a request is a GET
+     *
+     * Возврат результатов рассчета
      * 
      * @return array
      */
     public function executeGet()
     {
+        $valid = $this->hasRequiredParameters($this->requiredParams);
+        if ($valid instanceof Frapi_Error) {
+            throw $valid;
+        }
 
-    // тариф по доп. оборудованию
-    if ($ts_additional_flag == true){
-        $do_tariff = 10 * $ksd * $ka * $kkv;
-        $do_sum = round($dop_salary_value * $do_tariff / 100, 2);
-        $tariff = $do_sum;
-    }
+        //Сначала заберем обязательные коэфициенты и соберем с ними основную часть WHERE
+        $whereStr =
+            sprintf(
+                'WHERE TS_Group_Id = %s AND Tariff_Program_Id = %s AND Risk_Id = %s AND Damage_Det_Type_Id = %s AND TS_Age = %s',
+                $this->getParam('ts_group_id', self::TYPE_INT),
+                $this->getParam('tariff_program_id', self::TYPE_INT),
+                $this->getParam('risks_id', self::TYPE_INT),
+                $this->getParam('tariff_def_damage_type_id', self::TYPE_INT),
+                $this->getParam('ts_age', self::TYPE_INT)
+            );
+        //Далее берем необязательные и для них добиваем
+        if (!empty($this->params['ts_sum']))
+        {
+            $sum = $this->getParam('ts_sum', self::TYPE_DOUBLE);
+            $whereStr = $whereStr.sprintf(
+                        ' AND (TS_Sum_Down IS NULL OR TS_Sum_Down<=%u) AND (TS_Sum_Up IS NULL OR TS_Sum_Up>=%u)',
+                    $sum,$sum);
+        }
 
+        $db = Frapi_Database::getInstance();
+        $query = 'SELECT value as base_tariff FROM tariff_coefficients '.$whereStr;
+        $sth = $db->query($query);
+        $results = $sth->fetch(PDO::FETCH_ASSOC);
+        if (!$results || $sth->rowCount()>1)
+            throw new Frapi_Error('CANT_CALC_BASET');
+        $this->data['Result'] = $results;
         return $this->toArray();
     }
-
-
-
-
-
+    public function executeDocs()
+    {
+        return new Frapi_Response(array(
+            'code' => 200,
+            'data' => array(
+                'GET'    => 'Возвращает результаты рассчета стоимости страховой премии' .
+                    'по введенным пользователем факторам'
+            )
+        ));
+    }
 }
 
