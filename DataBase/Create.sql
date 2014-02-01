@@ -22,30 +22,50 @@ CREATE TABLE IF NOT EXISTS `additional_coefficients` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `factor_id` int(10) DEFAULT '0',
   `tariff_program_id` int(10) DEFAULT '0',
-  `TS_Risks_Id` int(10) DEFAULT '0',
+  `ts_risks_id` int(10) DEFAULT '0',
   `regres_limit_factor_id` int(10) DEFAULT '0',
   `tariff_def_damage_type_id` int(10) DEFAULT '0',
-  `payments_without_references_id` int(10) DEFAULT '0',
+  `payments_without_references_id` int(10) DEFAULT '0',  
   `franchise_type_id` int(10) DEFAULT '0',
-  `contract_days` int(2) DEFAULT NULL,
-  `contract_months` int(2) DEFAULT NULL,
-  `contract_years` int(2) DEFAULT NULL,
-  `driver_count` varchar(50) COLLATE utf8_bin DEFAULT '0',
+  `contract_from_day` int(2) DEFAULT NULL,
+  `contract_to_day` int(2) DEFAULT NULL,
+  `contract_from_month` int(2) DEFAULT NULL,
+  `contract_to_month` int(2) DEFAULT NULL,
+  `contract_from_year` int(2) DEFAULT NULL,
+  `contract_to_year` int(2) DEFAULT NULL,
+  `drivers_count` varchar(50) COLLATE utf8_bin DEFAULT '0',
   `driver_age_down` int(10) DEFAULT '0',
   `driver_age_up` int(10) DEFAULT '0',
   `driver_exp_down` int(10) DEFAULT '0',
   `driver_exp_up` int(10) DEFAULT '0',
-  `TS_NoDefendFlag` tinyint(1) DEFAULT '0',
-  `TS_SatelliteFlag` tinyint(1) DEFAULT '0',
-  `TS_HaveElectronicAlarm` tinyint(1) DEFAULT '0',
+  `ts_no_defend_flag` tinyint(1) DEFAULT '0',
+  `ts_satellite_flag` tinyint(1) DEFAULT '0',
+  `ts_have_electronic_alarm` tinyint(1) DEFAULT '0',
   `is_onetime_payment` tinyint(1) DEFAULT '0',
-  `Franshiza_Percent_Up` double DEFAULT '0',
-  `Franshiza_Percent_Down` double DEFAULT '0',
+  `car_quantity_down` int(10) DEFAULT '0',
+  `car_quantity_up` int(10) DEFAULT '0',
+  `franchise_percent_up` double DEFAULT '0',
+  `franchise_percent_down` double DEFAULT '0',
   `commercial_carting_flag` tinyint(1) DEFAULT '0',
   `commission_percent_value` double DEFAULT '0',
   `value` float DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=116 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Сводная таблица со значениями всех коэффициентов';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Сводная таблица со значениями всех коэффициентов';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 -- Дамп данных таблицы ubercalc.additional_coefficients: ~131 rows (приблизительно)
 /*!40000 ALTER TABLE `additional_coefficients` DISABLE KEYS */;
