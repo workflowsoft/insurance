@@ -21,35 +21,26 @@ DROP TABLE IF EXISTS `additional_coefficients`;
 CREATE TABLE IF NOT EXISTS `additional_coefficients` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `factor_id` int(10) DEFAULT '0',
+  `tariff_program_id` int(10) DEFAULT '0',
+  `TS_Risks_Id` int(10) DEFAULT '0',
+  `regres_limit_factor_id` int(10) DEFAULT '0',
+  `tariff_def_damage_type_id` int(10) DEFAULT '0',
+  `payments_without_references_id` int(10) DEFAULT '0',
+  `franchise_type_id` int(10) DEFAULT '0',
   `contract_days` int(2) DEFAULT NULL,
   `contract_months` int(2) DEFAULT NULL,
   `contract_years` int(2) DEFAULT NULL,
-  `ksp_value` double DEFAULT '0',
-  `tariff_program_id` int(10) DEFAULT '0',
-  `ldu_quantity` varchar(50) COLLATE utf8_bin DEFAULT '0',
+  `driver_count` varchar(50) COLLATE utf8_bin DEFAULT '0',
   `driver_age_down` int(10) DEFAULT '0',
   `driver_age_up` int(10) DEFAULT '0',
   `driver_exp_down` int(10) DEFAULT '0',
   `driver_exp_up` int(10) DEFAULT '0',
-  `ki_value` double DEFAULT '0',
   `TS_NoDefendFlag` tinyint(1) DEFAULT '0',
   `TS_SatelliteFlag` tinyint(1) DEFAULT '0',
   `TS_HaveElectronicAlarm` tinyint(1) DEFAULT '0',
-  `TS_Risks_Id` int(10) DEFAULT '0',
-  `ksd_description_id` int(10) DEFAULT '0',
-  `kp_description_id` int(10) DEFAULT '0',
-  `kp_flag` tinyint(1) DEFAULT '0',
-  `ko_is_checked` tinyint(1) DEFAULT '0',
-  `regres_limit_factor_id` int(10) DEFAULT '0',
-  `tariff_def_damage_type_id` int(10) DEFAULT '0',
-  `klv_value` double DEFAULT '0',
-  `payments_without_references_id` int(10) DEFAULT '0',
-  `ka_value` double DEFAULT '0',
+  `is_onetime_payment` tinyint(1) DEFAULT '0',
   `Franshiza_Percent_Up` double DEFAULT '0',
   `Franshiza_Percent_Down` double DEFAULT '0',
-  `Franshiza_Percent_value` double DEFAULT '0',
-  `franchise_type_id` int(10) DEFAULT '0',
-  `Franshiza_Flag` tinyint(1) DEFAULT '0',
   `commercial_carting_flag` tinyint(1) DEFAULT '0',
   `commission_percent_value` double DEFAULT '0',
   `value` float DEFAULT '0',
@@ -58,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `additional_coefficients` (
 
 -- Дамп данных таблицы ubercalc.additional_coefficients: ~131 rows (приблизительно)
 /*!40000 ALTER TABLE `additional_coefficients` DISABLE KEYS */;
-INSERT INTO `additional_coefficients` (`id`, `factor_id`, `contract_days`, `contract_months`, `contract_years`, `ksp_value`, `tariff_program_id`, `ldu_quantity`, `driver_age_down`, `driver_age_up`, `driver_exp_down`, `driver_exp_up`, `ki_value`, `TS_NoDefendFlag`, `TS_SatelliteFlag`, `TS_HaveElectronicAlarm`, `TS_Risks_Id`, `ksd_description_id`, `kp_description_id`, `kp_flag`, `ko_is_checked`, `regres_limit_factor_id`, `tariff_def_damage_type_id`, `klv_value`, `payments_without_references_id`, `ka_value`, `Franshiza_Percent_Up`, `Franshiza_Percent_Down`, `Franshiza_Percent_value`, `franchise_type_id`, `Franshiza_Flag`, `commercial_carting_flag`, `commission_percent_value`, `value`) VALUES
+INSERT INTO `additional_coefficients` (`id`, `factor_id`, `contract_days`, `contract_months`, `contract_years`, `ksp_value`, `tariff_program_id`, `driver_count`, `driver_age_down`, `driver_age_up`, `driver_exp_down`, `driver_exp_up`, `ki_value`, `TS_NoDefendFlag`, `TS_SatelliteFlag`, `TS_HaveElectronicAlarm`, `TS_Risks_Id`, `ksd_description_id`, `kp_description_id`, `kp_flag`, `ko_is_checked`, `regres_limit_factor_id`, `tariff_def_damage_type_id`, `klv_value`, `payments_without_references_id`, `ka_value`, `Franshiza_Percent_Up`, `Franshiza_Percent_Down`, `Franshiza_Percent_value`, `franchise_type_id`, `Franshiza_Flag`, `commercial_carting_flag`, `commission_percent_value`, `value`) VALUES
 	(1, 1, NULL, NULL, NULL, 0, 19, '0', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 	(2, 2, NULL, NULL, NULL, 0, 0, '0', NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 	(3, 2, NULL, NULL, NULL, 0, 0, '33', NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
@@ -207,67 +198,6 @@ INSERT INTO `all_factors` (`id`, `name`, `description`, `code`) VALUES
 	(15, 'Ккв', 'коэф. комиссионного вознаграждения', 'kkv');
 /*!40000 ALTER TABLE `all_factors` ENABLE KEYS */;
 
-
--- Дамп структуры для таблица ubercalc.fatality_factor_table
-DROP TABLE IF EXISTS `fatality_factor_table`;
-CREATE TABLE IF NOT EXISTS `fatality_factor_table` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `factor_id` int(10) DEFAULT '0',
-  `ksp_value` double DEFAULT '0',
-  `tariff_program_id` int(10) DEFAULT '0',
-  `ldu_quantity` varchar(50) COLLATE utf8_bin DEFAULT '0',
-  `driver_age_down` int(10) DEFAULT '0',
-  `driver_age_up` int(10) DEFAULT '0',
-  `driver_exp_down` int(10) DEFAULT '0',
-  `driver_exp_up` int(10) DEFAULT '0',
-  `ki_value` double DEFAULT '0',
-  `TS_NoDefendFlag` tinyint(1) DEFAULT '0',
-  `TS_SatelliteFlag` tinyint(1) DEFAULT '0',
-  `TS_HaveElectronicAlarm` tinyint(1) DEFAULT '0',
-  `TS_Risks_Id` int(10) DEFAULT '0',
-  `ksd_description_id` int(10) DEFAULT '0',
-  `kp_description_id` int(10) DEFAULT '0',
-  `kp_flag` tinyint(1) DEFAULT '0',
-  `ko_is_checked` tinyint(1) DEFAULT '0',
-  `regres_limit_factor_id` int(10) DEFAULT '0',
-  `tariff_def_damage_type_id` int(10) DEFAULT '0',
-  `klv_value` double DEFAULT '0',
-  `payments_without_references_id` int(10) DEFAULT '0',
-  `ka_value` double DEFAULT '0',
-  `Franshiza_Percent_Up` double DEFAULT '0',
-  `Franshiza_Percent_Down` double DEFAULT '0',
-  `franchise_type_id` int(10) DEFAULT '0',
-  `Franshiza_Flag` tinyint(1) DEFAULT '0',
-  `commission_percent_value` double DEFAULT '0',
-  `value` float DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Сводная таблица со значениями всех коэффициентов';
-
--- Дамп данных таблицы ubercalc.fatality_factor_table: ~19 rows (приблизительно)
-/*!40000 ALTER TABLE `fatality_factor_table` DISABLE KEYS */;
-INSERT INTO `fatality_factor_table` (`id`, `factor_id`, `ksp_value`, `tariff_program_id`, `ldu_quantity`, `driver_age_down`, `driver_age_up`, `driver_exp_down`, `driver_exp_up`, `ki_value`, `TS_NoDefendFlag`, `TS_SatelliteFlag`, `TS_HaveElectronicAlarm`, `TS_Risks_Id`, `ksd_description_id`, `kp_description_id`, `kp_flag`, `ko_is_checked`, `regres_limit_factor_id`, `tariff_def_damage_type_id`, `klv_value`, `payments_without_references_id`, `ka_value`, `Franshiza_Percent_Up`, `Franshiza_Percent_Down`, `franchise_type_id`, `Franshiza_Flag`, `commission_percent_value`, `value`) VALUES
-	(1, 7, 0, 0, 'Без ограничений', NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-	(2, 7, 0, 0, 'Любые лица от 33 лет', NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-	(3, 7, 0, 0, NULL, 18, 23, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.4),
-	(4, 7, 0, 0, NULL, 18, 23, 3, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.3),
-	(5, 7, 0, 0, NULL, 24, 27, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.3),
-	(6, 7, 0, 0, NULL, 24, 27, 3, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.1),
-	(7, 7, 0, 0, NULL, 24, 27, 6, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.95),
-	(8, 7, 0, 0, NULL, 28, 32, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.2),
-	(9, 7, 0, 0, NULL, 28, 32, 3, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.05),
-	(10, 7, 0, 0, NULL, 28, 32, 6, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.9),
-	(11, 7, 0, 0, NULL, 28, 32, 10, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.85),
-	(12, 7, 0, 0, NULL, 33, 40, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.1),
-	(13, 7, 0, 0, NULL, 33, 40, 3, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-	(14, 7, 0, 0, NULL, 33, 40, 6, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.85),
-	(15, 7, 0, 0, NULL, 33, 40, 10, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.8),
-	(16, 7, 0, 0, NULL, 41, NULL, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.15),
-	(17, 7, 0, 0, NULL, 41, NULL, 3, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-	(18, 7, 0, 0, NULL, 41, NULL, 6, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.85),
-	(19, 7, 0, 0, NULL, 41, NULL, 10, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.8);
-/*!40000 ALTER TABLE `fatality_factor_table` ENABLE KEYS */;
-
-
 -- Дамп структуры для таблица ubercalc.front_contract_duration
 DROP TABLE IF EXISTS `front_contract_duration`;
 CREATE TABLE IF NOT EXISTS `front_contract_duration` (
@@ -334,24 +264,24 @@ INSERT INTO `front_kp_description` (`id`, `name`) VALUES
 /*!40000 ALTER TABLE `front_kp_description` ENABLE KEYS */;
 
 
--- Дамп структуры для таблица ubercalc.front_ldu_quantity
-DROP TABLE IF EXISTS `front_ldu_quantity`;
-CREATE TABLE IF NOT EXISTS `front_ldu_quantity` (
+-- Дамп структуры для таблица ubercalc.front_driver_count
+DROP TABLE IF EXISTS `front_driver_count`;
+CREATE TABLE IF NOT EXISTS `front_driver_count` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(50) COLLATE utf8_bin DEFAULT NULL,
   `value` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Количество ЛДУ (лиц допущенных к управлению)';
 
--- Дамп данных таблицы ubercalc.front_ldu_quantity: ~5 rows (приблизительно)
-/*!40000 ALTER TABLE `front_ldu_quantity` DISABLE KEYS */;
-INSERT INTO `front_ldu_quantity` (`id`, `name`, `value`) VALUES
+-- Дамп данных таблицы ubercalc.front_driver_count: ~5 rows (приблизительно)
+/*!40000 ALTER TABLE `front_driver_count` DISABLE KEYS */;
+INSERT INTO `front_driver_count` (`id`, `name`, `value`) VALUES
 	(1, 'Без ограничений', 0),
 	(2, 'Не более 3-х водителей', 3),
 	(3, '4 водителя', 4),
 	(4, '5 водителей', 5),
 	(5, 'Любые лица от 33 лет', 33);
-/*!40000 ALTER TABLE `front_ldu_quantity` ENABLE KEYS */;
+/*!40000 ALTER TABLE `front_driver_count` ENABLE KEYS */;
 
 
 -- Дамп структуры для таблица ubercalc.front_payments_without_references
