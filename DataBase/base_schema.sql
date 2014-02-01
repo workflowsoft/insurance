@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS `additional_coefficients` (
   `franchise_percent_down` double DEFAULT '0',
   `commercial_carting_flag` tinyint(1) DEFAULT '0',
   `commission_percent_value` double DEFAULT '0',
+  `is_legal_entity` tinyint(1) DEFAULT '0',
   `value` float DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Поправочные коэфициенты с зависимостью от факторов, которые их формируют';
@@ -50,6 +51,8 @@ CREATE TABLE IF NOT EXISTS `all_factors` (
   `default_value` int(10) DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Таблица списка используемых в формуле РАССЧЕТНЫХ операндов, их обязательность и значение по-умолчанию';
+
+
 
 -- Таблица фронтового справочника, длительности договора страховки
 DROP TABLE IF EXISTS `front_contract_duration`;
@@ -195,3 +198,13 @@ CREATE TABLE IF NOT EXISTS `ts_modification` (
   CONSTRAINT `FK_Modif2TS_Type` FOREIGN KEY (`TS_Type_Id`) REFERENCES `ts_type` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Модификация ТС';
 
+
+
+-- Дамп структуры для таблица ubercalc.front_ldu_quantity
+DROP TABLE IF EXISTS `front_ldu_quantity`;
+CREATE TABLE IF NOT EXISTS `front_ldu_quantity` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) COLLATE utf8_bin DEFAULT NULL,
+  `value` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Количество ЛДУ (лиц допущенных к управлению)';

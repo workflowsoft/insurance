@@ -1,36 +1,32 @@
 
 -- вставка для kps
 SET @ksp_id = (SELECT id FROM all_factors WHERE code='ksp');
-SET @ksp_program_id = (SELECT id FROM front_tariff_program WHERE name='Эконом 50/50');
+SET @ksp_program_id = (SELECT id FROM tariff_program WHERE name='Эконом 50/50');
 INSERT INTO `additional_coefficients` (`factor_id`, `tariff_program_id`, `value`) VALUES
 	(@ksp_id, @ksp_program_id, 1);
 
 
 -- вставка для kvs
 SET @kvs_id = (SELECT id FROM all_factors WHERE code='kvs');
-SET @NoLimit = (SELECT value FROM front_ldu_quantity WHERE name='Без ограничений');
-SET @AnyMore33 = (SELECT value FROM front_ldu_quantity WHERE name='Любые лица от 33 лет');
 
-INSERT INTO `additional_coefficients` (`factor_id`, `drivers_count`, `driver_age_down`, `driver_age_up`, `driver_exp_down`, `driver_exp_up`, `value`) VALUES
-	(@kvs_id, @NoLimit, NULL, NULL, NULL, NULL, 1),
-	(@kvs_id, @AnyMore33, NULL, NULL, NULL, NULL, 1),
-	(@kvs_id, NULL, 18, 23, 0, 2, 1.4),
-	(@kvs_id, NULL, 18, 23, 3, 5, 1.3),
-	(@kvs_id, NULL, 24, 27, 0, 2, 1.3),
-	(@kvs_id, NULL, 24, 27, 3, 5, 1.1),
-	(@kvs_id, NULL, 24, 27, 6, 9, 0.95),
-	(@kvs_id, NULL, 28, 32, 0, 2, 1.2),
-	(@kvs_id, NULL, 28, 32, 3, 5, 1.05),
-	(@kvs_id, NULL, 28, 32, 6, 9, 0.9),
-	(@kvs_id, NULL, 28, 32, 10, NULL, 0.85),
-	(@kvs_id, NULL, 33, 40, 0, 2, 1.1),
-	(@kvs_id, NULL, 33, 40, 3, 5, 1),
-	(@kvs_id, NULL, 33, 40, 6, 9, 0.85),
-	(@kvs_id, NULL, 33, 40, 10, NULL, 0.8),
-	(@kvs_id, NULL, 41, NULL, 0, 2, 1.15),
-	(@kvs_id, NULL, 41, NULL, 3, 5, 1),
-	(@kvs_id, NULL, 41, NULL, 6, 9, 0.85),
-	(@kvs_id, NULL, 41, NULL, 10, NULL, 0.8);
+INSERT INTO `additional_coefficients` (`factor_id`, `drivers_count`, `driver_age_down`, `driver_age_up`, `driver_exp_down`, `driver_exp_up`, `value`, `is_legal_entity`) VALUES
+	(@kvs_id, NULL, 18, 23, 0, 2, 1.4, 1),
+	(@kvs_id, NULL, 18, 23, 3, 5, 1.3, 1),
+	(@kvs_id, NULL, 24, 27, 0, 2, 1.3, 1),
+	(@kvs_id, NULL, 24, 27, 3, 5, 1.1, 1),
+	(@kvs_id, NULL, 24, 27, 6, 9, 0.95, 1),
+	(@kvs_id, NULL, 28, 32, 0, 2, 1.2, 1),
+	(@kvs_id, NULL, 28, 32, 3, 5, 1.05, 1),
+	(@kvs_id, NULL, 28, 32, 6, 9, 0.9, 1),
+	(@kvs_id, NULL, 28, 32, 10, NULL, 0.85, 1),
+	(@kvs_id, NULL, 33, 40, 0, 2, 1.1, 1),
+	(@kvs_id, NULL, 33, 40, 3, 5, 1, 1),
+	(@kvs_id, NULL, 33, 40, 6, 9, 0.85, 1),
+	(@kvs_id, NULL, 33, 40, 10, NULL, 0.8, 1),
+	(@kvs_id, NULL, 41, NULL, 0, 2, 1.15, 1),
+	(@kvs_id, NULL, 41, NULL, 3, 5, 1, 1),
+	(@kvs_id, NULL, 41, NULL, 6, 9, 0.85, 1),
+	(@kvs_id, NULL, 41, NULL, 10, NULL, 0.8, 1);
 
 	
 -- вставка для kl 	
