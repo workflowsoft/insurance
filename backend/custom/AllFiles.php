@@ -6,6 +6,8 @@ define('FRAPI_CACHE_ADAPTER', 'dummy');
 // IE: require CUSTOM_MODEL . DIRECTORY_SEPARATOR . 'ModelName.php';
 // Or add an autolaoder if you are brave.
 
+require_once CUSTOM_MODEL . DIRECTORY_SEPARATOR . 'References.php';
+
 // Other data
 
 defined('CUSTOM_LIBRARY') || define('CUSTOM_LIBRARY', CUSTOM_PATH. DIRECTORY_SEPARATOR . 'Library');
