@@ -1,44 +1,8 @@
 -- Дамп структуры базы данных ubercalc
 DROP DATABASE IF EXISTS `ubercalc`;
-CREATE DATABASE IF NOT EXISTS `ubercalc` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_bin */;
-USE `ubercalc`;
+CREATE DATABASE IF NOT EXISTS `ubercalc` DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 
--- Поправочные коэфициенты с зависимостью от факторов, которые их формируют
-DROP TABLE IF EXISTS `additional_coefficients`;
-CREATE TABLE IF NOT EXISTS `additional_coefficients` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `factor_id` int(10) DEFAULT '0',
-  `tariff_program_id` int(10) DEFAULT '0',
-  `ts_risks_id` int(10) DEFAULT '0',
-  `regres_limit_factor_id` int(10) DEFAULT '0',
-  `tariff_def_damage_type_id` int(10) DEFAULT '0',
-  `payments_without_references_id` int(10) DEFAULT '0',  
-  `franchise_type_id` int(10) DEFAULT '0',
-  `contract_from_day` int(2) DEFAULT NULL,
-  `contract_to_day` int(2) DEFAULT NULL,
-  `contract_from_month` int(2) DEFAULT NULL,
-  `contract_to_month` int(2) DEFAULT NULL,
-  `contract_from_year` int(2) DEFAULT NULL,
-  `contract_to_year` int(2) DEFAULT NULL,
-  `drivers_count` varchar(50) COLLATE utf8_bin DEFAULT '0',
-  `driver_age_down` int(10) DEFAULT '0',
-  `driver_age_up` int(10) DEFAULT '0',
-  `driver_exp_down` int(10) DEFAULT '0',
-  `driver_exp_up` int(10) DEFAULT '0',
-  `ts_no_defend_flag` tinyint(1) DEFAULT '0',
-  `ts_satellite_flag` tinyint(1) DEFAULT '0',
-  `ts_have_electronic_alarm` tinyint(1) DEFAULT '0',
-  `is_onetime_payment` tinyint(1) DEFAULT '0',
-  `car_quantity_down` int(10) DEFAULT '0',
-  `car_quantity_up` int(10) DEFAULT '0',
-  `franchise_percent_up` double DEFAULT '0',
-  `franchise_percent_down` double DEFAULT '0',
-  `commercial_carting_flag` tinyint(1) DEFAULT '0',
-  `commission_percent_value` double DEFAULT '0',
-  `is_legal_entity` tinyint(1) DEFAULT '0',
-  `value` float DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Поправочные коэфициенты с зависимостью от факторов, которые их формируют';
+USE `ubercalc`;
 
 -- Таблица списка используемых в формуле РАССЧЕТНЫХ операндов, их обязательность и значение по-умолчанию
 DROP TABLE IF EXISTS `all_factors`;
@@ -51,19 +15,6 @@ CREATE TABLE IF NOT EXISTS `all_factors` (
   `default_value` int(10) DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Таблица списка используемых в формуле РАССЧЕТНЫХ операндов, их обязательность и значение по-умолчанию';
-
-
-
--- Таблица фронтового справочника, длительности договора страховки
-DROP TABLE IF EXISTS `front_contract_duration`;
-CREATE TABLE IF NOT EXISTS `front_contract_duration` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) COLLATE utf8_bin DEFAULT NULL,
-  `contract_to_days` int(11) DEFAULT NULL,
-  `contract_to_months` int(11) DEFAULT NULL,
-  `contract_to_years` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Таблица фронтового справочника, длительности договора страховки';
 
 -- Тип франшизы
 DROP TABLE IF EXISTS `franchise_type`;
@@ -105,25 +56,6 @@ CREATE TABLE IF NOT EXISTS `tariff_program` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Варианты тарифных планов';
 
--- Таблица зависимостей базового тарифа от различных факторов
-DROP TABLE IF EXISTS `tariff_coefficients`;
-CREATE TABLE IF NOT EXISTS `tariff_coefficients` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `TS_Group_Id` int(10) DEFAULT NULL,
-  `TS_Producer_Id` int(10) DEFAULT NULL,
-  `TS_Model_Id` int(10) DEFAULT NULL,
-  `TS_Modification_Id` int(10) DEFAULT NULL,
-  `Tariff_Program_Id` int(10) NOT NULL,
-  `Risk_Id` int(10) NOT NULL,
-  `Damage_Det_Type_Id` int(10) DEFAULT NULL,
-  `TS_Age` int(10) NOT NULL,
-  `TS_Sum_Up` int(10) DEFAULT NULL,
-  `TS_Sum_Down` int(10) DEFAULT NULL,
-  `Amortisation` bit(1) DEFAULT NULL,
-  `Value` double NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1802 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Таблица зависимостей базового тарифа от различных факторов';
-
 -- Определение размера страхового возмещения
 DROP TABLE IF EXISTS `tariff_def_damage_type`;
 CREATE TABLE IF NOT EXISTS `tariff_def_damage_type` (
@@ -131,6 +63,42 @@ CREATE TABLE IF NOT EXISTS `tariff_def_damage_type` (
   `name` varchar(128) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Определение размера страхового возмещения';
+
+-- Тип ТС
+DROP TABLE IF EXISTS `ts_type`;
+CREATE TABLE IF NOT EXISTS `ts_type` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Тип ТС';
+
+-- Производители ТС
+DROP TABLE IF EXISTS `ts_make`;
+CREATE TABLE IF NOT EXISTS `ts_make` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Производители ТС';
+
+-- Модель TC
+DROP TABLE IF EXISTS `ts_model`;
+CREATE TABLE IF NOT EXISTS `ts_model` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `ts_type_id` int(10) NOT NULL REFERENCES  ts_type(id),
+  `ts_make_id` int(10) NOT NULL REFERENCES `ts_make`(id),
+  `name` varchar(50) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Модель TC';
+
+-- Модификация ТС
+DROP TABLE IF EXISTS `ts_modification`;
+CREATE TABLE IF NOT EXISTS `ts_modification` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `ts_model_id` int(10) NOT NULL REFERENCES  `ts_model`(id),
+  `ts_type_id` int(10) REFERENCES `ts_type`(id), /*Модификация модели может поменять тип ТС, но обчыно такого не случается*/
+  `Name` varchar(50) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Модификация ТС';
 
 -- Группа ТС
 DROP TABLE IF EXISTS `ts_group`;
@@ -144,61 +112,84 @@ CREATE TABLE IF NOT EXISTS `ts_group` (
 DROP TABLE IF EXISTS `ts_group_match`;
 CREATE TABLE IF NOT EXISTS `ts_group_match` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
-  `TS_Group_Id` int(10) NOT NULL,
-  `TS_Modification_Id` int(10) NOT NULL,
-  `TS_Type_Id` int(10) NOT NULL,
-  `TS_Model_Id` int(10) NOT NULL,
-  `TS_Producer_ID` int(10) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FK_Group2TS_Group` (`TS_Group_Id`),
-  CONSTRAINT `FK_Group2TS_Group` FOREIGN KEY (`TS_Group_Id`) REFERENCES `ts_group` (`id`)
+  `ts_group_id` int(10) NOT NULL REFERENCES `ts_group`(id),
+  `ts_modification_id` int(10) REFERENCES `ts_modification`(id),
+  `ts_type_id` int(10) REFERENCES `ts_type`(id),
+  `ts_model_id` int(10) REFERENCES `ts_model`(id),
+  `ts_make_id` int(10) REFERENCES `ts_make`(id),
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Составление групп транспортных средств и конкретных моделей и марок';
 
--- Тип ТС
-DROP TABLE IF EXISTS `ts_type`;
-CREATE TABLE IF NOT EXISTS `ts_type` (
+
+-- Поправочные коэфициенты с зависимостью от факторов, которые их формируют
+DROP TABLE IF EXISTS `additional_coefficients`;
+CREATE TABLE IF NOT EXISTS `additional_coefficients` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
-  `Name` varchar(50) COLLATE utf8_bin NOT NULL,
+  `factor_id` int(10) NOT NULL REFERENCES all_factors(id),
+  `tariff_program_id` int(10) DEFAULT NULL REFERENCES tariff_program(id),
+  `risks_id` int(10) DEFAULT NULL REFERENCES  risks(id),
+  `regres_limit_factor_id` int(10) DEFAULT NULL REFERENCES regres_limit(id),
+  `tariff_def_damage_type_id` int(10) DEFAULT NULL REFERENCES tariff_def_damage_type(id),
+  `payments_without_references_id` int(10) DEFAULT NULL REFERENCES payments_without_references(id),
+  `franchise_type_id` int(10) DEFAULT NULL REFERENCES franchise_type(id),
+  `contract_from_day` int(2) DEFAULT NULL,
+  `contract_to_day` int(2) DEFAULT NULL,
+  `contract_from_month` int(2) DEFAULT NULL,
+  `contract_to_month` int(2) DEFAULT NULL,
+  `contract_from_year` int(2) DEFAULT NULL,
+  `contract_to_year` int(2) DEFAULT NULL,
+  `drivers_count_up` varchar(50) COLLATE utf8_bin DEFAULT NULL,
+  `drivers_count_down` varchar(50) COLLATE utf8_bin DEFAULT NULL,
+  `driver_age_down` int(10) DEFAULT NULL,
+  `driver_age_up` int(10) DEFAULT NULL,
+  `driver_exp_down` int(10) DEFAULT NULL,
+  `driver_exp_up` int(10) DEFAULT NULL,
+  `ts_no_defend_flag` tinyint(1) DEFAULT NULL,
+  `ts_satellite_flag` tinyint(1) DEFAULT NULL,
+  `ts_have_electronic_alarm` tinyint(1) DEFAULT NULL,
+  `is_onetime_payment` tinyint(1) DEFAULT NULL,
+  `car_quantity_down` int(10) DEFAULT NULL,
+  `car_quantity_up` int(10) DEFAULT NULL,
+  `franchise_percent_up` double DEFAULT NULL,
+  `franchise_percent_down` double DEFAULT NULL,
+  `commercial_carting_flag` tinyint(1) DEFAULT NULL,
+  `commission_percent_up` double DEFAULT NULL,
+  `commission_percent_down` double DEFAULT NULL,
+  `is_legal_entity` tinyint(1) DEFAULT NULL,
+  `amortisation` bit(1) DEFAULT NULL,
+  `value` float NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Тип ТС';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Поправочные коэфициенты с зависимостью от факторов, которые их формируют';
 
--- Производители ТС
-DROP TABLE IF EXISTS `ts_make`;
-CREATE TABLE IF NOT EXISTS `ts_make` (
+-- Таблица зависимостей базового тарифа от различных факторов
+DROP TABLE IF EXISTS `tariff_coefficients`;
+CREATE TABLE IF NOT EXISTS `tariff_coefficients` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
-  `Name` varchar(50) COLLATE utf8_bin NOT NULL,
+  `ts_group_id` int(10) REFERENCES `ts_group`(id),
+  `ts_make_id` int(10) REFERENCES `ts_make`(id),
+  `ts_model_id` int(10) REFERENCES `ts_model`(id),
+  `is_modification_id` int(10) REFERENCES `ts_modification`(id),
+  `tariff_program_id` int(10) NOT NULL REFERENCES `tariff_program`(id),
+  `risk_id` int(10) NOT NULL REFERENCES `risks`(id),
+  `damage_det_type_id` int(10) NOT NULL  REFERENCES `tariff_def_damage_type`(id),
+  `ts_age` int(10) NOT NULL,
+  `ts_sum_up` int(10) DEFAULT NULL,
+  `ts_sum_down` int(10) DEFAULT NULL,
+  `amortisation` bit(1) DEFAULT NULL,
+  `value` double NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Производители ТС';
+) ENGINE=InnoDB AUTO_INCREMENT=1802 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Таблица зависимостей базового тарифа от различных факторов';
 
--- Модель TC
-DROP TABLE IF EXISTS `ts_model`;
-CREATE TABLE IF NOT EXISTS `ts_model` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `TS_Producer_Id` int(10) NOT NULL,
-  `TS_Type_Id` int(10) DEFAULT '0',
-  `Name` varchar(50) COLLATE utf8_bin NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FK_Model2TS_Producer` (`TS_Producer_Id`),
-  KEY `FK_Model2TS_Type` (`TS_Type_Id`),
-  CONSTRAINT `FK_Model2TS_Producer` FOREIGN KEY (`TS_Producer_Id`) REFERENCES `ts_make` (`id`),
-  CONSTRAINT `FK_Model2TS_Type` FOREIGN KEY (`TS_Type_Id`) REFERENCES `ts_type` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Модель TC';
-
--- Модификация ТС
-DROP TABLE IF EXISTS `ts_modification`;
-CREATE TABLE IF NOT EXISTS `ts_modification` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `TS_Model_Id` int(10) NOT NULL DEFAULT '0',
-  `TS_Type_Id` int(10) DEFAULT '0',
-  `Name` varchar(50) COLLATE utf8_bin DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `FK_Modif2TS_Type` (`TS_Type_Id`),
-  KEY `FK_Modif2TS_Model` (`TS_Model_Id`),
-  CONSTRAINT `FK_Modif2TS_Model` FOREIGN KEY (`TS_Model_Id`) REFERENCES `ts_model` (`id`),
-  CONSTRAINT `FK_Modif2TS_Type` FOREIGN KEY (`TS_Type_Id`) REFERENCES `ts_type` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Модификация ТС';
-
-
+-- Таблица фронтового справочника, длительности договора страховки
+DROP TABLE IF EXISTS `front_contract_duration`;
+CREATE TABLE IF NOT EXISTS `front_contract_duration` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) COLLATE utf8_bin DEFAULT NULL,
+  `contract_to_days` int(11) DEFAULT NULL,
+  `contract_to_months` int(11) DEFAULT NULL,
+  `contract_to_years` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Таблица фронтового справочника, длительности договора страховки';
 
 -- Дамп структуры для таблица ubercalc.front_ldu_quantity
 DROP TABLE IF EXISTS `front_ldu_quantity`;
