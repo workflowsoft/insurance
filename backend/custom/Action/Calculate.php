@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Action Calculate 
- * 
+ * Action Calculate
+ *
  * Выполняет вычисление стоимости страховки
  * исходя из всех введенных пользователем
  * данных
- * 
+ *
  * @link http://getfrapi.com
  * @author Frapi <frapi@getfrapi.com>
  * @link /calc/web/v1
@@ -17,17 +17,17 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
 
     /**
      * The data container to use in toArray()
-     * 
+     *
      * @var A container of data to fill and return in toArray()
      */
     private $data = array();
 
     /**
      * To Array
-     * 
-     * This method returns the value found in the database 
+     *
+     * This method returns the value found in the database
      * into an associative array.
-     * 
+     *
      * @return array
      */
     public function toArray()
@@ -43,15 +43,15 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
             'ts_age' => $this->getParam('ts_age', self::TYPE_OUTPUT),
             'ts_sum' => $this->getParam('ts_sum', self::TYPE_OUTPUT),
             'amortisation' => $this->getParam('amortisation', self::TYPE_OUTPUT),
-    );
-    return $this->data;
+        );
+        return $this->data;
     }
 
     /**
      * Default Call Method
-     * 
+     *
      * This method is called when no specific request handler has been found
-     * 
+     *
      * @return array
      */
     public function executeAction()
@@ -66,7 +66,7 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
     /**
      *
      * Возврат результатов рассчета
-     * 
+     *
      * @return array
      */
     public function executeGet()
@@ -87,29 +87,29 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
                 $this->getParam('ts_age', self::TYPE_INT)
             );
         //Далее берем необязательные и для них добиваем
-        if (!empty($this->params['ts_sum']))
-        {
+        if (!empty($this->params['ts_sum'])) {
             $sum = $this->getParam('ts_sum', self::TYPE_DOUBLE);
-            $whereStr = $whereStr.sprintf(
-                        ' AND (TS_Sum_Down IS NULL OR TS_Sum_Down<=%u) AND (TS_Sum_Up IS NULL OR TS_Sum_Up>=%u)',
-                    $sum,$sum);
+            $whereStr = $whereStr . sprintf(
+                    ' AND (TS_Sum_Down IS NULL OR TS_Sum_Down<=%u) AND (TS_Sum_Up IS NULL OR TS_Sum_Up>=%u)',
+                    $sum, $sum);
         }
 
         $db = Frapi_Database::getInstance();
-        $query = 'SELECT value as base_tariff FROM tariff_coefficients '.$whereStr;
+        $query = 'SELECT value as base_tariff FROM tariff_coefficients ' . $whereStr;
         $sth = $db->query($query);
         $results = $sth->fetch(PDO::FETCH_ASSOC);
-        if (!$results || $sth->rowCount()>1)
+        if (!$results || $sth->rowCount() > 1)
             throw new Frapi_Error('CANT_CALC_BASET');
         $this->data['Result'] = $results;
         return $this->toArray();
     }
+
     public function executeDocs()
     {
         return new Frapi_Response(array(
             'code' => 200,
             'data' => array(
-                'GET'    => 'Возвращает результаты рассчета стоимости страховой премии' .
+                'GET' => 'Возвращает результаты рассчета стоимости страховой премии' .
                     'по введенным пользователем факторам'
             )
         ));
