@@ -1,3 +1,4 @@
+use `ubercalc`;
 
 INSERT INTO `tariff_def_damage_type` (`name`) VALUES('По калькуляции страховщика');
 SET @D1C = LAST_INSERT_ID();

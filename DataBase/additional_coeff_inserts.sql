@@ -1,3 +1,5 @@
+use `ubercalc`;
+
 -- вставка для kuts (утрата товарной стоимости))
 SET @kuts_id = (SELECT id FROM all_factors WHERE code='kuts');
 
