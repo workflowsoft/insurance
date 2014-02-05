@@ -165,10 +165,11 @@ CREATE TABLE IF NOT EXISTS `additional_coefficients` (
 DROP TABLE IF EXISTS `tariff_coefficients`;
 CREATE TABLE IF NOT EXISTS `tariff_coefficients` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
+  `ts_type_id` int(10) REFERENCES `ts_type`(id),
   `ts_group_id` int(10) REFERENCES `ts_group`(id),
   `ts_make_id` int(10) REFERENCES `ts_make`(id),
   `ts_model_id` int(10) REFERENCES `ts_model`(id),
-  `is_modification_id` int(10) REFERENCES `ts_modification`(id),
+  `ts_modification_id` int(10) REFERENCES `ts_modification`(id),
   `tariff_program_id` int(10) NOT NULL REFERENCES `tariff_program`(id),
   `risk_id` int(10) NOT NULL REFERENCES `risks`(id),
   `damage_det_type_id` int(10) NOT NULL  REFERENCES `tariff_def_damage_type`(id),
