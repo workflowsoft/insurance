@@ -75,10 +75,6 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
      */
     public function executeGet()
     {
-//        $this->data[] = 'lal';
-//        return $this->toArray();
-
-
         //Вытщим то, что пришло с фронта
         $parameters_known = array();
         $parameters_to_validate = array();
@@ -121,30 +117,6 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
 		}
         $this->data = $validation;
         return $this->toArray();
-
-//        $whereStr =
-//            sprintf(
-//                'WHERE
-//                        TS_Group_Id = %s
-//                    AND Tariff_Program_Id = %s
-//                    AND Risk_Id = %s
-//                    AND Damage_Det_Type_Id = %s
-//                    AND TS_Age = %s',
-//                $this->getParam('ts_group_id', self::TYPE_INT),
-//                $this->getParam('tariff_program_id', self::TYPE_INT),
-//                $this->getParam('risks_id', self::TYPE_INT),
-//                $this->getParam('tariff_def_damage_type_id', self::TYPE_INT),
-//                $this->getParam('ts_age', self::TYPE_INT)
-//            );
-//        if (!empty($this->params['ts_sum'])) {
-//            $sum = $this->getParam('ts_sum', self::TYPE_DOUBLE);
-//            $whereStr = $whereStr . sprintf(
-//                    ' AND (TS_Sum_Down IS NULL OR TS_Sum_Down<=%u)
-//                      AND (TS_Sum_Up IS NULL OR TS_Sum_Up>=%u)',
-//                    $sum, $sum);
-//        }
-
-
 
     }
 
