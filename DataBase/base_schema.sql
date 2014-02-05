@@ -172,7 +172,7 @@ CREATE TABLE IF NOT EXISTS `tariff_coefficients` (
   `ts_modification_id` int(10) REFERENCES `ts_modification`(id),
   `tariff_program_id` int(10) NOT NULL REFERENCES `tariff_program`(id),
   `risk_id` int(10) NOT NULL REFERENCES `risks`(id),
-  `damage_det_type_id` int(10) NOT NULL  REFERENCES `tariff_def_damage_type`(id),
+  `damage_det_type_id` int(10) NULL  REFERENCES `tariff_def_damage_type`(id),
   `ts_age` int(10) NOT NULL,
   `ts_sum_up` int(10) DEFAULT NULL,
   `ts_sum_down` int(10) DEFAULT NULL,

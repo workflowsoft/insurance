@@ -13,7 +13,7 @@
  */
 class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
 {
-    protected $requiredParams = array('ts_group_id', 'tariff_program_id', 'risks_id', 'tariff_def_damage_type_id', 'ts_age');
+    protected $requiredParams = array('tariff_program_id', 'risks_id', 'tariff_def_damage_type_id', 'ts_age');
 
     /**
      * The data container to use in toArray()
@@ -35,6 +35,7 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
         $this->data['inputParams'] = array(
             'ts_make_id' => $this->getParam('ts_make_id', self::TYPE_OUTPUT),
             'ts_model_id' => $this->getParam('ts_model_id', self::TYPE_OUTPUT),
+            'ts_type_id' => $this->getParam('ts_model_id', self::TYPE_OUTPUT),
             'ts_modification_id' => $this->getParam('ts_modification_id', self::TYPE_OUTPUT),
             'ts_group_id' => $this->getParam('ts_group_id', self::TYPE_OUTPUT),
             'tariff_program_id' => $this->getParam('tariff_program_id', self::TYPE_OUTPUT),
@@ -43,6 +44,20 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
             'ts_age' => $this->getParam('ts_age', self::TYPE_OUTPUT),
             'ts_sum' => $this->getParam('ts_sum', self::TYPE_OUTPUT),
             'amortisation' => $this->getParam('amortisation', self::TYPE_OUTPUT),
+            'payments_without_references_id' => $this->getParam('payments_without_references_id', self::TYPE_OUTPUT),
+            'franchise_type_id' => $this->getParam('franchise_type_id', self::TYPE_OUTPUT),
+            'regres_limit_factor_id' => $this->getParam('regres_limit_factor_id', self::TYPE_OUTPUT),
+            'contract_day' => $this->getParam('contract_day', self::TYPE_OUTPUT),
+            'contract_month' => $this->getParam('contract_month', self::TYPE_OUTPUT),
+            'contract_year' => $this->getParam('contract_year', self::TYPE_OUTPUT),
+            'drivers_count' => $this->getParam('drivers_count', self::TYPE_OUTPUT),
+            'driver_age' => $this->getParam('driver_age', self::TYPE_OUTPUT),
+            'driver_exp' => $this->getParam('driver_exp', self::TYPE_OUTPUT),
+            'ts_no_defend_flag' => $this->getParam('ts_no_defend_flag', self::TYPE_OUTPUT),
+            'ts_satellite_flag' => $this->getParam('ts_satellite_flag', self::TYPE_OUTPUT),
+            'ts_have_electronic_alarm' => $this->getParam('ts_have_electronic_alarm', self::TYPE_OUTPUT),
+            'franchise_percent' => $this->getParam('franchise_percent', self::TYPE_OUTPUT),
+            'commercial_carting_flag' => $this->getParam('commercial_carting_flag', self::TYPE_OUTPUT),
         );
         return $this->data;
     }
