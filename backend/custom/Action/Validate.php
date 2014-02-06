@@ -19,22 +19,77 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
      */
     protected $requiredParams = array();
 
-    private $_parameters = array(
+    /* all parameters
+        'ts_type_id' => self::TYPE_INT,
         'ts_make_id' => self::TYPE_INT,
         'ts_model_id' => self::TYPE_INT,
-        'is_modification_id' => self::TYPE_INT,
+        'ts_modification_id' => self::TYPE_INT,
         'ts_group_id' => self::TYPE_INT,
-        'tariff_program_id' => self::TYPE_INT,
-        'risk_id' => self::TYPE_INT,
         'damage_det_type_id' => self::TYPE_INT,
         'ts_age' => self::TYPE_INT,
-//        'ts_sum' => self::TYPE_DOUBLE,
+        'ts_sum' => self::TYPE_DOUBLE,
+        'tariff_program_id' => self::TYPE_INT,
+        'risk_id' => self::TYPE_INT,
         'amortisation' => self::TYPE_INT,
+
+        'payments_without_references_id' => self::TYPE_INT,
+        'franchise_type_id' => self::TYPE_INT,
+        'contract_day' => self::TYPE_INT,
+        'contract_month' => self::TYPE_INT,
+        'contract_year' => self::TYPE_INT,
+        'drivers_count' => self::TYPE_INT,
+        'driver_age' => self::TYPE_INT,
+        'driver_exp' => self::TYPE_INT,
+        'ts_no_defend_flag' => self::TYPE_INT,
+        'ts_satellite_flag' => self::TYPE_INT,
+        'ts_have_electronic_alarm' => self::TYPE_INT,
+        'is_onetime_payment' => self::TYPE_INT,
+        'car_quantity' => self::TYPE_INT,
+        'franchise_percent' => self::TYPE_INT,
+        'commercial_carting_flag' => self::TYPE_INT,
+        'commission_percent' => self::TYPE_INT,
+        'is_legal_entity' => self::TYPE_INT,
+     */
+
+
+    private $_parameters = array(
+        'ts_type_id' => self::TYPE_INT,
+        'ts_make_id' => self::TYPE_INT,
+        'ts_model_id' => self::TYPE_INT,
+        'ts_modification_id' => self::TYPE_INT,
+        'ts_group_id' => self::TYPE_INT,
+        'damage_det_type_id' => self::TYPE_INT,
+        'ts_age' => self::TYPE_INT,
+        'ts_sum' => self::TYPE_DOUBLE,
+        'tariff_program_id' => self::TYPE_INT,
+        'risk_id' => self::TYPE_INT,
+        'amortisation' => self::TYPE_INT,
+    );
+
+
+    private $_parameters_additional = array(
+        'payments_without_references_id' => self::TYPE_INT,
+        'franchise_type_id' => self::TYPE_INT,
+        'contract_day' => self::TYPE_INT,
+        'contract_month' => self::TYPE_INT,
+        'contract_year' => self::TYPE_INT,
+        'drivers_count' => self::TYPE_INT,
+        'driver_age' => self::TYPE_INT,
+        'driver_exp' => self::TYPE_INT,
+        'ts_no_defend_flag' => self::TYPE_INT,
+        'ts_satellite_flag' => self::TYPE_INT,
+        'ts_have_electronic_alarm' => self::TYPE_INT,
+        'is_onetime_payment' => self::TYPE_INT,
+        'car_quantity' => self::TYPE_INT,
+        'franchise_percent' => self::TYPE_DOUBLE,
+        'commercial_carting_flag' => self::TYPE_INT,
+        'commission_percent' => self::TYPE_INT,
+        'is_legal_entity' => self::TYPE_INT,
     );
 
     /**
      * The data container to use in toArray()
-     * 
+     *
      * @var A container of data to fill and return in toArray()
      */
     private $data = array();
@@ -90,11 +145,17 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
         $validation = array();
         $db = Frapi_Database::getInstance();
         foreach ($parameters_to_validate as $param) {
+            if($param === 'ts_sum') continue;
 			$sql_from = 'SELECT DISTINCT `' . $param . '` FROM `tariff_coefficients`';
 			$sql_where = '';
 			$first = true;
 			foreach ($parameters_known as $key => $param_known) {
-				$sql_where .=  ($first ? ' WHERE' : ' AND') . " `$key` = $param_known";
+                //dirt for sum
+                if($key === 'ts_sum'){
+				    $sql_where .=  ($first ? ' WHERE' : ' AND') . " `ts_sum_up` >= $param_known AND ts_sum_down <= $param_known";
+                } else {
+                    $sql_where .=  ($first ? ' WHERE' : ' AND') . " `$key` = $param_known";
+                }
 				$first = false;
 			}
             $sql = $sql_from . $sql_where;
