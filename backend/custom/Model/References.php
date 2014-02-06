@@ -5,15 +5,18 @@ class References
 {
 
     private static $_tables = array(
-        'franchise_type',
-        'front_contract_duration',
-        'payments_without_references',
-        'regres_limit',
-        'risks',
+        'ts_type',
+        'ts_make',
+        'ts_model',
+        'ts_modification',
+        'ts_group',
         'tariff_def_damage_type',
         'tariff_program',
-        'ts_group',
-        'all_factors',
+        'risks',
+        'payments_without_references',
+        'franchise_type',
+        'front_contract_duration',
+        'regres_limit',
     );
 
     /**
