@@ -4,7 +4,7 @@ use `ubercalc`;
 SET @kuts_id = (SELECT id FROM all_factors WHERE code='kuts');
 
 INSERT INTO `additional_coefficients` (`factor_id`, `amortisation`, `value`) VALUES
-  (@kuts_id, 1, 1.3);
+  (@kuts_id, 0, 1.3);
 
 -- Вставка для kf - коэф. франшизы
 SET @kf_id = (SELECT id FROM all_factors WHERE code='kf');

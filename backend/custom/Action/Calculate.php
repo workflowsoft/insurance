@@ -22,6 +22,16 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
      */
     private $data = array();
 
+    private function array_group_by(array $arr, callable $key_selector)
+    {
+        $result = array();
+        foreach ($arr as $i) {
+            $key = call_user_func($key_selector, $i);
+            $result[$key][] = $i;
+        }
+        return $result;
+    }
+
     /**
      * To Array
      *
@@ -91,31 +101,324 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
             throw $valid;
         }
 
-        //Сначала заберем обязательные коэфициенты и соберем с ними основную часть WHERE
-        $whereStr =
+        $calcErros = array();
+        $result = array();
+
+        $this->data['Result'] = array(
+            'Coefficients' => array()
+        );
+
+        //Сначала заберем обязательные факторы и основную часть WHERE
+        $bWhere =
             sprintf(
-                'WHERE TS_Group_Id = %s AND Tariff_Program_Id = %s AND Risk_Id = %s AND Damage_Det_Type_Id = %s AND TS_Age = %s',
-                $this->getParam('ts_group_id', self::TYPE_INT),
+                'WHERE tariff_program_id = %u AND risk_id = %u AND tariff_def_damage_type_id = %u AND ts_age = %u',
                 $this->getParam('tariff_program_id', self::TYPE_INT),
                 $this->getParam('risks_id', self::TYPE_INT),
                 $this->getParam('tariff_def_damage_type_id', self::TYPE_INT),
                 $this->getParam('ts_age', self::TYPE_INT)
             );
+        $aWhere =
+            sprintf('
+                 WHERE
+                    (tariff_program_id IS NULL OR tariff_program_id = %u) AND
+                    (risk_id IS NULL OR risk_id = %u) AND
+                    (tariff_def_damage_type_id IS NULL OR tariff_def_damage_type_id = %u) AND
+                    (ts_age IS NULL OR ts_age = %u)',
+                $this->getParam('tariff_program_id', self::TYPE_INT),
+                $this->getParam('risks_id', self::TYPE_INT),
+                $this->getParam('tariff_def_damage_type_id', self::TYPE_INT),
+                $this->getParam('ts_age', self::TYPE_INT)
+            );
+
+
         //Далее берем необязательные и для них добиваем
+        //TODO: Чует мое сердце этот код может быть сгенерен по схеме БД по конвенциям. Но сейчас ВЛОБ
+
+        $where = '';
+
         if (!empty($this->params['ts_sum'])) {
             $sum = $this->getParam('ts_sum', self::TYPE_DOUBLE);
-            $whereStr = $whereStr . sprintf(
-                    ' AND (TS_Sum_Down IS NULL OR TS_Sum_Down<=%u) AND (TS_Sum_Up IS NULL OR TS_Sum_Up>=%u)',
+            $where = sprintf(
+                    ' AND (ts_sum_down IS NULL OR ts_sum_down<=%u) AND (ts_sum_up IS NULL OR ts_sum_up>=%u)',
                     $sum, $sum);
         }
+        else
+            $where = ' AND ts_sum_down IS NULL AND ts_sum_up IS NULL';
+
+        $bWhere = $bWhere.$where;
+
+        if (!empty($this->params['ts_group_id']))
+        {
+            $ts_group_id = $this->getParam('ts_group_id', self::TYPE_INT);
+            $where = sprintf(
+                    ' AND (ts_group_id IS NULL OR ts_group_id=%u)', $ts_group_id);
+        }
+        else
+            $where = ' AND ts_group_id IS NULL';
+
+        $bWhere = $bWhere.$where;
+        $aWhere = $aWhere.$where;
+
+        if (!empty($this->params['ts_type_id']))
+        {
+            $ts_type_id = $this->getParam('ts_type_id', self::TYPE_INT);
+            $where = sprintf(
+                ' AND (ts_type_id IS NULL OR ts_type_id=%u)', $ts_type_id);
+        }
+        else
+            $where = ' AND ts_type_id IS NULL';
+
+        $bWhere = $bWhere.$where;
+        $aWhere = $aWhere.$where;
+
+        if (!empty($this->params['ts_make_id']))
+        {
+            $ts_make_id = $this->getParam('ts_make_id', self::TYPE_INT);
+            $where = sprintf(
+                ' AND (ts_make_id IS NULL OR ts_make_id=%u)', $ts_make_id);
+
+        }
+        else
+            $where = ' AND ts_make_id IS NULL';
+
+        $bWhere = $bWhere.$where;
+        $aWhere = $aWhere.$where;
+
+        if (!empty($this->params['ts_model_id']))
+        {
+            $ts_model_id = $this->getParam('ts_model_id', self::TYPE_INT);
+            $where = sprintf(
+                ' AND (ts_model_id IS NULL OR ts_model_id=%u)', $ts_model_id);
+        }
+        else
+            $where = ' AND ts_model_id IS NULL';
+
+        $bWhere = $bWhere.$where;
+        $aWhere = $aWhere.$where;
+
+        if (!empty($this->params['ts_modification_id']))
+        {
+            $ts_modification_id = $this->getParam('ts_modification_id', self::TYPE_INT);
+            $where = sprintf(
+                ' AND (ts_modification_id IS NULL OR ts_modification_id=%u)', $ts_modification_id);
+        }
+        else
+            $where = ' AND ts_modification_id IS NULL';
+
+        $bWhere = $bWhere.$where;
+        $aWhere = $aWhere.$where;
+
+        if (!empty($this->params['amortisation']))
+        {
+            $amortisation = $this->getParam('amortisation', self::TYPE_BOOL);
+            $where = sprintf(
+                ' AND (amortisation IS NULL OR amortisation=%u)', $amortisation);
+        }
+        else
+            $where = ' AND amortisation IS NULL';
+
+        $bWhere = $bWhere.$where;
+        $aWhere = $aWhere.$where;
+
+        if (!empty($this->params['payments_without_references_id']))
+        {
+            $payments_without_references_id = $this->getParam('payments_without_references_id', self::TYPE_INT);
+            $where = sprintf(
+                ' AND (payments_without_references_id IS NULL OR payments_without_references_id=%u)', $payments_without_references_id);
+        }
+        else
+            $where = ' AND payments_without_references_id IS NULL';
+
+        $aWhere = $aWhere.$where;
+
+        if (!empty($this->params['franchise_type_id']))
+        {
+            $franchise_type_id = $this->getParam('franchise_type_id', self::TYPE_INT);
+            $where = sprintf(
+                    ' AND (franchise_type_id IS NULL OR franchise_type_id=%u)', $franchise_type_id);
+        }
+        else
+            $where = ' AND franchise_type_id IS NULL';
+
+        $aWhere = $aWhere.$where;
+
+
+        if (!empty($this->params['regres_limit_factor_id']))
+        {
+            $regres_limit_factor_id = $this->getParam('regres_limit_factor_id', self::TYPE_INT);
+            $where = sprintf(
+                    ' AND (regres_limit_factor_id IS NULL OR regres_limit_factor_id=%u)', $regres_limit_factor_id);
+        }
+        else
+            $where = ' AND regres_limit_factor_id IS NULL';
+
+        $aWhere = $aWhere.$where;
+
+        if (!empty($this->params['contract_day']))
+        {
+            $contract_day = $this->getParam('contract_day', self::TYPE_INT);
+            $where = sprintf(
+                    ' AND (contract_from_day IS NULL OR contract_from_day<=%u) AND (contract_to_day IS NULL OR contract_to_day>=%u)',  $contract_day, $contract_day);
+        }
+        else
+            $where = ' AND contract_from_day IS NULL AND contract_to_day IS NULL';
+
+        $aWhere = $aWhere.$where;
+
+        if (!empty($this->params['contract_month']))
+        {
+            $contract_month = $this->getParam('contract_month', self::TYPE_INT);
+            $where = sprintf(
+                    ' AND (contract_from_month IS NULL OR contract_from_month<=%u) AND (contract_to_month IS NULL OR contract_to_month>=%u)',  $contract_month,  $contract_month);
+        }
+        else
+            $where = ' AND contract_from_month IS NULL AND contract_from_month IS NULL';
+
+        $aWhere = $aWhere.$where;
+
+        if (!empty($this->params['contract_year']))
+        {
+            $contract_year = $this->getParam('contract_year', self::TYPE_INT);
+            $where = sprintf(
+                    ' AND (contract_from_year IS NULL OR contract_from_year<=%u) AND (contract_to_year IS NULL OR contract_to_year>=%u)',  $contract_year, $contract_year);
+        }
+        else
+            $where = ' AND contract_from_year IS NULL AND contract_to_year IS NULL';
+
+        $aWhere = $aWhere.$where;
+
+        if (!empty($this->params['drivers_count']))
+        {
+            $drivers_count = $this->getParam('drivers_count', self::TYPE_INT);
+            $where = sprintf(
+                    ' AND (drivers_count_down IS NULL OR drivers_count_down<=%u) AND (drivers_count_up IS NULL OR drivers_count_up>=%u)',  $drivers_count, $drivers_count);
+        }
+        else
+            $where = ' AND drivers_count_down IS NULL AND drivers_count_up IS NULL';
+
+        $aWhere = $aWhere.$where;
+
+        if (!empty($this->params['driver_age']))
+        {
+            $driver_age = $this->getParam('driver_age', self::TYPE_INT);
+            $where = sprintf(
+                    ' AND (driver_age_down IS NULL OR driver_age_down<=%u) AND (driver_age_up IS NULL OR driver_age_up>=%u)',  $driver_age, $driver_age);
+        }
+        else
+            $where = ' AND driver_age_down IS NULL AND driver_age_up IS NULL';
+
+        $aWhere = $aWhere.$where;
+
+        if (!empty($this->params['driver_exp']))
+        {
+            $driver_exp = $this->getParam('driver_exp', self::TYPE_INT);
+            $where = sprintf(
+                    ' AND (driver_exp_down IS NULL OR driver_exp_down<=%u) AND (driver_exp_up IS NULL OR driver_exp_up>=%u)',  $driver_exp, $driver_exp);
+        }
+        else
+            $where = ' AND driver_exp_down IS NULL AND driver_exp_up IS NULL';
+
+        $aWhere = $aWhere.$where;
+
+        if (!empty($this->params['franchise_percent']))
+        {
+            $franchise_percent = $this->getParam('franchise_percent', self::TYPE_INT);
+            $where = sprintf(
+                    ' AND (franchise_percent_down IS NULL OR franchise_percent_down<=%u) AND (franchise_percent_up IS NULL OR franchise_percent_up>=%u)',  $franchise_percent, $franchise_percent);
+        }
+        else
+            $where = ' AND franchise_percent_down IS NULL AND franchise_percent_up IS NULL';
+
+        $aWhere = $aWhere.$where;
+
+        if (!empty($this->params['ts_no_defend_flag']))
+        {
+            $ts_no_defend_flag = $this->getParam('ts_no_defend_flag', self::TYPE_BOOL);
+            $where = sprintf(
+                    ' AND (ts_no_defend_flag IS NULL OR ts_no_defend_flag=%u)', $ts_no_defend_flag);
+        }
+        else
+            $where = ' AND ts_no_defend_flag IS NULL';
+
+        $aWhere = $aWhere.$where;
+
+        if (!empty($this->params['ts_satellite_flag']))
+        {
+            $ts_satellite_flag = $this->getParam('ts_satellite_flag', self::TYPE_BOOL);
+            $where = sprintf(
+                    ' AND (ts_satellite_flag IS NULL OR ts_satellite_flag=%u)', $ts_satellite_flag);
+        }
+        else
+            $where = ' AND ts_satellite_flag IS NULL';
+
+        $aWhere = $aWhere.$where;
+
+        if (!empty($this->params['ts_have_electronic_alarm']))
+        {
+            $ts_have_electronic_alarm = $this->getParam('ts_have_electronic_alarm', self::TYPE_BOOL);
+            $where = sprintf(
+                    ' AND (ts_have_electronic_alarm IS NULL OR ts_have_electronic_alarm=%u)', $ts_have_electronic_alarm);
+        }
+        else
+            $where = ' AND ts_have_electronic_alarm IS NULL';
+
+        $aWhere = $aWhere.$where;
+
+        if (!empty($this->params['commercial_carting_flag']))
+        {
+            $commercial_carting_flag = $this->getParam('commercial_carting_flag', self::TYPE_BOOL);
+            $where = sprintf(
+                    ' AND (commercial_carting_flag IS NULL OR commercial_carting_flag=%u)', $commercial_carting_flag);
+        }
+        else
+            $where = ' AND commercial_carting_flag IS NULL';
+
+        $aWhere = $aWhere.$where;
+
+        //Задаваемые нами факторы.
+
+        $is_legal_entity = false;
+            $aWhere = $aWhere.sprintf(
+                    ' AND (is_legal_entity IS NULL OR is_legal_entity=%u)', $is_legal_entity);
+        $is_onetime_payment = true;
+        $aWhere = $aWhere.sprintf(
+                ' AND (is_onetime_payment IS NULL OR is_onetime_payment=%u)', $is_onetime_payment);
+
+        //Фактор парковости
+        $car_quantity = 10;
+        $aWhere = $aWhere.sprintf(
+                ' AND (car_quantity_down IS NULL OR car_quantity_down<=%u) AND (car_quantity_up IS NULL OR car_quantity_up>=%u)',  $car_quantity, $car_quantity);
+
+        //Фактор комиссионного вознаграждения
+        $commission_percent = 0;
+        $aWhere = $aWhere.sprintf(
+                ' AND (commission_percent_down IS NULL OR commission_percent_down<=%u) AND (commission_percent_up IS NULL OR commission_percent_up>=%u)',  $commission_percent, $commission_percent);
 
         $db = Frapi_Database::getInstance();
-        $query = 'SELECT value as base_tariff FROM tariff_coefficients ' . $whereStr;
-        $sth = $db->query($query);
+        $bquery = 'SELECT `value` as base_tariff FROM `tariff_coefficients` '.$bWhere;
+        $aquery = 'SELECT f.`code`, f.`is_mandatory`, f.`default_value`, c.`value` FROM `all_factors` f
+                      LEFT OUTER JOIN
+   	                    (SELECT `factor_id`, `value` FROM `additional_coefficients` '.$aWhere.
+                  ') AS c ON f.`id` = c.`factor_id`';
+
+        $sth = $db->query($bquery);
         $results = $sth->fetch(PDO::FETCH_ASSOC);
         if (!$results || $sth->rowCount() > 1)
-            throw new Frapi_Error('CANT_CALC_BASET');
-        $this->data['Result'] = $results;
+            array_push($calcErros,'base');
+        else
+            array_push($result ,$results);
+
+        $sth = $db->query($aquery);
+        $results = $sth->fetchAll(PDO::FETCH_ASSOC);
+
+        //Группируем по поправочным коэфициентам
+        $grouped = $this->array_group_by($results, function($coef) { return $coef['code']; });
+        //TODO: Сделать проверки и выдачу ошибок и рассчет конечной формулы
+        array_push($result ,$grouped);
+
+        //Выбираем все значения коэфициентов проходящие по выбранным факторам
+        $this->data['Result']['Coefficients'] = $result;
+
         return $this->toArray();
     }
 
