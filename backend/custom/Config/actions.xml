@@ -38,7 +38,7 @@
                     <required>1</required>
                 </parameter>
                 <parameter>
-                    <name>risks_id</name>
+                    <name>risk_id</name>
                     <required>1</required>
                 </parameter>
                 <parameter>

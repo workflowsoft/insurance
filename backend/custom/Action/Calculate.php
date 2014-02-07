@@ -13,7 +13,7 @@
  */
 class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
 {
-    protected $requiredParams = array('tariff_program_id', 'risks_id', 'tariff_def_damage_type_id', 'ts_age');
+    protected $requiredParams = array('tariff_program_id', 'risk_id', 'tariff_def_damage_type_id', 'ts_age');
 
     /**
      * The data container to use in toArray()
@@ -22,12 +22,12 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
      */
     private $data = array();
 
-    private function array_group_by(array $arr, callable $key_selector)
+    private function array_group_by(array $arr, callable $key_selector, callable $value_selector)
     {
         $result = array();
         foreach ($arr as $i) {
             $key = call_user_func($key_selector, $i);
-            $result[$key][] = $i;
+            $result[$key][] = call_user_func($value_selector, $i);
         }
         return $result;
     }
@@ -49,7 +49,7 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
             'ts_modification_id' => $this->getParam('ts_modification_id', self::TYPE_OUTPUT),
             'ts_group_id' => $this->getParam('ts_group_id', self::TYPE_OUTPUT),
             'tariff_program_id' => $this->getParam('tariff_program_id', self::TYPE_OUTPUT),
-            'risks_id' => $this->getParam('risks_id', self::TYPE_OUTPUT),
+            'risk_id' => $this->getParam('risk_id', self::TYPE_OUTPUT),
             'tariff_def_damage_type_id' => $this->getParam('tariff_def_damage_type_id', self::TYPE_OUTPUT),
             'ts_age' => $this->getParam('ts_age', self::TYPE_OUTPUT),
             'ts_sum' => $this->getParam('ts_sum', self::TYPE_OUTPUT),
@@ -113,7 +113,7 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
             sprintf(
                 'WHERE tariff_program_id = %u AND risk_id = %u AND tariff_def_damage_type_id = %u AND ts_age = %u',
                 $this->getParam('tariff_program_id', self::TYPE_INT),
-                $this->getParam('risks_id', self::TYPE_INT),
+                $this->getParam('risk_id', self::TYPE_INT),
                 $this->getParam('tariff_def_damage_type_id', self::TYPE_INT),
                 $this->getParam('ts_age', self::TYPE_INT)
             );
@@ -125,7 +125,7 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
                     (tariff_def_damage_type_id IS NULL OR tariff_def_damage_type_id = %u) AND
                     (ts_age IS NULL OR ts_age = %u)',
                 $this->getParam('tariff_program_id', self::TYPE_INT),
-                $this->getParam('risks_id', self::TYPE_INT),
+                $this->getParam('risk_id', self::TYPE_INT),
                 $this->getParam('tariff_def_damage_type_id', self::TYPE_INT),
                 $this->getParam('ts_age', self::TYPE_INT)
             );
@@ -412,9 +412,41 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
         $results = $sth->fetchAll(PDO::FETCH_ASSOC);
 
         //Группируем по поправочным коэфициентам
-        $grouped = $this->array_group_by($results, function($coef) { return $coef['code']; });
+        $grouped = $this->array_group_by($results,
+            function($coef) { return $coef['code']; },
+            function($coef) use (&$calcErros) {
+                $value = null;
+                if (is_null($coef['value']))
+                {
+                    if ($coef['is_mandatory'] == 0 && !is_null($coef['default_value']))
+                        $value = $coef['default_value'];
+                    else
+                        array_push($calcErros,$coef['code']);
+                }
+                else
+                    $value = $coef['value'];
+                return $value;
+            }
+        );
+
+        $results = array();
+
+        foreach($grouped as $key => $value)
+        {
+           if (count($value)>1)
+           {
+               array_push($results, array($key=>null));
+               array_push($calcErros,$key);
+           }
+           else
+               array_push($results, array($key=>$value[0]));
+        }
+
         //TODO: Сделать проверки и выдачу ошибок и рассчет конечной формулы
-        array_push($result ,$grouped);
+        $result = array_merge($result ,$results);
+
+        //if (count($calcErros))
+        //    throw new Frapi_Exception('CANT_CALC_COEF', join(', ', $calcErros));
 
         //Выбираем все значения коэфициентов проходящие по выбранным факторам
         $this->data['Result']['Coefficients'] = $result;
