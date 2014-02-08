@@ -12,9 +12,9 @@ CREATE TABLE IF NOT EXISTS `all_factors` (
   `description` varchar(50) COLLATE utf8_bin NOT NULL,
   `code` varchar(50) COLLATE utf8_bin NOT NULL,
   `is_mandatory` tinyint(1) DEFAULT '0',
-  `default_value` int(10) DEFAULT '1',
+  `default_value` double DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Таблица списка используемых в формуле РАССЧЕТНЫХ операндов, их обязательность и значение по-умолчанию';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Таблица списка используемых в формуле РАССЧЕТНЫХ операндов, их обязательность и значение по-умолчанию';
 
 -- Тип франшизы
 DROP TABLE IF EXISTS `franchise_type`;
@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS `franchise_type` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(50) COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Тип франшизы';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Тип франшизы';
 
 -- Варианты выплаты без справок
 DROP TABLE IF EXISTS `payments_without_references`;
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `payments_without_references` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(50) COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Варианты выплаты без справок';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Варианты выплаты без справок';
 
 -- Лимит регресного возмещения страховой суммы
 DROP TABLE IF EXISTS `regres_limit`;
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `regres_limit` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(50) COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Лимит регресного возмещения страховой суммы';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Лимит регресного возмещения страховой суммы';
 
 -- Пакеты рисков или конкретные риски
 DROP TABLE IF EXISTS `risks`;
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `risks` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) COLLATE utf8_bin NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Пакеты рисков или конкретные риски';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Пакеты рисков или конкретные риски';
 
 -- Варианты тарифных планов
 DROP TABLE IF EXISTS `tariff_program`;
@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `tariff_program` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(50) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Варианты тарифных планов';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Варианты тарифных планов';
 
 -- Определение размера страхового возмещения
 DROP TABLE IF EXISTS `tariff_def_damage_type`;
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `tariff_def_damage_type` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(128) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Определение размера страхового возмещения';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Определение размера страхового возмещения';
 
 -- Тип ТС
 DROP TABLE IF EXISTS `ts_type`;
@@ -163,9 +163,10 @@ CREATE TABLE IF NOT EXISTS `additional_coefficients` (
   `commission_percent_down` double DEFAULT NULL,
   `is_legal_entity` tinyint(1) DEFAULT NULL,
   `amortisation` bit(1) DEFAULT NULL,
+  `priority` int(10) DEFAULT 0,
   `value` float NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Поправочные коэфициенты с зависимостью от факторов, которые их формируют';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Поправочные коэфициенты с зависимостью от факторов, которые их формируют';
 
 -- Таблица зависимостей базового тарифа от различных факторов
 DROP TABLE IF EXISTS `tariff_coefficients`;
@@ -185,7 +186,7 @@ CREATE TABLE IF NOT EXISTS `tariff_coefficients` (
   `amortisation` bit(1) DEFAULT NULL,
   `value` double NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1802 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Таблица зависимостей базового тарифа от различных факторов';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Таблица зависимостей базового тарифа от различных факторов';
 
 -- Таблица фронтового справочника, длительности договора страховки
 DROP TABLE IF EXISTS `front_contract_duration`;
@@ -196,7 +197,7 @@ CREATE TABLE IF NOT EXISTS `front_contract_duration` (
   `contract_to_months` int(11) DEFAULT NULL,
   `contract_to_years` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Таблица фронтового справочника, длительности договора страховки';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Таблица фронтового справочника, длительности договора страховки';
 
 -- Дамп структуры для таблица ubercalc.front_ldu_quantity
 DROP TABLE IF EXISTS `front_ldu_quantity`;
@@ -205,4 +206,21 @@ CREATE TABLE IF NOT EXISTS `front_ldu_quantity` (
   `name` varchar(50) COLLATE utf8_bin DEFAULT NULL,
   `value` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Количество ЛДУ (лиц допущенных к управлению)';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Количество ЛДУ (лиц допущенных к управлению)';
+
+-- Таблица обязательной зависимости значений одних факторов от значений других факторов
+DROP TABLE IF EXISTS `factor_restricions`;
+CREATE TABLE IF NOT EXISTS `factor_restricions` (
+	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+	`factor_name` varchar(50) NOT NULL COLLATE utf8_bin,
+	`dependent_factor_name` varchar(50) NOT NULL COLLATE utf8_bin,
+	`factor_value_down` double,
+	`factor_value_up` double,
+	`factor_value` varchar(50) NULL COLLATE utf8_bin,
+	`dependent_factor_value` varchar(50) NULL COLLATE utf8_bin,
+	`dependent_factor_down` double,
+	`dependent_factor_up` double,
+	`conditional` bit(1) DEFAULT NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Определение значений одних факторов значеним других на праве перезаписи';
+

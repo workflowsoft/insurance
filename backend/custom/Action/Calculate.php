@@ -450,7 +450,7 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
         if (!$results || $sth->rowCount() > 1)
             array_push($calcErros,'base');
         else
-            array_push($result ,$results);
+            $result = $results;
 
         $sth = $db->query($aquery);
         $results = $sth->fetchAll(PDO::FETCH_ASSOC);
@@ -485,7 +485,7 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
                    $actual_value = $this->getParam('ki_ts', self::TYPE_DOUBLE);
             else
                    $actual_value = $value[0]; //Стоит обратить внимание, что из базы коэфициенты приходят сразу посортированне по приоритету
-            array_push($results, array($key=>$actual_value));
+            $results[$key]=$actual_value;
         }
 
 
@@ -505,7 +505,7 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
             $tariff = 10 * $result['ksd'] * $result['ka'] * $result['kkv'];
 		    $sum = Round($additional_sum * $tariff / 100, 2);
             $dbg = $tariff.': Тариф по доп. оборудованию = 10%. Ксд ='.$result['ksd'].'. Ка='.$result['ka'].'. Ккв='.$result['kkv'].'. Премия по доп. оборудованию = '.$sum;
-            $data['Result']['Additional'] = array(
+            $this->data['Result']['Additional'] = array(
                     'Sum' => $sum,
                     'Dbg' => $dbg
                 );
@@ -520,11 +520,11 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
             $base_tariff = $base_tariff * $multiplier;
         }
         $sum = $this->getParam('ts_sum', self::TYPE_DOUBLE);
-        $data['Result']['Contract'] = array(
+        $this->data['Result']['Contract'] = array(
           'Tariff' => $base_tariff,
           'Sum' => Round($sum * $base_tariff / 100, 2)
         );
-         return $this->toArray();
+        return $this->toArray();
     }
 
     public function executeDocs()
