@@ -13,7 +13,7 @@
  */
 class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
 {
-    protected $requiredParams = array('tariff_program_id', 'risk_id', 'tariff_def_damage_type_id', 'ts_age');
+    protected $requiredParams = array('tariff_program_id', 'risk_id', 'tariff_def_damage_type_id', 'ts_age','payments_without_references_id', 'ts_sum');
 
     /**
      * The data container to use in toArray()
@@ -68,6 +68,7 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
             'ts_have_electronic_alarm' => $this->getParam('ts_have_electronic_alarm', self::TYPE_OUTPUT),
             'franchise_percent' => $this->getParam('franchise_percent', self::TYPE_OUTPUT),
             'commercial_carting_flag' => $this->getParam('commercial_carting_flag', self::TYPE_OUTPUT),
+            'additional_sum' => $this->getParam('additional_sum', self::TYPE_OUTPUT),
         );
         return $this->data;
     }
@@ -100,6 +101,50 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
         if ($valid instanceof Frapi_Error) {
             throw $valid;
         }
+
+        //Сначала надо установить поправки на входные параметры и поругаться, если корректировка не проходит
+        /* При заполнении корректирующих параметров надо учитывать множественное назначение от разных источников
+         * Также стоит учитываеть циклические выставления значений. Пока все тупо.
+         * В цикле просто будут ставиться новые значения, если отрабает условие срабатывания
+         */
+        $correctionQuery = 'SELECT `factor_name` as `source`, `dependent_factor_name` as `name`, `dependent_factor_value` as `value`, `conditional` FROM `factor_restricions` WHERE ';
+        $predicateArray = array();
+        foreach($this->params as $key=>$value)
+        {
+            array_push($predicateArray,
+                '(`factor_name` = \''.$key.'\' AND
+                 (`factor_value` IS NULL OR `factor_value` = '.$value.') AND
+                 (`factor_value_down` IS NULL OR `factor_value_down`<='.$value.') AND
+                 (`factor_value_up` IS NULL OR `factor_value_up`>='.$value.')
+                )'
+            );
+        }
+
+        $correctionQuery = $correctionQuery.join(' OR ', $predicateArray);
+
+        $db = Frapi_Database::getInstance();
+
+        $sth = $db->query($correctionQuery);
+        $corrections = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $correce_errors = array();
+
+        foreach($corrections as $correction)
+        {
+            $cor_value = $correction['value'];
+            if (!is_null($cor_value))
+            {
+                //Осущестляем корректировку
+                $this->params[$correction['name']] = $cor_value;
+            }
+            else
+            {
+                //Ругаемся, что не можем осуществить корректировку
+                array_push($correce_errors, $correction['source'].'=>'.$correction['name']);
+            }
+        }
+
+        if (count($correce_errors))
+            throw new Frapi_Exception('CANT_CORRECE', join(', ', $correce_errors));
 
         $calcErros = array();
         $result = array();
@@ -208,7 +253,7 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
         $bWhere = $bWhere.$where;
         $aWhere = $aWhere.$where;
 
-        if (!empty($this->params['amortisation']))
+        if (isset($this->params['amortisation']))
         {
             $amortisation = $this->getParam('amortisation', self::TYPE_BOOL);
             $where = sprintf(
@@ -394,12 +439,11 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
         $aWhere = $aWhere.sprintf(
                 ' AND (commission_percent_down IS NULL OR commission_percent_down<=%u) AND (commission_percent_up IS NULL OR commission_percent_up>=%u)',  $commission_percent, $commission_percent);
 
-        $db = Frapi_Database::getInstance();
         $bquery = 'SELECT `value` as base_tariff FROM `tariff_coefficients` '.$bWhere;
         $aquery = 'SELECT f.`code`, f.`is_mandatory`, f.`default_value`, c.`value` FROM `all_factors` f
                       LEFT OUTER JOIN
    	                    (SELECT `factor_id`, `value` FROM `additional_coefficients` '.$aWhere.
-                  ') AS c ON f.`id` = c.`factor_id`';
+                  ' ORDER BY `priority` DESC) AS c ON f.`id` = c.`factor_id`';
 
         $sth = $db->query($bquery);
         $results = $sth->fetch(PDO::FETCH_ASSOC);
@@ -431,27 +475,56 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
 
         $results = array();
 
+        //$result = array_merge($result ,$grouped); //Для отладки по выдаче нескольких значений коэфициентов одновременно (отладка приоритета)
+
         foreach($grouped as $key => $value)
         {
-           if (count($value)>1)
-           {
-               array_push($results, array($key=>null));
-               array_push($calcErros,$key);
-           }
-           else
-               array_push($results, array($key=>$value[0]));
+            $actual_value = null;
+            //Нужен небольшой ручной костыль для коэфициента использования ТС. Может вводиться поправками по исходным данным
+            if ($key == 'ki' && isset($this->params['ki_ts']))
+                   $actual_value = $this->getParam('ki_ts', self::TYPE_DOUBLE);
+            else
+                   $actual_value = $value[0]; //Стоит обратить внимание, что из базы коэфициенты приходят сразу посортированне по приоритету
+            array_push($results, array($key=>$actual_value));
         }
 
-        //TODO: Сделать проверки и выдачу ошибок и рассчет конечной формулы
+
         $result = array_merge($result ,$results);
 
-        //if (count($calcErros))
-        //    throw new Frapi_Exception('CANT_CALC_COEF', join(', ', $calcErros));
+        if (count($calcErros))
+            throw new Frapi_Exception('CANT_CALC_COEF', join(', ', $calcErros));
 
         //Выбираем все значения коэфициентов проходящие по выбранным факторам
         $this->data['Result']['Coefficients'] = $result;
 
-        return $this->toArray();
+        //Ну раз не вывалились с концами, то считаем сумму уже
+        if (!empty($this->params['additional_sum']))
+        {
+            //Допоборудование
+            $additional_sum = $this->getParam('additional_sum', self::TYPE_DOUBLE);
+            $tariff = 10 * $result['ksd'] * $result['ka'] * $result['kkv'];
+		    $sum = Round($additional_sum * $tariff / 100, 2);
+            $dbg = $tariff.': Тариф по доп. оборудованию = 10%. Ксд ='.$result['ksd'].'. Ка='.$result['ka'].'. Ккв='.$result['kkv'].'. Премия по доп. оборудованию = '.$sum;
+            $data['Result']['Additional'] = array(
+                    'Sum' => $sum,
+                    'Dbg' => $dbg
+                );
+        }
+        //Основной рассчет. Надо тупо перемножить все коэфициенты :) Получить тариф, умножить на страховую сумму и разделить на 100, магия, чо
+        $base_tariff = 1;
+        foreach ($result as $key=>$multiplier)
+        {
+            //А если это коэф. утраты товарной стоимости, то он почему-то прибавляется. С этим надо бы разобрваться
+            if ($key == 'kuts' && $multiplier>1)
+                $base_tariff = $base_tariff + $multiplier;
+            $base_tariff = $base_tariff * $multiplier;
+        }
+        $sum = $this->getParam('ts_sum', self::TYPE_DOUBLE);
+        $data['Result']['Contract'] = array(
+          'Tariff' => $base_tariff,
+          'Sum' => Round($sum * $base_tariff / 100, 2)
+        );
+         return $this->toArray();
     }
 
     public function executeDocs()
