@@ -25,7 +25,7 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
         'ts_model_id' => self::TYPE_INT,
         'ts_modification_id' => self::TYPE_INT,
         'ts_group_id' => self::TYPE_INT,
-        'damage_det_type_id' => self::TYPE_INT,
+        'tariff_def_damage_type_id' => self::TYPE_INT,
         'ts_age' => self::TYPE_INT,
         'ts_sum' => self::TYPE_DOUBLE,
         'tariff_program_id' => self::TYPE_INT,
@@ -58,7 +58,7 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
         'ts_model_id' => self::TYPE_INT,
         'ts_modification_id' => self::TYPE_INT,
         'ts_group_id' => self::TYPE_INT,
-        'damage_det_type_id' => self::TYPE_INT,
+        'tariff_def_damage_type_id' => self::TYPE_INT,
         'ts_age' => self::TYPE_INT,
         'ts_sum' => self::TYPE_DOUBLE,
         'tariff_program_id' => self::TYPE_INT,
@@ -162,7 +162,10 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
 
             $sth = $db->query($sql);
             if(!$sth) {
-                $this->data['crashed_on'] = $param;
+                $this->data['crashed_on']  = array(
+                    'param' => $param,
+                    'query' => $sql,
+                );
                 return $this->toArray();
             }
             $results = $sth->fetchAll(PDO::FETCH_ASSOC);
