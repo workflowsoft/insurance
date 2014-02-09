@@ -25,29 +25,57 @@ $(function () {
 			}.bind(this);
 
 			// Грузим вьюшки
-			$.get('static/html/common_info.html')
-				.then(function(template) {
-					templateFactory('MainInfoTemplate', {
-						el: 'mainInfo',
-						template: template,
-						data: {
-							groupMembersCount: 5,
-							progressPercent: 45
+
+			// $.get('static/html/common_info.html')
+			// 	.then(function(template) {
+			// 		templateFactory('MainInfoTemplate', {
+			// 			el: 'mainInfo',
+			// 			template: template,
+			// 			data: {
+			// 				groupMembersCount: 5,
+			// 				progressPercent: 45
+			// 			}
+			// 		});
+			// 	})
+			// 	.then(function(){
+			// 		$.get('static/html/calc.html')
+			// 			.then(function(template) {
+			// 				templateFactory('CalcTemplate', {
+			// 					el: 'calc',
+			// 					template: template,
+			// 					data: {}
+			// 				});
+			// 			})
+			// 			.then(function() {
+			// 				this.afterLoad();
+			// 			}.bind(this));
+			$.get('/refrences.json')
+				.then(function(response) {
+
+					templateFactory('CalcTemplate', {
+						el: 'calc',
+						template: '#calcTemplate',
+						data: response,
+						init: function() {
+							console.log(123);
+
+							this.on({bzz: function() {
+								console.log('waka!');
+							}});
 						}
-					});
-				})
-				.then(function(){
-					$.get('static/html/calc.html')
-						.then(function(template) {
-							templateFactory('CalcTemplate', {
-								el: 'calc',
-								template: template,
-								data: {}
-							});
-						})
-						.then(function() {
-							this.afterLoad();
-						}.bind(this));
+					})
+
+					// templateFactory('MainInfoTemplate', {
+					// 	el: 'mainInfo',
+					// 	template: template,
+					// 	data: {
+					// 		groupMembersCount: 5,
+					// 		progressPercent: 45
+					// 	}
+					// });
+				}.bind(this))
+				.then(function() {
+					this.afterLoad();
 				}.bind(this));
 		},
 
@@ -62,10 +90,10 @@ $(function () {
 		// Дата биндинг, обработка событий, вот это вот всё
 		initBindings: function() {
 			// Описываем события Ractivejs вьюшек
-			this.templates.MainInfoTemplate.on({
-				showDatepickerModal: function(event) {
+			// this.templates.MainInfoTemplate.on({
+			// 	showDatepickerModal: function(event) {
 					
-			}});
+			// }});
 
 			this.templates.CalcTemplate.on({
 				processFormData: function(event) {
