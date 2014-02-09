@@ -7,12 +7,12 @@ esurance
 * Развернуть API
 Для этого нужен сервер Apache. Его нужно настроить слушать 2 дополнительных порта, которые будут привязаны к администраторской части API и самому API. 
 Для этого нужно в файлах конфигурации Apache (папка conf, порты могут быть другими, если эти у вас заняты)
-** httpd.conf, добавить
+- httpd.conf, добавить
 ```
 	Listen 91
 	Listen 92
 ```
-** conf/extra/httpd-vhosts.conf добавить
+- conf/extra/httpd-vhosts.conf добавить
 
 ```xml
 <VirtualHost *:91>
@@ -47,7 +47,7 @@ esurance
 ```
 
 * Настроить соединение с БД FRAPI
-** В файле backend\custom\Config\configurations.xml найти соответсвтующие теги и поменять их значения на свои
+- В файле backend\custom\Config\configurations.xml найти соответсвтующие теги и поменять их значения на свои
 ```xml
   <key>db_username</key>
    <value>root</value>
@@ -64,7 +64,7 @@ esurance
  
  *Развернуть БД на своем локальном сервере БД MySql
  Для этого надо последовательно выполнить скрипты:
- ** base_schema.sql
- ** base_tariff_data.sql
- ** references_data.sql
- ** additional_coeff_inserts.sql
+ - base_schema.sql
+ - base_tariff_data.sql
+ - references_data.sql
+ - additional_coeff_inserts.sql
