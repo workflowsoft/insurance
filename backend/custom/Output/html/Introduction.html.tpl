@@ -1,435 +1,230 @@
-<?php
-require_once CUSTOM_LIBRARY . DIRECTORY_SEPARATOR . 'markdown/markdown_extended.php';
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Insurance, bitch!</title>
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,600,700' rel='stylesheet' type='text/css'>
+<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+<link rel="stylesheet" href="static/css/main.css">
+<link rel="stylesheet" href="static/css/bootstrap.min.css">
+<script src="static/js/vendor/modernizr-2.6.2.min.js"></script>
+<script src="static/js/vendor/lodash.min.js"></script>
+<script src="static/js/jquery/jquery-1.9.1.min.js"></script>
+<script src="static/js/vendor/bootstrap.min.js"></script>
+</head>
+<body class="l-body">
+<!--[if lt IE 7]>
+			<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+		<![endif]-->
+<div class="l-wrapper">
+	<div class="b-header">
+		<div class="page-header">
+			<h1>Insurance</h1>
+			<h4><small>Get insured or die trying</small></h4>
+		</div>
+	</div>
+	<div class="l-content">
+		<!-- Контейнер шаблона с общей информацией -->
+		<div id="mainInfo" class="b-main_info">
+		</div>
 
-function _makeAnchor($string)
-{
-    return preg_replace('/[^a-zA-Z0-9_\-]+/', '', $string);
-}
+<script id="calcTemplate" type="ractive">
 
-function _sortActions($a, $b)
-{
-    if ($a['route'] == '/') {
-       return -1;
-    }
-    return ($a['name'] < $b['name']) ? -1 : 1;
-}
+	<h2><small>Калькулятор тарифов по страхованию средств наземного транспорта</small></h2>
+	<form role="form" class="g-clrfix" on-submit="processFormData">
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				<h3 class="panel-title">Сведения о транспортном средстве</h3>
+			</div>
 
-function _sortErrors($a, $b)
-{
-    return ($a['http_code'] . $a['name'] < $b['http_code'] . $b['name']) ? -1 : 1;
-}
+			<div class="panel-body">
+				<div class="form-group g-clrfix">
+					<div class="col-lg-6">
+						<label class=" control-label">Программа страхования</label>
+						<select class="form-control" name="tariff_program">
+							<option disabled selected>Выберите программу</option>
+							{{#tariff_program}}
+								<option value={{id}}>{{name}}</option>
+							{{/tariff_program}}
 
-function _sortOutputs($a, $b)
-{
-    if ($a['default'] == '1') {
-        return -1;
-    }
-    return ($a['name'] < $b['name']) ? -1 : 1;
-}
+						</select>
+					</div>
+					<div class="col-lg-6">
+						<label class=" control-label">Коэффициент срока действия договора</label>
+						<div class="">
+							<select class="form-control" name="front_contract_duration">
+								<option disabled selected>Выберите коэффициент</option>
+								{{#front_contract_duration}}
+								<option value={{id}}>{{name}}</option>
+								{{/front_contract_duration}}
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="form-group g-clrfix">
+					<div class="col-lg-12">
+						<label class=" control-label">Категория ТС</label>
+						<select class="form-control" name="ts_group">
+							<option disabled selected>Выберите категорию</option>
+							{{#ts_group}}
+								<option value={{id}}>{{Name}}</option>
+							{{/ts_group}}
+						</select>
+					</div>
+				</div>
+				<div class="form-group g-clrfix">
+					<div class="col-lg-6">
+						<div class="input-group"><span class="input-group-addon">Срок эксплуатации ТС</span><input type="text" name="expluatation_time" class="form-control"></div>
+					</div>
+					<div class="col-lg-6">
+						<div class="input-group"><span class="input-group-addon">Стоимость ТС</span><input type="text" name="ts_cost" class="form-control"></div>
+					</div>
+				</div>
+				<div class="form-group g-clrfix">
+					<div class="col-lg-6">
+						<label class=" control-label">Набор рисков</label>
+						<select name="risks" class="form-control">
+							{{#risks}}
+								<option value="{{id}}">{{name}}</option>
+							{{/risks}}
+						</select>
+					</div>
+					<div class="col-lg-6">
+						<label class=" control-label">Франшиза</label>
+						<select name="franchise_type" class="form-control">
+							<option value="1">Не выбрано</option>
+							{{#franchise_type}}
+								<option value="{{id}}">{{name}}</option>
+							{{/franchise_type}}
+						</select>
+					</div>
+					<div class="form-group g-clrfix">
+						<div class="col-lg-6">
+							<label class=" control-label">Есть доп.оборудование на сумму</label>
+							<div class="input-group">
+								<span class="input-group-addon">
+								<input name="additional_equip" type="checkbox">
+								</span>
+								<input type="text" disabled class="form-control">
+							</div>
+						 </div>
+					</div>
+					<div class="form-group g-clrfix">
+						<div class="col-lg-4">
+							<label class="checkbox-inline">
+								<input type="checkbox" id="inlineCheckbox1" value="option1">Есть спутниковая поисковая система
+							</label>
+						</div>
+						<div class="col-lg-4">
+							<label class="checkbox-inline">
+								<input type="checkbox" id="inlineCheckbox2" value="option2">Нет противоугонной системы (для грузовиков, автобусов…)
+							</label>
+						</div>
+						<div class="col-lg-4">
+							<label class="checkbox-inline">
+								<input type="checkbox" id="inlineCheckbox3" value="option3">Есть эл. сигнализация с обратной связью
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<h3 class="panel-title">Сведения для рассчёта тарифа</h3>
+				</div>
+				<div class="panel-body">
+					<div class="form-group g-clrfix">
+						<div class="col-lg-6">
+							<label class="checkbox-inline">
+								<input type="checkbox" id="inlineCheckbox3" value="option1">Страхователь — юр.лицо
+							</label>
+						</div>
+					</div>
+					<div class="form-group g-clrfix">
+						<div class="col-lg-6">
+							<label class=" control-label">Количество ЛДУ</label>
+							<select name="lduCount" class="form-control">
+								<option value="1">Без ограничений</option>
+								<option value="2">Не более 3-х водителей</option>
+							</select>
+						</div><!-- /.col-lg-6 -->
+						<div class="col-lg-6">
+							<label class=" control-label">Выплаты без справок</label>
+							<select name="payments_without_references" class="form-control">
+								{{#payments_without_references}}
+									<option value={{id}}>{{name}}</option>
+								{{/payments_without_references}}
+							</select>
+						</div>
+					</div>
+					<div class="form-group g-clrfix">
+						<div class="col-lg-4"><label for="">Возраст водителей(По самому «плохому» показателю)</label><input type="text" class="form-control"></div>
+						<div class="col-lg-4"><label for="">Стаж водителей(По самому «плохому» показателю)</label><input type="text" class="form-control"></div>
+						<div class="col-lg-4"><label for="">Коэффициент исопльзования ТС <br />&nbsp;</label><input type="text" class="form-control"></div>
+						<div class="col-lg-4"><label for="">Коэффициент бонус-малус</label><input type="text" class="form-control"></div>
+						<div class="col-lg-4"><label for="">Дополнительный коэффициент</label><input type="text" class="form-control"></div>
+						<div class="col-lg-4"><label for="">Коэф. страхового продукта</label><input type="text" class="form-control"></div>
+					</div>
+					<div class="form-group g-clrfix">
+						<div class="col-lg-12">
+							<label class=" control-label">Определение размера ущерба</label>
+							<select class="form-control" name="tariff_def_damage_type">
+								{{#tariff_def_damage_type}}
+								<option value={{id}}>{{name}}</option>
+								{{/tariff_def_damage_type}}
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</script>
 
-function _sortMimetypes($a, $b)
-{
-    return ($a['output_format'] < $b['output_format']) ? -1 : 1;
-}
+<div class="b-calc" id="calc">
+	
+</div>
+		
+		<!-- Контейнер шаблона с калькулятором -->
+		<div id="calc2" class="b-calc">
 
-$internal = new Frapi_Internal();
-$actions = $internal->getConfiguration('actions')->getAll('action');
-$errors = $internal->getConfiguration('errors')->getAll('error');
-$outputs = $internal->getConfiguration('outputs')->getAll('output');
-$mimetypes = $internal->getConfiguration('mimetypes')->getAll('mimetype');
+		</div>
+	</div>
+	<div class="b-footer">
+	</div>
+</div>
 
-usort($actions, '_sortActions');
+<div class="b-loader-backdrop">
+	<div class="b-loading"></div>
+</div>
 
-usort($errors, '_sortErrors');
+<!-- Modal -->
+<div class="modal fade" id="datepickerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h4 class="modal-title" id="myModalLabel">Выберите дату</h4>
+			</div>
+			<div class="modal-body">
+			...
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary">OK</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
-usort($outputs, '_sortOutputs');
-
-usort($mimetypes, '_sortMimetypes');
-
-foreach ($mimetypes as $mimetype) {
-    $grouped[$mimetype['output_format']][] = $mimetype['mimetype'];
-}
-
-$mimetypes = $grouped;
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title>API Documentation</title>
-        <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Droid+Sans">
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
-        <style type="text/css">
-            body {
-                font-family: 'Droid Sans', serif;
-                padding-left: 10%;
-                padding-right: 10%;
-            }
-
-            h2 {
-                float: left;
-                margin-top: 1.5em;
-            }
-
-            /**
-            * HTML (admin inline) Documentation
-            *
-            */
-            h3.desc {
-                padding-top: 20px;
-            }
-
-            p.description, div.description {
-                padding: 5px;
-                padding-left:10px;
-                margin-bottom: 10px;
-                font-size: 16px;
-                color: #000;
-            }
-
-            p.error-description, div.error-description {
-                padding: 5px;
-                padding-left:10px;
-                border-left: 3px solid #a41e22;
-                font-size: 16px;
-                color: #000;
-            }
-
-            .doc-subdata{
-                margin-left: 2em;
-            }
-
-            .doc-subdata h2 {
-                float: none;
-            }
-
-            .action, .error {
-                background: #e7f0f7;
-                width: 100%;
-                position: relative;
-            }
-
-            .action .top, .error .top {
-                position: relative;
-                float: left;
-                width: 100%;
-                height: 30px;
-                margin-bottom:25px;
-            }
-
-            .action .top .name, .error .top .name, .mimetype .top .name, .endpoint .top .name {
-                width: 20%;
-                float: left;
-                height: 30px;
-                position: relative;
-                background: #0F6AB4;
-                -webkit-border-radius: 4px 0 0 4px;
-                -moz-border-radius: 4px 0 0 4px;
-                border-radius: 4px 0 0 4px;
-                color: white;
-                text-align: center;
-                padding-top: 12px;
-                cursor: pointer;
-                clear: left;
-            }
-
-            .error .top .name {
-                background: #a41e22;
-            }
-
-            .mimetype .top .name {
-                background: #7d1fff;
-                cursor: auto;
-            }
-
-            .endpoint .top .name {
-                background: #A6A6A6;
-                cursor: auto;
-            }
-
-
-            .action .top .route, .error .top .route, .mimetype .top .route, .endpoint .top .route  {
-                width: 78%;
-                height: 30px;
-                background: #e7f0f7;
-                border: 1px solid #c3d9ec;
-                position: relative;
-                float: left;
-                padding-left: 1%;
-                padding-top: 10px;
-                font-size: 16px;
-                cursor: pointer;
-                -webkit-border-radius: 4px 0 0 4px;
-                -moz-border-radius: 4px 0 0 4px;
-                border-radius: 0 4px 4px 0;
-            }
-
-            .error .top .route {
-                background: #f5e8e8;
-                border: 1px solid #e8c6c7;
-            }
-
-            .mimetype .top .route {
-                background: #e2cfff;
-                border: 1px solid #7d1fff;
-                margin-bottom: 1em;
-                cursor: auto;
-            }
-
-            .endpoint .top .route {
-                background: #e3e3e3;
-                border: 1px solid #A6A6A6;
-                margin-bottom: 1em;
-                cursor: auto;
-            }
-
-            .action .stub{
-                background: #e7f0f7;
-                display: none;
-                position: relative;
-                float: left;
-                border: 1px solid #c3d9ec;
-                width: 98%;
-                padding-left: 10px;
-                margin-top: -15px;
-                margin-bottom:25px;
-            }
-
-            .root .name {
-                background-color: green !important;
-            }
-
-            .root .route, .root .stub {
-                background-color: #ccffcc !important;
-                border-color: #99ff99 !important;
-            }
-
-            .error .stub {
-                background: #f5e8e8;
-                display: none;
-                position: relative;
-                float: left;
-                border: 1px solid #e8c6c7;
-                margin-top: -15px;
-                padding-left: 10px;
-                width: 98%;
-                margin-bottom:25px;
-            }
-
-            .action .stub .doc-subdata {
-                color: #0F6AB4;
-            }
-
-            .error .stub .doc-subdata {
-                color: #a41e22;
-            }
-
-            .doc-table tr th.param-name, .doc-table tr td.param-name {
-                width: 100px;
-                padding: 10px;
-                text-align: center;
-            }
-
-            .action .stub .doc-subdata .doc-table tr th{
-                border-bottom: 2px solid #0F6AB4;
-            }
-
-            .action .stub .doc-subdata .doc-table tr td {
-                border-bottom: 1px solid #0F6AB4;
-            }
-
-            .error .stub .doc-subdata .doc-table tr td {
-                border-bottom: 1px solid #a41e22;
-            }
-
-            .error .stub .doc-subdata .doc-table tr th{
-                border-bottom: 2px solid #a41e22;
-            }
-
-            .doc-table tr th.param-required, .doc-table tr td.param-required {
-                width: 70%;
-                padding: 10px;
-                text-align: center;
-            }
-
-            .doc-table tr td.param-name {
-                color: #000;
-            }
-
-            blockquote {
-                padding-left: 1em;
-                border-left: 3px solid #0F6AB4;
-            }
-        </style>
-    </head>
-    <body>
-        <h1>API Documentation</h1>
-
-        <?php
-        $protocol = !empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off' ? 'https' : 'http';
-        $url = $protocol . '://' .$_SERVER['HTTP_HOST']. '/';
-        ?>
-        <div class="endpoint">
-            <div class="top">
-                <span class="name">Endpoint:</span>
-                <span class="route"><?php echo '<a href="' .$url. '">' .$url. '</a>'; ?></span>
-            </div>
-        </div>
-
-        <?php
-        if (count($actions)) {
-            foreach ($actions as $action) {
-                if ($action['enabled'] != 1) {
-                    continue;
-                }
-
-                $action['route'] = preg_replace('@:([^/]+)@', '<strong>:$1</strong>', $action['route']);
-                ?>
-                <div class="action <?php if ($action['route'] == '/') { echo 'root'; } ?>" hash="<?php echo $action['hash']; ?>">
-                    <div class="top">
-                        <span class="name" hash="<?php echo $action['hash']; ?>"><?php echo $action['name'] ?></span>
-                        <span class="route"><?php echo (isset($action['route']) && $action['route'] != '/') ? $action['route'] : '<em>Click to show</em>'; ?></span>
-                    </div>
-                    <div class="stub" id="action-<?php echo $action['hash']; ?>">
-                        <div class="doc-subdata">
-                            <?php
-                            if (isset($action['parameters']) && !empty($action['parameters']) && count($action['parameters'])) {
-                                ?>
-                                <h3>Parameters</h3>
-                                <table class="doc-table">
-                                    <tr>
-                                        <th class="param-name">Name</th>
-                                        <th class="param-required">Required</th>
-                                    </tr>
-                                    <?php
-                                    foreach ($action['parameters'] as $key => $param) {
-                                        if (is_array($param) && isset($param[0])) {
-                                            foreach ($param as $subkey => $subparam) {
-                                                ?>
-                                                <tr>
-                                                    <td class="param-name"><?php echo $subparam['name'] ?></td>
-                                                    <td class="param-required">
-                                                        <?php
-                                                            echo isset($subparam['required']) && $subparam['required'] == '1'
-                                                                ? '<strong>&#10003;</strong>' : '<strong>&#10007;</strong>'
-                                                        ?>
-                                                    </td>
-                                                </tr>
-                                                <?php
-                                            }
-                                        } else {
-                                        ?>
-                                        <tr>
-                                            <td><?php echo $param['name']; ?></td>
-                                                <td class="param-required">
-                                                    <?php
-                                                        echo isset($param['required']) && $param['required'] == '1'
-                                                        ? '<strong>&#10003;</strong>' : '<strong>&#10007;</strong>'
-                                                    ?>
-                                                </td>
-                                        </tr>
-                                        <?php
-										}
-                                    }
-                                    ?>
-                                </table>
-                                <?php
-                            }
-                            if (!empty($action['description'])) {
-                                ?>
-                                <div class="description"><?php echo MarkdownExtended($action['description']); ?></div>
-                                <?php
-                            } else {
-                                ?>
-                                <h3 class="desc">Description</h3>
-                                <p class="description">This API call has no description :-(</p>
-                                <?php
-                            }
-                            ?>
-                        </div>
-                    </div>
-                </div>
-                <?php
-                if ($action['route'] == '/') {
-                    echo '<h2>Actions</h2>';
-                }
-            }
-        }
-        ?>
-        <h2>Errors</h2>
-        <?php
-        if (!empty($errors)) {
-            foreach ($errors as $error) {
-                ?>
-                <div class="error" hash="<?php echo $error['hash']; ?>">
-                    <div class="top">
-                        <span class="name" hash="<?php echo $error['hash']; ?>"><?php echo ((!is_null($error['http_code']))?($error['http_code']):('400'))?></span>
-                        <span class="route"><?php echo $error['name']; ?></span>
-                    </div>
-                    <div class="stub" id="error-<?php echo $error['hash']; ?>">
-                        <div class="doc-subdata">
-                            <?php
-                            if (!empty($error['description'])) {
-                                ?>
-                                <h3>Description</h3>
-                                <div class="error-description"><?php echo MarkdownExtended($error['description']) ?></div>
-                                <?php
-                            }
-                            ?>
-                            <h3>Error Message</h3>
-                            <p class="error-description">
-                                <?php echo $error['message']; ?>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <?php
-            }
-        }
-        ?>
-
-        <h2>Output Formats / Mimetypes</h2>
-        <?php
-        if (count($mimetypes)) {
-            foreach ($mimetypes as $format => $mimetype) {
-                ?>
-                <div class="mimetype">
-                    <div class="top">
-                        <span class="name"><?php echo $format; ?></span>
-                        <span class="route"><?php echo implode('<strong> | </strong>', $mimetype); ?></span>
-                    </div>
-                </div>
-                <?php
-            }
-        } else {
-            ?>
-            <p>There is currently no mimetypes.</p>
-            <?php
-        }
-        ?>
-
-        <script type="text/javascript" charset="utf-8">
-            $(document).ready(function() {
-                $('.action .name').live('click', function() {
-                    var hash = $(this).attr('hash');
-                    $('#action-' + hash).slideToggle();
-                });
-
-                $('.action .route').live('click', function() {
-                    var hash = $(this).parent().find('.name').attr('hash');
-                    $('#action-' + hash).slideToggle();
-                });
-
-                $('.error .name').live('click', function() {
-                    var hash = $(this).attr('hash');
-                    $('#error-' + hash).slideToggle();
-                });
-
-                $('.error .route').live('click', function() {
-                    var hash = $(this).parent().find('.name').attr('hash');
-                    $('#error-' + hash).slideToggle();
-                });
-            });
-        </script>
-    </body>
+<script src="static/js/core/Ractive.js"></script>
+<script src="static/js/main.js"></script>
+</body>
 </html>
