@@ -25,7 +25,7 @@ $(function () {
 			}.bind(this);
 
 			// Грузим вьюшки
-			$.get('html/common_info.html')
+			$.get('static/html/common_info.html')
 				.then(function(template) {
 					templateFactory('MainInfoTemplate', {
 						el: 'mainInfo',
@@ -37,7 +37,7 @@ $(function () {
 					});
 				})
 				.then(function(){
-					$.get('html/calc.html')
+					$.get('static/html/calc.html')
 						.then(function(template) {
 							templateFactory('CalcTemplate', {
 								el: 'calc',

@@ -21,37 +21,37 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
 
     private $dependences = array(
         // kuts
-        16 => array('amortisation',),
+        1 => array('amortisation',),
         // kf
-        17 => array('tariff_program_id', 'franchise_type_id', 'franchise_percent_up', 'franchise_percent_down', 'commercial_carting_flag',),
+        2 => array('tariff_program_id', 'franchise_type_id', 'franchise_percent_up', 'franchise_percent_down', 'commercial_carting_flag',),
         // kvs
-        18 => array('driver_age_down', 'driver_age_up', 'driver_exp_down', 'driver_exp_up', 'is_legal_entity',),
+        3 => array('driver_age_down', 'driver_age_up', 'driver_exp_down', 'driver_exp_up', 'is_legal_entity',),
         // kl
-        19 => array('drivers_count_up', 'drivers_count_down', 'driver_age_down', 'is_legal_entity',),
+        4 => array('drivers_count_up', 'drivers_count_down', 'driver_age_down', 'is_legal_entity',),
         // kp
-        20 => array('car_quantity_down', 'car_quantity_up',),
+        5 => array('car_quantity_down', 'car_quantity_up',),
         // ksd
-        21 => array('tariff_program_id', 'contract_from_day', 'contract_to_day', 'contract_from_month', 'contract_to_month',),
+        6 => array('tariff_program_id', 'contract_from_day', 'contract_to_day', 'contract_from_month', 'contract_to_month',),
         // kps
-        22 => array('ts_no_defend_flag', 'ts_satellite_flag', 'ts_have_electronic_alarm',),
+        7 => array('ts_no_defend_flag', 'ts_satellite_flag', 'ts_have_electronic_alarm',),
         // kkv
-        23 => array('commission_percent_up', 'commission_percent_down',),
+        8 => array('commission_percent_up', 'commission_percent_down',),
         // ko
-        24 => array('is_onetime_payment',),
+        9 => array('is_onetime_payment',),
         // klv
-        25 => array('tariff_program_id', 'regres_limit_factor_id',),
+        10 => array('tariff_program_id', 'regres_limit_factor_id',),
         // kctoa
-        26 => array('tariff_program_id', 'regres_limit_factor_id', 'tariff_def_damage_type_id',),
+        11 => array('tariff_program_id', 'regres_limit_factor_id', 'tariff_def_damage_type_id',),
         // vbs
-        27 => array('tariff_program_id', 'payments_without_references_id',),
+        12 => array('tariff_program_id', 'payments_without_references_id',),
         // ksp
-        28 => array(),
+        13 => array(),
         // ki
-        29 => array(),
+        14 => array(),
         // kbm
-        30 => array(),
+        15 => array(),
         // ka
-        31 => array(),
+        16 => array(),
     );
 
 

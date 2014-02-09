@@ -1,2 +1,5 @@
 RewriteEngine On
+RewriteRule / static/index.html [QSA,NC,L]
+RewriteRule ^$ static/index.html [QSA,NC,L]
+RewriteRule ^.*index\.html$ static/index.html [QSA,NC,L]
 RewriteRule ^.*$ index.php [QSA,NC,L]
