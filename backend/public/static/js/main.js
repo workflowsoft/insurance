@@ -37,21 +37,8 @@ $(function () {
 			// 			}
 			// 		});
 			// 	})
-			// 	.then(function(){
-			// 		$.get('static/html/calc.html')
-			// 			.then(function(template) {
-			// 				templateFactory('CalcTemplate', {
-			// 					el: 'calc',
-			// 					template: template,
-			// 					data: {}
-			// 				});
-			// 			})
-			// 			.then(function() {
-			// 				this.afterLoad();
-			// 			}.bind(this));
 			$.get('/references')
 				.then(function(response) {
-
 					templateFactory('CalcTemplate', {
 						el: 'calc',
 						template: '#calcTemplate',
@@ -96,12 +83,21 @@ $(function () {
 			// }});
 
 			this.templates.CalcTemplate.on({
+				// Обработчик, срабатывающий при изменении любого контрола в калькуляторе
 				processFormData: function(event) {
-					event.original.preventDefault();
 
+					return false;
+				},
+				getTotal: function(event) {
+					$.get('/calculate/v1', {
+						data: this.data.calculate
+					});
+
+					event.original.preventDefault();
 					return false;
 				}
 			})
+
 		}
 	}
 
