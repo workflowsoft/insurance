@@ -49,7 +49,7 @@ $(function () {
 			// 			.then(function() {
 			// 				this.afterLoad();
 			// 			}.bind(this));
-			$.get('/refrences.json')
+			$.get('/references')
 				.then(function(response) {
 
 					templateFactory('CalcTemplate', {
