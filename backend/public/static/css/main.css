@@ -217,12 +217,13 @@ body {
   left: 0;
   height: 100%;
   width: 100%;
+  z-index: 16;
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=40);
   opacity: 0.4;
   background: #005BA3;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/static\/styles\/_loader\.scss}line{font-family:\0000311}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/static\/styles\/_loader\.scss}line{font-family:\0000312}}
 .b-loading {
   position: relative;
   left: 50%;
@@ -235,7 +236,7 @@ body {
   border: 10px solid #19bee1;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/static\/styles\/_loader\.scss}line{font-family:\0000323}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/static\/styles\/_loader\.scss}line{font-family:\0000324}}
 .b-loading:after {
   content: '';
   background: trasparent;
@@ -249,29 +250,42 @@ body {
   box-shadow: rgba(255, 255, 255, 0.6) -4px -5px 3px -3px;
   animation: rotate 2s infinite linear;
   -webkit-animation: rotate 2s infinite linear;
+  -moz-animation: rotate 2s infinite linear;
 }
 
 @keyframes rotate {
-  /* line 39, ../styles/_loader.scss */
+  /* line 41, ../styles/_loader.scss */
   0% {
     transform: rotateZ(0deg);
   }
 
-  /* line 42, ../styles/_loader.scss */
+  /* line 44, ../styles/_loader.scss */
   100% {
     transform: rotateZ(360deg);
   }
 }
 
 @-webkit-keyframes rotate {
-  /* line 48, ../styles/_loader.scss */
+  /* line 50, ../styles/_loader.scss */
   0% {
     -webkit-transform: rotateZ(0deg);
   }
 
-  /* line 51, ../styles/_loader.scss */
+  /* line 53, ../styles/_loader.scss */
   100% {
     -webkit-transform: rotateZ(360deg);
+  }
+}
+
+@-moz-keyframes rotate {
+  /* line 59, ../styles/_loader.scss */
+  0% {
+    -moz-transform: rotateZ(0deg);
+  }
+
+  /* line 62, ../styles/_loader.scss */
+  100% {
+    -moz-transform: rotateZ(360deg);
   }
 }
 
