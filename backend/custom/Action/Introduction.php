@@ -60,6 +60,7 @@ class Action_Introduction extends Frapi_Action implements Frapi_Action_Interface
      */
     public function executeGet()
     {
+        $this->data=['lalalal'];
         return $this->toArray();
     }
 
