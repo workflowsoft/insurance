@@ -4,6 +4,7 @@
 	left: 0;
 	height: 100%;
 	width: 100%;
+	z-index: 16;
 	@include opacity(.4);
 	background: #005BA3;
 }
@@ -33,6 +34,7 @@
 	box-shadow: rgba(255, 255, 255, 0.6) -4px -5px 3px -3px;
 	animation: rotate 2s infinite linear;
 	-webkit-animation: rotate 2s infinite linear;
+	-moz-animation: rotate 2s infinite linear;
 }
 
 @keyframes rotate {
@@ -45,10 +47,19 @@
 }
 
 @-webkit-keyframes rotate {
-  0% {
-    -webkit-transform: rotateZ(0deg);
-  }
-  100% {
-    -webkit-transform: rotateZ(360deg);
-  }
+	0% {
+		-webkit-transform: rotateZ(0deg);
+	}
+	100% {
+		-webkit-transform: rotateZ(360deg);
+	}
+}
+
+@-moz-keyframes rotate {
+	0% {
+		-moz-transform: rotateZ(0deg);
+	}
+	100% {
+		-moz-transform: rotateZ(360deg);
+	}
 }

@@ -9,7 +9,7 @@
  * @author Frapi <frapi@getfrapi.com>
  * @link /
  */
-class Action_Introduction extends Frapi_Action implements Frapi_Action_Interface
+class Action_Doc extends Frapi_Action implements Frapi_Action_Interface
 {
 
     /**

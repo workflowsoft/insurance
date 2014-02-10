@@ -25,29 +25,44 @@ $(function () {
 			}.bind(this);
 
 			// Грузим вьюшки
-			$.get('static/html/common_info.html')
-				.then(function(template) {
-					templateFactory('MainInfoTemplate', {
-						el: 'mainInfo',
-						template: template,
-						data: {
-							groupMembersCount: 5,
-							progressPercent: 45
+
+			// $.get('static/html/common_info.html')
+			// 	.then(function(template) {
+			// 		templateFactory('MainInfoTemplate', {
+			// 			el: 'mainInfo',
+			// 			template: template,
+			// 			data: {
+			// 				groupMembersCount: 5,
+			// 				progressPercent: 45
+			// 			}
+			// 		});
+			// 	})
+			$.get('/references')
+				.then(function(response) {
+					templateFactory('CalcTemplate', {
+						el: 'calc',
+						template: '#calcTemplate',
+						data: response,
+						init: function() {
+							console.log(123);
+
+							this.on({bzz: function() {
+								console.log('waka!');
+							}});
 						}
-					});
-				})
-				.then(function(){
-					$.get('static/html/calc.html')
-						.then(function(template) {
-							templateFactory('CalcTemplate', {
-								el: 'calc',
-								template: template,
-								data: {}
-							});
-						})
-						.then(function() {
-							this.afterLoad();
-						}.bind(this));
+					})
+
+					// templateFactory('MainInfoTemplate', {
+					// 	el: 'mainInfo',
+					// 	template: template,
+					// 	data: {
+					// 		groupMembersCount: 5,
+					// 		progressPercent: 45
+					// 	}
+					// });
+				}.bind(this))
+				.then(function() {
+					this.afterLoad();
 				}.bind(this));
 		},
 
@@ -62,18 +77,27 @@ $(function () {
 		// Дата биндинг, обработка событий, вот это вот всё
 		initBindings: function() {
 			// Описываем события Ractivejs вьюшек
-			this.templates.MainInfoTemplate.on({
-				showDatepickerModal: function(event) {
+			// this.templates.MainInfoTemplate.on({
+			// 	showDatepickerModal: function(event) {
 					
-			}});
+			// }});
 
 			this.templates.CalcTemplate.on({
+				// Обработчик, срабатывающий при изменении любого контрола в калькуляторе
 				processFormData: function(event) {
-					event.original.preventDefault();
 
+					return false;
+				},
+				getTotal: function(event) {
+					$.get('/calculate/v1', {
+						data: this.data.calculate
+					});
+
+					event.original.preventDefault();
 					return false;
 				}
 			})
+
 		}
 	}
 
