@@ -104,23 +104,38 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
 
 
     private $_parameters_additional = array(
-        'payments_without_references_id' => self::TYPE_INT,
+        /*is in basis*/
+        'amortisation' => self::TYPE_INT,
+        /*is basis*/
+        'tariff_program_id' => self::TYPE_INT,
         'franchise_type_id' => self::TYPE_INT,
-        'contract_day' => self::TYPE_INT,
-        'contract_month' => self::TYPE_INT,
-        'contract_year' => self::TYPE_INT,
-        'drivers_count' => self::TYPE_INT,
+        /*up down*/
+        'franchise_percent' => self::TYPE_DOUBLE,
+        'commercial_carting_flag' => self::TYPE_INT,
+        /*up down*/
         'driver_age' => self::TYPE_INT,
+        /*up down*/
         'driver_exp' => self::TYPE_INT,
+        'is_legal_entity' => self::TYPE_INT,
+        /*up down*/
+        'drivers_count' => self::TYPE_INT,
+        'is_legal_entity' => self::TYPE_INT,
+        /*up down*/
+        'car_quantity' => self::TYPE_INT,
+        /*up down*/
+        'contract_day' => self::TYPE_INT,
+        /*up down*/
+        'contract_month' => self::TYPE_INT,
         'ts_no_defend_flag' => self::TYPE_INT,
         'ts_satellite_flag' => self::TYPE_INT,
         'ts_have_electronic_alarm' => self::TYPE_INT,
-        'is_onetime_payment' => self::TYPE_INT,
-        'car_quantity' => self::TYPE_INT,
-        'franchise_percent' => self::TYPE_DOUBLE,
-        'commercial_carting_flag' => self::TYPE_INT,
+        /*up down*/
         'commission_percent' => self::TYPE_INT,
-        'is_legal_entity' => self::TYPE_INT,
+        'is_onetime_payment' => self::TYPE_INT,
+        /*is in basis*/
+        'tariff_def_damage_type_id' => self::TYPE_INT,
+        'regres_limit_factor_type_id' => self::TYPE_INT,
+        'payments_without_references_id' => self::TYPE_INT,
     );
 
     /**
@@ -215,6 +230,14 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
 
         }
         $this->data = $validation;
+
+        // additional coefficient validation
+//        if(isset($this->getParam('tariff_program_id'))) {
+//
+//        }
+
+
+
         return $this->toArray();
 
     }
