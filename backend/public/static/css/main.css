@@ -1,3 +1,8 @@
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/blocks\/\*\.png}line{font-family:\0000342}}
+.blocks-sprite {
+  background: url('../img/blocks-s7d29a9affd.png') no-repeat;
+}
+
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_reset\.scss}line{font-family:\000039}}
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -160,24 +165,46 @@ body {
 }
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_blocks\.scss}line{font-family:\000033}}
+.l-body {
+  background-image: url(../img/blocks/white_wall_hash.png);
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_blocks\.scss}line{font-family:\000037}}
+.l-content {
+  background: #fff;
+  padding-bottom: 20px;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_blocks\.scss}line{font-family:\0000312}}
 .l-wrapper {
   width: 960px;
   position: relative;
-  margin: 0 auto;
-  -webkit-box-shadow: 0 0 4px 0 #aeaeae;
-  -moz-box-shadow: 0 0 4px 0 #aeaeae;
-  box-shadow: 0 0 4px 0 #aeaeae;
+  margin: 12px auto;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -o-border-radius: 8px;
+  border-radius: 8px;
+  -webkit-box-shadow: 0 0 4px 0 #451f6f;
+  -moz-box-shadow: 0 0 4px 0 #451f6f;
+  box-shadow: 0 0 4px 0 #451f6f;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_blocks\.scss}line{font-family:\0000311}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_blocks\.scss}line{font-family:\0000322}}
 .col-lg-6 {
   margin-bottom: 8px;
 }
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_header\.scss}line{font-family:\000031}}
 .b-header {
+  font-family: Helvetica;
   position: relative;
   padding: 2px 16px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -o-border-radius: 8px;
+  border-radius: 8px;
   background-color: #f0f8ff;
   *zoom: 1;
   filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFF0F8FF', endColorstr='#FFFFFFFF');
@@ -187,12 +214,12 @@ body {
   background-image: -o-linear-gradient(top, #f0f8ff 0%, #ffffff 100%);
   background-image: linear-gradient(top, #f0f8ff 0%, #ffffff 100%);
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_header\.scss}line{font-family:\000039}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_header\.scss}line{font-family:\0000311}}
 .b-header .page-header {
   margin: 0px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_header\.scss}line{font-family:\0000317}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_header\.scss}line{font-family:\0000319}}
 .b-header-ingroup_info {
   position: relative;
   margin: 8px 0;
@@ -291,7 +318,7 @@ body {
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_main_info\.scss}line{font-family:\000031}}
 .b-main_info {
-  padding: 16px;
+  padding: 2px 16px;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_main_info\.scss}line{font-family:\000034}}
 .b-main_info .carousel-control {

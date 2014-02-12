@@ -1,11 +1,22 @@
 $dark-blue: #31708F;
 
+.l-body {
+	background-image: url(../img/blocks/white_wall_hash.png);
+}
+
+.l-content {
+	background: #fff;
+	padding-bottom: 20px;
+}
+
 .l-wrapper {
 	width: 960px;
 	position: relative;
-	margin: 0 auto;
+	margin: 12px auto;
 
-	@include box-shadow(0 0 4px 0 #aeaeae);
+	@include border-radius(8px);
+
+	@include box-shadow(0 0 4px 0 #451F6F);
 }
 
 .col-lg-6 {
