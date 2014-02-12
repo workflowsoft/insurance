@@ -105,29 +105,29 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
 
     private $_parameters_additional = array(
         /*is in basis*/
-        'amortisation' => array('type' => self::TYPE_INT, ),
+        'amortisation' => array('type' => self::TYPE_INT,),
         /*is basis*/
-        'tariff_program_id' => array('type' => self::TYPE_INT, ),
-        'franchise_type_id' => array('type' => self::TYPE_INT, ),
-        'franchise_percent' => array('type' => self::TYPE_DOUBLE,  'fork' => true, ),
-        'commercial_carting_flag' => array('type' => self::TYPE_INT, ),
-        'driver_age' => array('type' => self::TYPE_INT,  'fork' => true, ),
-        'driver_exp' => array('type' => self::TYPE_INT,  'fork' => true, ),
-        'is_legal_entity' => array('type' => self::TYPE_INT, ),
-        'drivers_count' => array('type' => self::TYPE_INT, 'fork' => true, ),
-        'is_legal_entity' => array('type' => self::TYPE_INT, ),
-        'car_quantity' => array('type' => self::TYPE_INT, 'fork' => true, ),
-        'contract_day' => array('type' => self::TYPE_INT, 'fork' => true, ),
-        'contract_month' => array('type' => self::TYPE_INT, 'fork' => true, ),
-        'ts_no_defend_flag' => array('type' => self::TYPE_INT, ),
-        'ts_satellite_flag' => array('type' => self::TYPE_INT, ),
-        'ts_have_electronic_alarm' => array('type' => self::TYPE_INT, ),
-        'commission_percent' => array('type' => self::TYPE_INT, 'fork' => true, ),
-        'is_onetime_payment' => array('type' => self::TYPE_INT, ),
+        'tariff_program_id' => array('type' => self::TYPE_INT,),
+        'franchise_type_id' => array('type' => self::TYPE_INT,),
+        'franchise_percent' => array('type' => self::TYPE_DOUBLE, 'fork' => true,),
+        'commercial_carting_flag' => array('type' => self::TYPE_INT,),
+        'driver_age' => array('type' => self::TYPE_INT, 'fork' => true,),
+        'driver_exp' => array('type' => self::TYPE_INT, 'fork' => true,),
+        'is_legal_entity' => array('type' => self::TYPE_INT,),
+        'drivers_count' => array('type' => self::TYPE_INT, 'fork' => true,),
+        'is_legal_entity' => array('type' => self::TYPE_INT,),
+        'car_quantity' => array('type' => self::TYPE_INT, 'fork' => true,),
+        'contract_day' => array('type' => self::TYPE_INT, 'fork' => true,),
+        'contract_month' => array('type' => self::TYPE_INT, 'fork' => true,),
+        'ts_no_defend_flag' => array('type' => self::TYPE_INT,),
+        'ts_satellite_flag' => array('type' => self::TYPE_INT,),
+        'ts_have_electronic_alarm' => array('type' => self::TYPE_INT,),
+        'commission_percent' => array('type' => self::TYPE_INT, 'fork' => true,),
+        'is_onetime_payment' => array('type' => self::TYPE_INT,),
         /*is in basis*/
-        'tariff_def_damage_type_id' => array('type' => self::TYPE_INT, ),
-        'regres_limit_factor_type_id' => array('type' => self::TYPE_INT, ),
-        'payments_without_references_id' => array('type' => self::TYPE_INT, ),
+        'tariff_def_damage_type_id' => array('type' => self::TYPE_INT,),
+        'regres_limit_factor_type_id' => array('type' => self::TYPE_INT,),
+        'payments_without_references_id' => array('type' => self::TYPE_INT,),
     );
 
 
@@ -178,7 +178,8 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
 
     }
 
-    private function _validateBase() {
+    private function _validateBase()
+    {
         //Вытщим то, что пришло с фронта
         $parameters_known = array();
         $parameters_to_validate = array();
@@ -224,7 +225,12 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
                 throw new Frapi_Error('CANT_CALC_BASET');
             }
             foreach ($results as $value) {
-                $validation[$param][] = $value[$param];
+                $param_to_front = preg_replace('/_id$/u', '', $param);
+                if (empty($value[$param])) {
+                    $validation[$param_to_front] = array();
+                } else {
+                    $validation[$param_to_front][] = $value[$param];
+                };
             }
 
         }
@@ -233,7 +239,8 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
 
     }
 
-    private function _validateAdditional() {
+    private function _validateAdditional()
+    {
         $parameters_known = array();
         $parameters_to_validate = array();
         foreach ($this->_parameters_additional as $key => $type) {
