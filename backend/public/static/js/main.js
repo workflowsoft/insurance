@@ -74,9 +74,9 @@ $(function () {
 			this.templates.CalcTemplate.on({
 				// Обработчик, срабатывающий при изменении любого контрола в калькуляторе
 				processFormData: function(event) {					
-					$.get('/validate', {
-						data: this.data.calculate
-					}).then(function(response) {
+					$.get('/validate',
+						this.data.calculate
+					).then(function(response) {
 						this.set(insurance.preprocessResponseData(response));
 					}.bind(this));
 
@@ -89,13 +89,14 @@ $(function () {
 					// Заполняем необходимые поля наллами даже если пользователь их не указал.
 					for (var i = 0, l = requiredFields.length; i < l; i++) {
 						if (!data.hasOwnProperty(requiredFields[i])) {
-							data[requiredFields[i]] = null;
+							data[requiredFields[i]] = 1;
 						}
 					}
 
-					$.get('/calculate/v1', {
-						data: data
-					}).then(function(response) {
+                    console.log(data);
+					$.get('/calculate/v1',
+						data
+					).then(function(response) {
 						
 					}.bind(this));
 

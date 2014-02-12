@@ -225,7 +225,8 @@ class Frapi_Action
      *
      * If they are not, uhoh! Return a new error.
      *
-     * @param  Array   $requiredParameters An array of the required params
+     * @param  Array $requiredParameters An array of the required params
+     * @throws Frapi_Action_Exception
      * @return Mixed   Either an ErrorContext with missing param or true
      */
     protected function hasRequiredParameters($requiredParameters)
