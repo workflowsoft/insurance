@@ -97,10 +97,7 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
      */
     public function executeGet()
     {
-        $valid = $this->hasRequiredParameters($this->requiredParams);
-        if ($valid instanceof Frapi_Error) {
-            throw $valid;
-        }
+        $this->hasRequiredParameters($this->requiredParams);
 
         //Сначала надо установить поправки на входные параметры и поругаться, если корректировка не проходит
         /* При заполнении корректирующих параметров надо учитывать множественное назначение от разных источников
@@ -126,7 +123,7 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
 
         $sth = $db->query($correctionQuery);
         $corrections = $sth->fetchAll(PDO::FETCH_ASSOC);
-        $correce_errors = array();
+        $correct_errors = array();
 
         foreach($corrections as $correction)
         {
@@ -139,12 +136,12 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
             else
             {
                 //Ругаемся, что не можем осуществить корректировку
-                array_push($correce_errors, $correction['source'].'=>'.$correction['name']);
+                array_push($correct_errors, $correction['source'].'=>'.$correction['name']);
             }
         }
 
-        if (count($correce_errors))
-            throw new Frapi_Exception('CANT_CORRECE', join(', ', $correce_errors));
+        if (count($correct_errors))
+            throw new Frapi_Exception('CANT_CORRECT', join(', ', $correct_errors));
 
         $calcErros = array();
         $result = array();
