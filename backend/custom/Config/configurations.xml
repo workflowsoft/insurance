@@ -11,7 +11,7 @@
   </configuration>
   <configuration>
    <key>db_password</key>
-   <value>root</value>
+   <value>mysql12345</value>
   </configuration>
   <configuration>
    <key>db_database</key>
