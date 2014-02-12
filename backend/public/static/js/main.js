@@ -93,7 +93,7 @@ $(function () {
 						}
 					}
 
-					$.get('/calculate', {
+					$.get('/calculate/v1', {
 						data: data
 					}).then(function(response) {
 						
