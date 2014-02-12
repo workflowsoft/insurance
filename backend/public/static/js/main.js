@@ -8,6 +8,14 @@ $(function () {
 		// сюда складываем объекты Ractivejs темплейт
 		templates: {},
 
+		preprocessResponseData: function(data) {
+			_.each(data, function(item, key) {
+				_.isArray(item) && !item.length && (data[key] = false);
+			});
+
+			return data;
+		},
+
 		// Заводим инстансы Ractive.js
 		processTemplates: function () {
 			// Фабрика, создающая вьюшки. В options необходимо передать el и template
@@ -24,21 +32,10 @@ $(function () {
 
 			}.bind(this);
 
-			// Грузим вьюшки
-
-			// $.get('static/html/common_info.html')
-			// 	.then(function(template) {
-			// 		templateFactory('MainInfoTemplate', {
-			// 			el: 'mainInfo',
-			// 			template: template,
-			// 			data: {
-			// 				groupMembersCount: 5,
-			// 				progressPercent: 45
-			// 			}
-			// 		});
-			// 	})
 			$.get('/references')
 				.then(function(response) {
+					response = this.preprocessResponseData(response);
+
 					templateFactory('CalcTemplate', {
 						el: 'calc',
 						template: '#calcTemplate',
@@ -52,14 +49,6 @@ $(function () {
 						}
 					})
 
-					// templateFactory('MainInfoTemplate', {
-					// 	el: 'mainInfo',
-					// 	template: template,
-					// 	data: {
-					// 		groupMembersCount: 5,
-					// 		progressPercent: 45
-					// 	}
-					// });
 				}.bind(this))
 				.then(function() {
 					this.afterLoad();
@@ -84,14 +73,31 @@ $(function () {
 
 			this.templates.CalcTemplate.on({
 				// Обработчик, срабатывающий при изменении любого контрола в калькуляторе
-				processFormData: function(event) {
+				processFormData: function(event) {					
+					$.get('/validate', {
+						data: this.data.calculate
+					}).then(function(response) {
+						this.set(insurance.preprocessResponseData(response));
+					}.bind(this));
 
 					return false;
 				},
 				getTotal: function(event) {
-					$.get('/calculate/v1', {
-						data: this.data.calculate
-					});
+					var requiredFields = ['tariff_program_id', 'risk_id', 'tariff_def_damage_type_id', 'ts_age','payments_without_references_id', 'ts_sum'],
+						data = this.data.calculate || {};
+
+					// Заполняем необходимые поля наллами даже если пользователь их не указал.
+					for (var i = 0, l = requiredFields.length; i < l; i++) {
+						if (!data.hasOwnProperty(requiredFields[i])) {
+							data[requiredFields[i]] = null;
+						}
+					}
+
+					$.get('/calculate', {
+						data: data
+					}).then(function(response) {
+						
+					}.bind(this));
 
 					event.original.preventDefault();
 					return false;

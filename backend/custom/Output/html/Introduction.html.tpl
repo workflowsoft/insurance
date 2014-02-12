@@ -39,7 +39,7 @@
 <script id="calcTemplate" type="ractive">
 
 	<h2><small>Калькулятор тарифов по страхованию средств наземного транспорта</small></h2>
-	<form role="form" class="g-clrfix" on-submit="getTotal" on-change="processFormData">
+	<form id="calcForm" role="form" class="g-clrfix" on-submit="getTotal" on-change="processFormData">
 		<div class="panel panel-info">
 			<div class="panel-heading">
 				<h3 class="panel-title">Сведения о транспортном средстве</h3>
@@ -49,7 +49,7 @@
 				<div class="form-group g-clrfix">
 					<div class="col-lg-6">
 						<label class=" control-label">Тип транспортного средства</label>
-						<select class="form-control" name="ts_type_id" value={{calculate.ts_type_id}}>
+						<select class="form-control" disabled={{!ts_type}} name="ts_type_id" value={{calculate.ts_type_id}}>
 							<option disabled selected>Выберите тип ТС</option>
 							{{#ts_type}}
 								<option value={{id}}>{{name}}</option>
@@ -59,7 +59,7 @@
 					</div>
 					<div class="col-lg-6">
 						<label class=" control-label">Марка транспортного средства</label>
-						<select class="form-control" name="ts_make_id" value={{calculate.ts_make_id}}>
+						<select disabled={{!ts_make}} class="form-control" name="ts_make_id" value={{calculate.ts_make_id}}>
 							<option disabled selected>Выберите марку ТС</option>
 							{{#ts_make}}
 								<option value={{id}}>{{name}}</option>
@@ -68,7 +68,7 @@
 					</div>
 					<div class="col-lg-6">
 						<label class=" control-label">Модель транспортного средства</label>
-						<select class="form-control" name="ts_model_id" value={{calculate.ts_model_id}}>
+						<select disabled={{!ts_model}} class="form-control" name="ts_model_id" value={{calculate.ts_model_id}}>
 							<option disabled selected>Выберите модель ТС</option>
 							{{#ts_model}}
 								<option value={{id}}>{{name}}</option>
@@ -77,8 +77,8 @@
 					</div>
 					<div class="col-lg-6">
 						<label class=" control-label">Модификация транспортного средства</label>
-						<select class="form-control" name="ts_modification_id" value={{calculate.ts_modification_id}}>
-							<option disabled selected>Выберите модель ТС</option>
+						<select disabled={{!ts_modification}} class="form-control" name="ts_modification_id" value={{calculate.ts_modification_id}}>
+							<option disabled selected>Выберите модификацию ТС</option>
 							{{#ts_modification}}
 								<option value={{id}}>{{name}}</option>
 							{{/ts_modification}}
@@ -86,7 +86,7 @@
 					</div>
 					<div class="col-lg-6">
 						<label class=" control-label">Программа страхования</label>
-						<select class="form-control" name="tariff_program_id" value={{calculate.tariff_program_id}}>
+						<select disabled={{!tariff_program}} class="form-control" name="tariff_program_id" value={{calculate.tariff_program_id}}>
 							<option disabled selected>Выберите программу</option>
 							{{#tariff_program}}
 								<option value={{id}}>{{name}}</option>
@@ -95,21 +95,20 @@
 						</select>
 					</div>
 					<div class="col-lg-6">
-						<label class=" control-label">Коэффициент срока действия договора</label>
-						<div class="">
-							<select class="form-control" name="front_contract_duration">
-								<option disabled selected>Выберите коэффициент</option>
-								{{#front_contract_duration}}
+						<label class=" control-label">Тип возмещения</label>
+						<select disabled={{!tariff_def_damage_type}} class="form-control" name="tariff_def_damage_type_id" value={{calculate.tariff_def_damage_type_id}}>
+							<option disabled selected>Выберите тип возмещения</option>
+							{{#tariff_def_damage_type}}
 								<option value={{id}}>{{name}}</option>
-								{{/front_contract_duration}}
-							</select>
-						</div>
+							{{/tariff_def_damage_type}}
+
+						</select>
 					</div>
 				</div>
 				<div class="form-group g-clrfix">
 					<div class="col-lg-12">
 						<label class=" control-label">Категория ТС</label>
-						<select class="form-control" name="ts_group_id">
+						<select disabled={{!ts_group}} class="form-control" value={{calculate.ts_group_id}}> name="ts_group_id">
 							<option disabled selected>Выберите категорию</option>
 							{{#ts_group}}
 								<option value={{id}}>{{Name}}</option>
@@ -119,106 +118,123 @@
 				</div>
 				<div class="form-group g-clrfix">
 					<div class="col-lg-6">
-						<div class="input-group"><span class="input-group-addon">Срок эксплуатации ТС</span><input type="text" name="expluatation_time" class="form-control"></div>
+						<div class="input-group"><span class="input-group-addon">Срок эксплуатации ТС</span><input value={{calculate.ts_age}} type="text" name="ts_age" class="form-control"></div>
 					</div>
 					<div class="col-lg-6">
-						<div class="input-group"><span class="input-group-addon">Стоимость ТС</span><input type="text" name="ts_cost" class="form-control"></div>
+						<div class="input-group"><span class="input-group-addon">Стоимость ТС</span><input value={{calculate.ts_sum}} type="text" name="ts_sum" class="form-control"></div>
 					</div>
 				</div>
 				<div class="form-group g-clrfix">
 					<div class="col-lg-6">
 						<label class=" control-label">Набор рисков</label>
-						<select name="risks" class="form-control">
+						<select disabled={{!risks}} name="ts_risk_id" value={{calculate.ts_risk_id}} class="form-control">
 							{{#risks}}
 								<option value="{{id}}">{{name}}</option>
 							{{/risks}}
 						</select>
 					</div>
 					<div class="col-lg-6">
-						<label class=" control-label">Франшиза</label>
-						<select name="franchise_type" class="form-control">
-							<option value="1">Не выбрано</option>
-							{{#franchise_type}}
-								<option value="{{id}}">{{name}}</option>
-							{{/franchise_type}}
+					<label class=" control-label">Есть доп.оборудование на сумму</label>
+						<div class="input-group">
+							<span class="input-group-addon">
+							<input name="additional_equip" checked={{additional.equip}} type="checkbox">
+							</span>
+							<input type="text" disabled="{{!additional.equip}}" class="form-control" />
+						</div>
+						
+					</div>
+					<div class="form-group g-clrfix">
+						<div class="col-lg-6">
+							<label class=" control-label">Франшиза</label>
+							<select disabled={{!franchise_type}} name="ts_franchise_type_id" value={{calculate.ts_franchise_type_id}} class="form-control">
+								<option value="1">Не выбрано</option>
+								{{#franchise_type}}
+									<option value="{{id}}">{{name}}</option>
+								{{/franchise_type}}
+							</select>
+						 </div>
+						 <div class="col-lg-6">
+							<label for="">Процент от страховой суммы</label><input type="text" value="{{calculate.franchise_percent}}" class="form-control"></div>
+						</div>
+
+					</div>
+					<div class="form-group g-clrfix">
+						<div class="col-lg-3">
+							<label class="checkbox-inline">
+								<input type="checkbox" id="inlineCheckbox1" checked="{{calculate.ts_satellite_flag}}">Есть спутниковая поисковая система
+							</label>
+						</div>
+						<div class="col-lg-3">
+							<label class="checkbox-inline">
+								<input type="checkbox" id="inlineCheckbox2" checked="{{calculate.ts_no_defend_flag}}">Нет противоугонной системы (для грузовиков, автобусов…)
+							</label>
+						</div>
+						<div class="col-lg-3">
+							<label class="checkbox-inline">
+								<input type="checkbox"  id="inlineCheckbox3" checked="{{calculate.ts_have_electronic_alarm}}">Есть эл. сигнализация с обратной связью
+							</label>
+						</div>
+						<div class="col-lg-3">
+							<label class="checkbox-inline">
+								<input type="checkbox"  id="inlineCheckbox3" checked="{{calculate.amortisation}}">Учёт амортизации (для тарифа УНИВЕРСАЛ)
+							</label>
+						</div>
+					</div>
+				</div>
+			
+		</div>
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				<h3 class="panel-title">Сведения для рассчёта тарифа</h3>
+			</div>
+			<div class="panel-body">
+				<div class="form-group g-clrfix">
+					<div class="col-lg-6">
+						<label class="checkbox-inline">
+							<input type="checkbox" checked={{calculate.commercial_carting_flag}}>ТС сдаётся в прокат
+						</label>
+					</div>
+				</div>
+				<div class="form-group g-clrfix">
+					<div class="col-lg-6">
+						<label class="control-label">Количество ЛДУ</label>
+						<input name="drivers_count" type="text" value="{{calculate.drivers_count}}" class="form-control">
+					</div><!-- /.col-lg-6 -->
+					<div class="col-lg-6">
+						<label class=" control-label">Выплаты без справок</label>
+						<select name="payments_without_references" class="form-control">
+							{{#payments_without_references}}
+								<option value={{id}}>{{name}}</option>
+							{{/payments_without_references}}
 						</select>
 					</div>
-					<div class="form-group g-clrfix">
-						<div class="col-lg-6">
-							<label class=" control-label">Есть доп.оборудование на сумму</label>
-							<div class="input-group">
-								<span class="input-group-addon">
-								<input name="additional_equip" type="checkbox">
-								</span>
-								<input type="text" disabled class="form-control">
-							</div>
-						 </div>
-					</div>
-					<div class="form-group g-clrfix">
-						<div class="col-lg-4">
-							<label class="checkbox-inline">
-								<input type="checkbox" id="inlineCheckbox1" value="option1">Есть спутниковая поисковая система
-							</label>
-						</div>
-						<div class="col-lg-4">
-							<label class="checkbox-inline">
-								<input type="checkbox" id="inlineCheckbox2" value="option2">Нет противоугонной системы (для грузовиков, автобусов…)
-							</label>
-						</div>
-						<div class="col-lg-4">
-							<label class="checkbox-inline">
-								<input type="checkbox" id="inlineCheckbox3" value="option3">Есть эл. сигнализация с обратной связью
-							</label>
-						</div>
-					</div>
 				</div>
-			</div>
-			<div class="panel panel-info">
-				<div class="panel-heading">
-					<h3 class="panel-title">Сведения для рассчёта тарифа</h3>
+				<div class="form-group g-clrfix">
+					<div class="col-lg-4">
+					<label for="contract_day">День</label>
+							<input name="contract_day" type="text" value="{{calculate.contract_day}}" class="form-control">
+						</div>
+						<div class="col-lg-4">
+							<label for="contract_month">Месяц</label>
+							<input value="{{calculate.contract_month}}" name="contract_month" type="text" class="form-control">
+						</div>
+						<div class="col-lg-4">
+							<label for="contract_year">Год</label>
+							<input type="text" name="contract_year" value="{{calculate.contract_year}}" class="form-control">
+						</div>
+
+					<div class="col-lg-4"><label for="">Возраст водителей(По самому «плохому» показателю)</label><input type="text" value="{{calculate.driver_age}}" class="form-control"></div>
+					<div class="col-lg-4"><label for="">Стаж водителей(По самому «плохому» показателю)</label><input type="text" value="{{calculate.driver_exp}}" class="form-control"></div>
+					<div class="col-lg-4"><label for="additional_sum">Стоимость доп.оборудования<br />&nbsp;</label><input value="{{calculate.additional_sum}}" name="additional_sum" type="text" class="form-control"></div>
 				</div>
-				<div class="panel-body">
-					<div class="form-group g-clrfix">
-						<div class="col-lg-6">
-							<label class="checkbox-inline">
-								<input type="checkbox" id="inlineCheckbox3" value="option1">Страхователь — юр.лицо
-							</label>
-						</div>
-					</div>
-					<div class="form-group g-clrfix">
-						<div class="col-lg-6">
-							<label class=" control-label">Количество ЛДУ</label>
-							<select name="lduCount" class="form-control">
-								<option value="1">Без ограничений</option>
-								<option value="2">Не более 3-х водителей</option>
-							</select>
-						</div><!-- /.col-lg-6 -->
-						<div class="col-lg-6">
-							<label class=" control-label">Выплаты без справок</label>
-							<select name="payments_without_references" class="form-control">
-								{{#payments_without_references}}
-									<option value={{id}}>{{name}}</option>
-								{{/payments_without_references}}
-							</select>
-						</div>
-					</div>
-					<div class="form-group g-clrfix">
-						<div class="col-lg-4"><label for="">Возраст водителей(По самому «плохому» показателю)</label><input type="text" class="form-control"></div>
-						<div class="col-lg-4"><label for="">Стаж водителей(По самому «плохому» показателю)</label><input type="text" class="form-control"></div>
-						<div class="col-lg-4"><label for="">Коэффициент исопльзования ТС <br />&nbsp;</label><input type="text" class="form-control"></div>
-						<div class="col-lg-4"><label for="">Коэффициент бонус-малус</label><input type="text" class="form-control"></div>
-						<div class="col-lg-4"><label for="">Дополнительный коэффициент</label><input type="text" class="form-control"></div>
-						<div class="col-lg-4"><label for="">Коэф. страхового продукта</label><input type="text" class="form-control"></div>
-					</div>
-					<div class="form-group g-clrfix">
-						<div class="col-lg-12">
-							<label class=" control-label">Определение размера ущерба</label>
-							<select class="form-control" name="tariff_def_damage_type">
-								{{#tariff_def_damage_type}}
-								<option value={{id}}>{{name}}</option>
-								{{/tariff_def_damage_type}}
-							</select>
-						</div>
+				<div class="form-group g-clrfix">
+					<div class="col-lg-12">
+						<label class=" control-label">Тип возмещения</label>
+						<select class="form-control" value="{{calculate.regres_limit_id}}" name="regres_limit_id">
+							{{#regres_limit}}
+							<option value={{id}}>{{name}}</option>
+							{{/regres_limit}}
+						</select>
 					</div>
 				</div>
 			</div>
