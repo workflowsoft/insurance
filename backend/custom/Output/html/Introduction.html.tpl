@@ -39,7 +39,7 @@
 <script id="calcTemplate" type="ractive">
 
 	<h2><small>Калькулятор тарифов по страхованию средств наземного транспорта</small></h2>
-	<form role="form" class="g-clrfix" on-submit="processFormData">
+	<form role="form" class="g-clrfix" on-submit="getTotal" on-change="processFormData">
 		<div class="panel panel-info">
 			<div class="panel-heading">
 				<h3 class="panel-title">Сведения о транспортном средстве</h3>
@@ -48,8 +48,45 @@
 			<div class="panel-body">
 				<div class="form-group g-clrfix">
 					<div class="col-lg-6">
+						<label class=" control-label">Тип транспортного средства</label>
+						<select class="form-control" name="ts_type_id" value={{calculate.ts_type_id}}>
+							<option disabled selected>Выберите тип ТС</option>
+							{{#ts_type}}
+								<option value={{id}}>{{name}}</option>
+							{{/ts_type}}
+
+						</select>
+					</div>
+					<div class="col-lg-6">
+						<label class=" control-label">Марка транспортного средства</label>
+						<select class="form-control" name="ts_make_id" value={{calculate.ts_make_id}}>
+							<option disabled selected>Выберите марку ТС</option>
+							{{#ts_make}}
+								<option value={{id}}>{{name}}</option>
+							{{/ts_make}}
+						</select>
+					</div>
+					<div class="col-lg-6">
+						<label class=" control-label">Модель транспортного средства</label>
+						<select class="form-control" name="ts_model_id" value={{calculate.ts_model_id}}>
+							<option disabled selected>Выберите модель ТС</option>
+							{{#ts_model}}
+								<option value={{id}}>{{name}}</option>
+							{{/ts_model}}
+						</select>
+					</div>
+					<div class="col-lg-6">
+						<label class=" control-label">Модификация транспортного средства</label>
+						<select class="form-control" name="ts_modification_id" value={{calculate.ts_modification_id}}>
+							<option disabled selected>Выберите модель ТС</option>
+							{{#ts_modification}}
+								<option value={{id}}>{{name}}</option>
+							{{/ts_modification}}
+						</select>
+					</div>
+					<div class="col-lg-6">
 						<label class=" control-label">Программа страхования</label>
-						<select class="form-control" name="tariff_program">
+						<select class="form-control" name="tariff_program_id" value={{calculate.tariff_program_id}}>
 							<option disabled selected>Выберите программу</option>
 							{{#tariff_program}}
 								<option value={{id}}>{{name}}</option>
@@ -72,7 +109,7 @@
 				<div class="form-group g-clrfix">
 					<div class="col-lg-12">
 						<label class=" control-label">Категория ТС</label>
-						<select class="form-control" name="ts_group">
+						<select class="form-control" name="ts_group_id">
 							<option disabled selected>Выберите категорию</option>
 							{{#ts_group}}
 								<option value={{id}}>{{Name}}</option>
@@ -186,6 +223,7 @@
 				</div>
 			</div>
 		</div>
+		<button type="submit" class="btn btn-lg btn-info pull-right">Рассчитать</button>
 	</form>
 </script>
 
