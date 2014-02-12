@@ -89,9 +89,9 @@ $(function () {
 
                     insurance.toggleLoader(true);
 
-                    $.get('/validate', {
-                        data: this.data.calculate
-                    }).then(function(response) {
+                    $.get('/validate',
+                        this.data.calculate
+                    ).then(function(response) {
                             this.set(self.preprocessResponseData(response));
                             self.toggleLoader(false);
                         }.bind(this));
@@ -109,9 +109,9 @@ $(function () {
                         }
                     }
 
-                    $.get('/calculate/v1', {
-                        data: data
-                    }).then(function(response) {
+                    $.get('/calculate/v1',
+                        data
+                    ).then(function(response) {
 
                         }.bind(this));
 
