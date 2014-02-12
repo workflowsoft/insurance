@@ -134,54 +134,54 @@
 						</select>
 					</div>
 					<div class="col-lg-6">
-					<label class=" control-label">Есть доп.оборудование на сумму</label>
+						<label class=" control-label">Есть доп.оборудование на сумму</label>
 						<div class="input-group">
 							<span class="input-group-addon">
 							<input name="additional_equip" checked={{additional.equip}} type="checkbox">
 							</span>
 							<input type="text" disabled="{{!additional.equip}}" class="form-control" />
 						</div>
-						
-					</div>
-					<div class="form-group g-clrfix">
-						<div class="col-lg-6">
-							<label class=" control-label">Франшиза</label>
-							<select disabled={{!franchise_type}} name="ts_franchise_type_id" value={{calculate.ts_franchise_type_id}} class="form-control">
-								<option value="1">Не выбрано</option>
-								{{#franchise_type}}
-									<option value="{{id}}">{{name}}</option>
-								{{/franchise_type}}
-							</select>
-						 </div>
-						 <div class="col-lg-6">
-							<label for="">Процент от страховой суммы</label><input type="text" value="{{calculate.franchise_percent}}" class="form-control"></div>
-						</div>
-
-					</div>
-					<div class="form-group g-clrfix">
-						<div class="col-lg-3">
-							<label class="checkbox-inline">
-								<input type="checkbox" id="inlineCheckbox1" checked="{{calculate.ts_satellite_flag}}">Есть спутниковая поисковая система
-							</label>
-						</div>
-						<div class="col-lg-3">
-							<label class="checkbox-inline">
-								<input type="checkbox" id="inlineCheckbox2" checked="{{calculate.ts_no_defend_flag}}">Нет противоугонной системы (для грузовиков, автобусов…)
-							</label>
-						</div>
-						<div class="col-lg-3">
-							<label class="checkbox-inline">
-								<input type="checkbox"  id="inlineCheckbox3" checked="{{calculate.ts_have_electronic_alarm}}">Есть эл. сигнализация с обратной связью
-							</label>
-						</div>
-						<div class="col-lg-3">
-							<label class="checkbox-inline">
-								<input type="checkbox"  id="inlineCheckbox3" checked="{{calculate.amortisation}}">Учёт амортизации (для тарифа УНИВЕРСАЛ)
-							</label>
-						</div>
 					</div>
 				</div>
-			
+				<div class="form-group g-clrfix">
+					<div class="col-lg-6">
+						<label class=" control-label">Франшиза</label>
+						<select disabled={{!franchise_type}} name="ts_franchise_type_id" value={{calculate.ts_franchise_type_id}} class="form-control">
+							<option value="1">Не выбрано</option>
+							{{#franchise_type}}
+								<option value="{{id}}">{{name}}</option>
+							{{/franchise_type}}
+						</select>
+					 </div>
+					 <div class="col-lg-6">
+						<label for="">Процент от страховой суммы</label>
+						<input type="text" value="{{calculate.franchise_percent}}" class="form-control">
+					</div>
+				</div>
+
+				<div class="form-group g-clrfix">
+					<div class="col-lg-3">
+						<label class="checkbox-inline">
+							<input type="checkbox" id="inlineCheckbox1" checked="{{calculate.ts_satellite_flag}}">Есть спутниковая поисковая система
+						</label>
+					</div>
+					<div class="col-lg-3">
+						<label class="checkbox-inline">
+							<input type="checkbox" id="inlineCheckbox2" checked="{{calculate.ts_no_defend_flag}}">Нет противоугонной системы (для грузовиков, автобусов…)
+						</label>
+					</div>
+					<div class="col-lg-3">
+						<label class="checkbox-inline">
+							<input type="checkbox"  id="inlineCheckbox3" checked="{{calculate.ts_have_electronic_alarm}}">Есть эл. сигнализация с обратной связью
+						</label>
+					</div>
+					<div class="col-lg-3">
+						<label class="checkbox-inline">
+							<input type="checkbox"  id="inlineCheckbox3" checked="{{calculate.amortisation}}">Учёт амортизации (для тарифа УНИВЕРСАЛ)
+						</label>
+					</div>
+				</div>
+			</div>
 		</div>
 		<div class="panel panel-info">
 			<div class="panel-heading">
@@ -223,9 +223,18 @@
 							<input type="text" name="contract_year" value="{{calculate.contract_year}}" class="form-control">
 						</div>
 
-					<div class="col-lg-4"><label for="">Возраст водителей(По самому «плохому» показателю)</label><input type="text" value="{{calculate.driver_age}}" class="form-control"></div>
-					<div class="col-lg-4"><label for="">Стаж водителей(По самому «плохому» показателю)</label><input type="text" value="{{calculate.driver_exp}}" class="form-control"></div>
-					<div class="col-lg-4"><label for="additional_sum">Стоимость доп.оборудования<br />&nbsp;</label><input value="{{calculate.additional_sum}}" name="additional_sum" type="text" class="form-control"></div>
+					<div class="col-lg-4">
+						<label for="">Возраст водителей(По самому «плохому» показателю)</label>
+						<input type="text" value="{{calculate.driver_age}}" class="form-control">
+					</div>
+					<div class="col-lg-4">
+						<label for="">Стаж водителей(По самому «плохому» показателю)</label>
+						<input type="text" value="{{calculate.driver_exp}}" class="form-control">
+					</div>
+					<div class="col-lg-4">
+						<label for="additional_sum">Стоимость доп.оборудования<br />&nbsp;</label>
+						<input value="{{calculate.additional_sum}}" name="additional_sum" type="text" class="form-control">
+					</div>
 				</div>
 				<div class="form-group g-clrfix">
 					<div class="col-lg-12">

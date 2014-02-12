@@ -8,14 +8,6 @@ $(function () {
 		// сюда складываем объекты Ractivejs темплейт
 		templates: {},
 
-		preprocessResponseData: function(data) {
-			_.each(data, function(item, key) {
-				_.isArray(item) && !item.length && (data[key] = false);
-			});
-
-			return data;
-		},
-
 		toggleLoader: function (toggle) {
 			toggle = toggle || false;
 
@@ -67,6 +59,14 @@ $(function () {
 			this.toggleLoader(false);
 
 			this.initBindings();
+		},
+
+		preprocessResponseData: function(data) {
+			_.each(data, function(item, key) {
+				_.isArray(item) && !item.length && (data[key] = false);
+			});
+
+			return data;
 		},
 
 		// Дата биндинг, обработка событий, вот это вот всё
