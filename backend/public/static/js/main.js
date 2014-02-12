@@ -16,6 +16,14 @@ $(function () {
 			return data;
 		},
 
+		toggleLoader: function (toggle) {
+			toggle = toggle || false;
+
+			var loader = $('.b-loader-backdrop');
+
+			loader.toggle(toggle);
+		},
+
 		// Заводим инстансы Ractive.js
 		processTemplates: function () {
 			// Фабрика, создающая вьюшки. В options необходимо передать el и template
@@ -56,9 +64,7 @@ $(function () {
 		},
 
 		afterLoad: function() {
-			var loader = $('.b-loader-backdrop');
-
-			loader.hide();
+			this.toggleLoader(false);
 
 			this.initBindings();
 		},
@@ -73,11 +79,21 @@ $(function () {
 
 			this.templates.CalcTemplate.on({
 				// Обработчик, срабатывающий при изменении любого контрола в калькуляторе
-				processFormData: function(event) {					
+				processFormData: function(event) {
+					var excludes = ['additional_equip'],
+						self = insurance;
+
+					if (excludes.indexOf(event.original.target.name) != -1) {
+						return;
+					}
+
+					insurance.toggleLoader(true);
+
 					$.get('/validate', {
 						data: this.data.calculate
 					}).then(function(response) {
-						this.set(insurance.preprocessResponseData(response));
+						this.set(self.preprocessResponseData(response));
+						self.toggleLoader(false);
 					}.bind(this));
 
 					return false;
@@ -96,7 +112,7 @@ $(function () {
 					$.get('/calculate', {
 						data: data
 					}).then(function(response) {
-						
+
 					}.bind(this));
 
 					event.original.preventDefault();
