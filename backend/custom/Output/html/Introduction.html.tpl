@@ -127,7 +127,7 @@
 				<div class="form-group g-clrfix">
 					<div class="col-lg-6">
 						<label class=" control-label">Набор рисков</label>
-						<select disabled={{!risks}} name="ts_risk_id" value={{calculate.ts_risk_id}} class="form-control">
+						<select disabled={{!risks}} name="risk_id" value={{calculate.risk_id}} class="form-control">
 							{{#risks}}
 								<option value="{{id}}">{{name}}</option>
 							{{/risks}}
@@ -146,7 +146,7 @@
 				<div class="form-group g-clrfix">
 					<div class="col-lg-6">
 						<label class=" control-label">Франшиза</label>
-						<select disabled={{!franchise_type}} name="ts_franchise_type_id" value={{calculate.ts_franchise_type_id}} class="form-control">
+						<select disabled={{!franchise_type}} name="franchise_type_id" value={{calculate.franchise_type_id}} class="form-control">
 							<option value="1">Не выбрано</option>
 							{{#franchise_type}}
 								<option value="{{id}}">{{name}}</option>
@@ -202,7 +202,7 @@
 					</div><!-- /.col-lg-6 -->
 					<div class="col-lg-6">
 						<label class=" control-label">Выплаты без справок</label>
-						<select name="payments_without_references" class="form-control">
+						<select name="payments_without_references_id" value={{calculate.payments_without_references_id}} class="form-control">
 							{{#payments_without_references}}
 								<option value={{id}}>{{name}}</option>
 							{{/payments_without_references}}
@@ -239,7 +239,7 @@
 				<div class="form-group g-clrfix">
 					<div class="col-lg-12">
 						<label class=" control-label">Тип возмещения</label>
-						<select class="form-control" value="{{calculate.regres_limit_id}}" name="regres_limit_id">
+						<select class="form-control" value="{{calculate.regres_limit_factor_id}}" name="regres_limit_factor_id">
 							{{#regres_limit}}
 							<option value={{id}}>{{name}}</option>
 							{{/regres_limit}}
@@ -248,7 +248,13 @@
 				</div>
 			</div>
 		</div>
-		<button type="submit" class="btn btn-lg btn-info pull-right">Рассчитать</button>
+		
+		{{^additional.submitReady}}
+			<button type="submit" disabled  class="btn btn-lg btn-default pull-right">Рассчитать</button>
+		{{/additional.submitReady}}
+		{{#additional.submitReady}}
+			<button type="submit"  class="btn btn-lg btn-info pull-right">Рассчитать</button>
+		{{/additional.submitReady}}
 	</form>
 </script>
 

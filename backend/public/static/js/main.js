@@ -81,33 +81,39 @@ $(function () {
 				// Обработчик, срабатывающий при изменении любого контрола в калькуляторе
 				processFormData: function(event) {
 					var excludes = ['additional_equip'],
-						self = insurance;
+						requiredFields = ['tariff_program_id', 'risk_id', 'tariff_def_damage_type_id', 'ts_age','payments_without_references_id', 'ts_sum'],
+						self = insurance,
+						data = this.data.calculate || {};
 
 					if (excludes.indexOf(event.original.target.name) != -1) {
 						return;
 					}
 
-					insurance.toggleLoader(true);
+					// Заполняем необходимые поля наллами даже если пользователь их не указал.
+					for (var i = 0, l = requiredFields.length; i < l; i++) {
+						var currentRequiredField = requiredFields[i];
 
-					$.get('/validate',
-						this.data.calculate
-					).then(function(response) {
-						this.set(self.preprocessResponseData(response));
-						self.toggleLoader(false);
-					}.bind(this));
+						if (!data.hasOwnProperty(currentRequiredField)) {							
+							return;
+						} else {
+							this.set('additional.submitReady', true);
+						}
+					}
+
+					// insurance.toggleLoader(true);
+
+					// $.get('/validate',
+					// 	this.data.calculate
+					// ).then(function(response) {
+					// 	this.set(self.preprocessResponseData(response));
+					// 	self.toggleLoader(false);
+					// }.bind(this));
 
 					return false;
 				},
 				getTotal: function(event) {
-					var requiredFields = ['tariff_program_id', 'risk_id', 'tariff_def_damage_type_id', 'ts_age','payments_without_references_id', 'ts_sum'],
-						data = this.data.calculate || {};
-
-					// Заполняем необходимые поля наллами даже если пользователь их не указал.
-					for (var i = 0, l = requiredFields.length; i < l; i++) {
-						if (!data.hasOwnProperty(requiredFields[i])) {
-							data[requiredFields[i]] = null;
-						}
-					}
+					var data = this.data.calculate || {},
+						submitReady = false;
 
 					$.get('/calculate/v1',
 						data
