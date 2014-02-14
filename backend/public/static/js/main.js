@@ -83,23 +83,24 @@ $(function () {
 					var excludes = ['additional_equip'],
 						requiredFields = ['tariff_program_id', 'risk_id', 'tariff_def_damage_type_id', 'ts_age','payments_without_references_id', 'ts_sum'],
 						self = insurance,
-						data = this.data.calculate || {};
+						data = this.data.calculate || {},
+						submitReady;
 
 					if (excludes.indexOf(event.original.target.name) != -1) {
 						return;
 					}
 
-					// Заполняем необходимые поля наллами даже если пользователь их не указал.
 					for (var i = 0, l = requiredFields.length; i < l; i++) {
 						var currentRequiredField = requiredFields[i];
 
-						if (!data.hasOwnProperty(currentRequiredField)) {							
-							return;
-						} else {
-							this.set('additional.submitReady', true);
+						!i && (submitReady = true);
+
+						if (submitReady && !data[currentRequiredField]) {
+							submitReady = false;
 						}
 					}
 
+					this.set('additional.submitReady', submitReady);
 					// insurance.toggleLoader(true);
 
 					// $.get('/validate',
