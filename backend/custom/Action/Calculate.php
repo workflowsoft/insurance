@@ -13,7 +13,14 @@
  */
 class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
 {
-    protected $requiredParams = array('tariff_program_id', 'risk_id', 'tariff_def_damage_type_id', 'ts_age', 'payments_without_references_id', 'ts_sum');
+    protected $requiredParams = array(
+        'tariff_program_id',
+        'risk_id',
+        'tariff_def_damage_type_id',
+        'ts_age',
+        'payments_without_references_id',
+        'ts_sum'
+    );
 
     /**
      * The data container to use in toArray()
@@ -107,7 +114,7 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
         $correctionQuery = 'SELECT `factor_name` as `source`, `dependent_factor_name` as `name`, `dependent_factor_value` as `value`, `conditional` FROM `factor_restricions` WHERE ';
         $predicateArray = array();
         foreach ($this->params as $key => $value) {
-            if(is_bool($value)) {
+            if (is_bool($value)) {
                 $this->params[$key] = (int)$value;
             }
             if (!empty($value)) {
@@ -283,27 +290,27 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
         if (!empty($this->params['contract_day'])) {
             $contract_day = $this->getParam('contract_day', self::TYPE_INT);
             $where = sprintf(
-                ' AND (contract_from_day IS NULL OR contract_from_day<=%u) AND (contract_to_day IS NULL OR contract_to_day>=%u)', $contract_day, $contract_day);
+                ' AND (contract_day_down IS NULL OR contract_day_down<=%u) AND (contract_day_up IS NULL OR contract_day_up>=%u)', $contract_day, $contract_day);
         } else
-            $where = ' AND contract_from_day IS NULL AND contract_to_day IS NULL';
+            $where = ' AND contract_day_down IS NULL AND contract_day_up IS NULL';
 
         $aWhere = $aWhere . $where;
 
         if (!empty($this->params['contract_month'])) {
             $contract_month = $this->getParam('contract_month', self::TYPE_INT);
             $where = sprintf(
-                ' AND (contract_from_month IS NULL OR contract_from_month<=%u) AND (contract_to_month IS NULL OR contract_to_month>=%u)', $contract_month, $contract_month);
+                ' AND (contract_month_down IS NULL OR contract_month_down<=%u) AND (contract_month_up IS NULL OR contract_month_up>=%u)', $contract_month, $contract_month);
         } else
-            $where = ' AND contract_from_month IS NULL AND contract_from_month IS NULL';
+            $where = ' AND contract_month_down IS NULL AND contract_month_down IS NULL';
 
         $aWhere = $aWhere . $where;
 
         if (!empty($this->params['contract_year'])) {
             $contract_year = $this->getParam('contract_year', self::TYPE_INT);
             $where = sprintf(
-                ' AND (contract_from_year IS NULL OR contract_from_year<=%u) AND (contract_to_year IS NULL OR contract_to_year>=%u)', $contract_year, $contract_year);
+                ' AND (contract_year_down IS NULL OR contract_year_down<=%u) AND (contract_year_up IS NULL OR contract_year_up>=%u)', $contract_year, $contract_year);
         } else
-            $where = ' AND contract_from_year IS NULL AND contract_to_year IS NULL';
+            $where = ' AND contract_year_down IS NULL AND contract_year_up IS NULL';
 
         $aWhere = $aWhere . $where;
 

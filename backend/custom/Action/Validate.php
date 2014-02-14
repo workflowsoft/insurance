@@ -19,7 +19,7 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
      */
     protected $requiredParams = array();
 
-    private $dependences = array(
+    private $_dependences = array(
         // kuts
         1 => array('amortisation',),
         // kf
@@ -30,9 +30,9 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
         4 => array('drivers_count_up', 'drivers_count_down', 'driver_age_down', 'is_legal_entity',),
         // kp
         5 => array('car_quantity_down', 'car_quantity_up',),
-        // ksd
-        6 => array('tariff_program_id', 'contract_from_day', 'contract_to_day', 'contract_from_month', 'contract_to_month',),
-        // kps
+        // ksd  mandatory
+        6 => array('tariff_program_id', 'contract_day_down', 'contract_day_up', 'contract_month_down', 'contract_month_up',),
+        // kps  mandatory
         7 => array('ts_no_defend_flag', 'ts_satellite_flag', 'ts_have_electronic_alarm',),
         // kkv
         8 => array('commission_percent_up', 'commission_percent_down',),
@@ -42,7 +42,7 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
         10 => array('tariff_program_id', 'regres_limit_factor_id',),
         // kctoa
         11 => array('tariff_program_id', 'regres_limit_factor_id', 'tariff_def_damage_type_id',),
-        // vbs
+        // vbs mandatory
         12 => array('tariff_program_id', 'payments_without_references_id',),
         // ksp
         13 => array(),
@@ -54,38 +54,6 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
         16 => array(),
     );
 
-
-    /* all parameters
-        'ts_type_id' => self::TYPE_INT,
-        'ts_make_id' => self::TYPE_INT,
-        'ts_model_id' => self::TYPE_INT,
-        'ts_modification_id' => self::TYPE_INT,
-        'ts_group_id' => self::TYPE_INT,
-        'tariff_def_damage_type_id' => self::TYPE_INT,
-        'ts_age' => self::TYPE_INT,
-        'ts_sum' => self::TYPE_DOUBLE,
-        'tariff_program_id' => self::TYPE_INT,
-        'risk_id' => self::TYPE_INT,
-        'amortisation' => self::TYPE_INT,
-
-        'payments_without_references_id' => self::TYPE_INT,
-        'franchise_type_id' => self::TYPE_INT,
-        'contract_day' => self::TYPE_INT,
-        'contract_month' => self::TYPE_INT,
-        'contract_year' => self::TYPE_INT,
-        'drivers_count' => self::TYPE_INT,
-        'driver_age' => self::TYPE_INT,
-        'driver_exp' => self::TYPE_INT,
-        'ts_no_defend_flag' => self::TYPE_INT,
-        'ts_satellite_flag' => self::TYPE_INT,
-        'ts_have_electronic_alarm' => self::TYPE_INT,
-        'is_onetime_payment' => self::TYPE_INT,
-        'car_quantity' => self::TYPE_INT,
-        'franchise_percent' => self::TYPE_INT,
-        'commercial_carting_flag' => self::TYPE_INT,
-        'commission_percent' => self::TYPE_INT,
-        'is_legal_entity' => self::TYPE_INT,
-     */
 
 
     private $_parameters = array(
@@ -173,8 +141,23 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
      */
     public function executeGet()
     {
-        $this->data = $this->_validateBase();
+        $this->_validate();
+
         return $this->toArray();
+    }
+
+    private function _validate() {
+        $base_validation = $this->_validateBase();
+        if(empty($this->data['crashed_on'])) {
+            $this->data = $this->_validateAdditional($base_validation);
+        }
+
+
+//        foreach($additional_validation as $k => $v){
+//            if(!empty($base_validation[$k])){
+//
+//            }
+//        }
 
     }
 
@@ -222,7 +205,7 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
             $this->data[] = $results;
 
             if (!$results) {
-                throw new Frapi_Error('CANT_CALC_BASET');
+                throw new Frapi_Error('CANT_CALC_BASET', 'Wrong ' . implode(', ', array_keys($parameters_known)));
             }
             foreach ($results as $value) {
                 $param_to_front = preg_replace('/_id$/u', '', $param);
@@ -239,20 +222,116 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
 
     }
 
-    private function _validateAdditional()
+    private function _validateAdditional(array $base_validation)
     {
+        $db = Frapi_Database::getInstance();
         $parameters_known = array();
-        $parameters_to_validate = array();
-        foreach ($this->_parameters_additional as $key => $type) {
-            $tmp = $this->getParam($key, $type);
-            if (empty($tmp)) {
-                $parameters_to_validate[] = $key;
-            } else {
-                $parameters_known[$key] = $tmp;
+        foreach ($this->_parameters_additional as $key => $item) {
+            $tmp = $this->getParam($key, $item['type']);
+            if (!empty($tmp)) {
+                $parameters_known[$key]['value'] = $tmp;
+                if (!empty($item['fork'])) $parameters_known[$key]['fork'] = true;
+            }
+        }
+        $results = $base_validation;
+        foreach ($this->_dependences as $factor_id => $dependences) {
+            if (!empty($dependences)) {
+                $sqls = $this->_generateSQL($dependences, $parameters_known);
+                foreach ($sqls as $column => $sql) {
+                    $sth = $db->query($sql);
+                    if (!$sth) {
+                        $this->data['crashed_on'] = array(
+                            'param' => $factor_id,
+                            'query' => $sql,
+                        );
+                        return $this->toArray();
+                    }
+                    $result = $sth->fetchAll(PDO::FETCH_COLUMN);
+
+                    if (empty($results[$column])) {
+                        $results[$column] = $result;
+                    } elseif(empty($base_validation[$column]) || in_array($factor_id, array(6,7,12))) {
+                        // мержим базовую валидацию только в случае обязательных коэф
+                        //TODO если мы изменяем базовую валидацию надо бы все перевалидировать нахуй
+                        $results[$column] = array_values(array_intersect($results[$column], $result));
+                    }
+                }
+
+
             }
         }
 
+        //Приведем в порядок вилки, оставим только максимальное и минимальные значения в соотв ключах
+        foreach ($results as $k => $v) {
+            if (strpos($k, '_down')) {
+                $new_k = preg_replace('/_down$/u','', $k );
+                $results[$new_k]['down'] = min($v);
+                unset($results[$k]);
+            } elseif (strpos($k, '_up')) {
+                $new_k = preg_replace('/_up$/u','', $k );
+                //null - бесконечность, он всегда больше
+                if(in_array(null, $v)){
+                    $results[$new_k]['up'] = null;
+                } else {
+                    $results[$new_k]['up'] = max($v);
 
+                }
+                unset($results[$k]);
+            }
+        }
+
+        return $results;
+
+
+    }
+
+    /**
+     * @param array $columns_to_get
+     * @param array (fork, value) $known_columns
+     * @return array
+     */
+    private function _generateSQL($columns_to_get, $known_columns)
+    {
+        $columns_to_get_initial = $columns_to_get;
+        // Исключим из искомых уже данные. На всякий пожарный
+        foreach ($columns_to_get as $k => $column) {
+            foreach ($known_columns as $kk => $known_column) {
+                if (
+                    $column == $kk
+                    || (!empty($known_column['fork']) && $column == $kk . '_down')
+                    || (!empty($known_column['fork']) && $column == $kk . '_up')
+                ) {
+                    unset($columns_to_get[$k]);
+                }
+            }
+
+        }
+
+        $first = true;
+        $where = '';
+        foreach ($known_columns as $column => $item) {
+            //Если данный коэффициент не зависит от переданных параметров, просто не добавляем его в where
+            //Но стоит проверять на up down значения!
+            if (!in_array($column, $columns_to_get_initial) and !in_array($column . '_down', $columns_to_get_initial)) {
+                continue;
+            }
+            $where .= $first ? ' WHERE ' : ' AND ';
+            $first = false;
+            if (empty($item['fork'])) {
+                $where .= $column . ' = ' . $item['value'];
+            } else {
+                $down = sprintf('`%s_down`', $column);
+                $up = sprintf('`%s_up`', $column);
+                $val = $item['value'];
+                $where .= "(($down IS NULL OR $down <= $val) AND ($up IS NULL OR $up >= $val))";
+            }
+        }
+
+        foreach ($columns_to_get as $k => $column) {
+            $sql [$column] = 'SELECT distinct `' . $column . "` as '$column' FROM `additional_coefficients` " . $where;
+        }
+
+        return $sql;
     }
 
 

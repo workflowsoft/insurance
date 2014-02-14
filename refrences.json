@@ -116,107 +116,107 @@
     {
         "id": "19",
         "name": "\u0434\u043e 5-\u0442\u0438 \u0434\u043d\u0435\u0439",
-        "contract_to_days": "5",
-        "contract_to_months": null,
-        "contract_to_years": null
+        "contract_days_up": "5",
+        "contract_months_up": null,
+        "contract_years_up": null
     },
     {
         "id": "20",
         "name": "\u0434\u043e 15-\u0442\u0438 \u0434\u043d\u0435\u0439",
-        "contract_to_days": "15",
-        "contract_to_months": null,
-        "contract_to_years": null
+        "contract_days_up": "15",
+        "contract_months_up": null,
+        "contract_years_up": null
     },
     {
         "id": "21",
         "name": "\u0434\u043e 1-\u0433\u043e \u043c\u0435\u0441\u044f\u0446\u0430",
-        "contract_to_days": null,
-        "contract_to_months": "1",
-        "contract_to_years": null
+        "contract_days_up": null,
+        "contract_months_up": "1",
+        "contract_years_up": null
     },
     {
         "id": "22",
         "name": "\u0434\u043e 2-\u0445 \u043c\u0435\u0441\u044f\u0446\u0435\u0432",
-        "contract_to_days": null,
-        "contract_to_months": "2",
-        "contract_to_years": null
+        "contract_days_up": null,
+        "contract_months_up": "2",
+        "contract_years_up": null
     },
     {
         "id": "23",
         "name": "\u0434\u043e 3-\u0445 \u043c\u0435\u0441\u044f\u0446\u0435\u0432",
-        "contract_to_days": null,
-        "contract_to_months": "3",
-        "contract_to_years": null
+        "contract_days_up": null,
+        "contract_months_up": "3",
+        "contract_years_up": null
     },
     {
         "id": "24",
         "name": "\u0434\u043e 4-\u0445 \u043c\u0435\u0441\u044f\u0446\u0435\u0432",
-        "contract_to_days": null,
-        "contract_to_months": "4",
-        "contract_to_years": null
+        "contract_days_up": null,
+        "contract_months_up": "4",
+        "contract_years_up": null
     },
     {
         "id": "25",
         "name": "\u0434\u043e 5-\u0442\u0438 \u043c\u0435\u0441\u044f\u0446\u0435\u0432",
-        "contract_to_days": null,
-        "contract_to_months": "5",
-        "contract_to_years": null
+        "contract_days_up": null,
+        "contract_months_up": "5",
+        "contract_years_up": null
     },
     {
         "id": "26",
         "name": "\u0434\u043e 6-\u0442\u0438 \u043c\u0435\u0441\u044f\u0446\u0435\u0432",
-        "contract_to_days": null,
-        "contract_to_months": "6",
-        "contract_to_years": null
+        "contract_days_up": null,
+        "contract_months_up": "6",
+        "contract_years_up": null
     },
     {
         "id": "27",
         "name": "\u0434\u043e 7-\u043c\u0438 \u043c\u0435\u0441\u044f\u0446\u0435\u0432",
-        "contract_to_days": null,
-        "contract_to_months": "7",
-        "contract_to_years": null
+        "contract_days_up": null,
+        "contract_months_up": "7",
+        "contract_years_up": null
     },
     {
         "id": "28",
         "name": "\u0434\u043e 8-\u043c\u0438 \u043c\u0435\u0441\u044f\u0446\u0435\u0432",
-        "contract_to_days": null,
-        "contract_to_months": "8",
-        "contract_to_years": null
+        "contract_days_up": null,
+        "contract_months_up": "8",
+        "contract_years_up": null
     },
     {
         "id": "29",
         "name": "\u0434\u043e 9-\u0442\u0438 \u043c\u0435\u0441\u044f\u0446\u0435\u0432",
-        "contract_to_days": null,
-        "contract_to_months": "9",
-        "contract_to_years": null
+        "contract_days_up": null,
+        "contract_months_up": "9",
+        "contract_years_up": null
     },
     {
         "id": "30",
         "name": "\u0434\u043e 10-\u0442\u0438 \u043c\u0435\u0441\u044f\u0446\u0435\u0432",
-        "contract_to_days": null,
-        "contract_to_months": "10",
-        "contract_to_years": null
+        "contract_days_up": null,
+        "contract_months_up": "10",
+        "contract_years_up": null
     },
     {
         "id": "31",
         "name": "\u0434\u043e 11-\u0442\u0438 \u043c\u0435\u0441\u044f\u0446\u0435\u0432",
-        "contract_to_days": null,
-        "contract_to_months": "11",
-        "contract_to_years": null
+        "contract_days_up": null,
+        "contract_months_up": "11",
+        "contract_years_up": null
     },
     {
         "id": "32",
         "name": "\u0434\u043e 12-\u0442\u0438 \u043c\u0435\u0441\u044f\u0446\u0435\u0432",
-        "contract_to_days": null,
-        "contract_to_months": "12",
-        "contract_to_years": null
+        "contract_days_up": null,
+        "contract_months_up": "12",
+        "contract_years_up": null
     },
     {
         "id": "33",
         "name": "\u0434\u043e 2-\u0445 \u043b\u0435\u0442",
-        "contract_to_days": null,
-        "contract_to_months": null,
-        "contract_to_years": "2"
+        "contract_days_up": null,
+        "contract_months_up": null,
+        "contract_years_up": "2"
     }
 ], "regres_limit": [
     {
