@@ -113,7 +113,7 @@ $(function () {
 						}
 					}
 
-					// if (submitReady) {
+					if (submitReady) {
 						this.set('additional.submitReady', submitReady);
 
 						insurance.toggleLoader(true);
@@ -129,7 +129,9 @@ $(function () {
 					$.get('/calculate/v1',
 						data
 					).then(function(response) {
-
+						if (response.Result) {
+							this.set('totalSum', response.Result.Contract.Sum);
+						}
 					}.bind(this));
 
 					event.original.preventDefault();
