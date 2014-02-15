@@ -8,6 +8,8 @@ $(function () {
 		// сюда складываем объекты Ractivejs темплейт
 		templates: {},
 
+		initialData: {},
+
 		toggleLoader: function (toggle) {
 			toggle = toggle || false;
 
@@ -39,14 +41,7 @@ $(function () {
 					templateFactory('CalcTemplate', {
 						el: 'calc',
 						template: '#calcTemplate',
-						data: response,
-						init: function() {
-							console.log(123);
-
-							this.on({bzz: function() {
-								console.log('waka!');
-							}});
-						}
+						data: response
 					})
 
 				}.bind(this))
@@ -61,11 +56,28 @@ $(function () {
 			this.initBindings();
 		},
 
+		validate: function(data) {
+			this.toggleLoader(true);
+
+			$.get('/validate',
+				data
+			).then(function(response) {
+
+				this.toggleLoader(false);
+			}.bind(this))
+			.fail(function(message){
+				console.error(message.statusText);
+				this.toggleLoader(false);
+			}.bind(this));
+		},
+
 		preprocessResponseData: function(data) {
+			// Если справочник — пустой массив, превращаем его в false
 			_.each(data, function(item, key) {
 				_.isArray(item) && !item.length && (data[key] = false);
 			});
 
+			_.isEmpty(this.initialData) && (this.initialData = data);
 			return data;
 		},
 
@@ -96,19 +108,17 @@ $(function () {
 						!i && (submitReady = true);
 
 						if (submitReady && !data[currentRequiredField]) {
+							data[currentRequiredField] = null;
 							submitReady = false;
 						}
 					}
 
-					this.set('additional.submitReady', submitReady);
-					// insurance.toggleLoader(true);
+					if (submitReady) {
+						this.set('additional.submitReady', submitReady);
 
-					// $.get('/validate',
-					// 	this.data.calculate
-					// ).then(function(response) {
-					// 	this.set(self.preprocessResponseData(response));
-					// 	self.toggleLoader(false);
-					// }.bind(this));
+						insurance.toggleLoader(true);
+						insurance.validate(this.data.calculate);
+					}
 
 					return false;
 				},
@@ -119,7 +129,9 @@ $(function () {
 					$.get('/calculate/v1',
 						data
 					).then(function(response) {
-
+						if (response.Result) {
+							this.set('totalSum', response.Result.Contract.Sum);
+						}
 					}.bind(this));
 
 					event.original.preventDefault();

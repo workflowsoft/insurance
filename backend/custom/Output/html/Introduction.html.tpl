@@ -248,6 +248,10 @@
 				</div>
 			</div>
 		</div>
+
+		{{#totalSum}}
+			<h2 class="b-total_sum">Стоимость полиса составит {{totalSum}} рублей.</h2>
+		{{/totalSum}}
 		
 		{{^additional.submitReady}}
 			<button type="submit" disabled  class="btn btn-lg btn-default pull-right">Рассчитать</button>
