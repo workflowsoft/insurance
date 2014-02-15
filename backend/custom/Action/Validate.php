@@ -241,6 +241,7 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
                 foreach ($sqls as $column => $sql) {
                     $sth = $db->query($sql);
                     if (!$sth) {
+                        $this->data = array();
                         $this->data['crashed_on'] = array(
                             'param' => $factor_id,
                             'query' => $sql,
