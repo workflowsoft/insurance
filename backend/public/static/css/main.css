@@ -185,14 +185,21 @@ body {
   -ms-border-radius: 8px;
   -o-border-radius: 8px;
   border-radius: 8px;
-  -webkit-box-shadow: 0 0 4px 0 #451f6f;
-  -moz-box-shadow: 0 0 4px 0 #451f6f;
-  box-shadow: 0 0 4px 0 #451f6f;
+  -webkit-box-shadow: 0 0 4px 0 #7296c5;
+  -moz-box-shadow: 0 0 4px 0 #7296c5;
+  box-shadow: 0 0 4px 0 #7296c5;
 }
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_blocks\.scss}line{font-family:\0000322}}
 .col-lg-6 {
   margin-bottom: 8px;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_blocks\.scss}line{font-family:\0000326}}
+.b-total_sum {
+  color: #0571A3;
+  float: left;
+  margin: 6px 0 0 4px;
 }
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_header\.scss}line{font-family:\000031}}
