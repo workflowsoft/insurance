@@ -101,8 +101,8 @@ INSERT INTO `additional_coefficients` (`factor_id`, `car_quantity_down`, `car_qu
 -- Вставка для ksd (коэфициент срока действия договора))
 SET @ksd_id = (SELECT id FROM all_factors WHERE code='ksd');
 
-INSERT INTO `additional_coefficients` (`factor_id`, `tariff_program_id`, `contract_from_day`, `contract_to_day`, `contract_from_month`,
-                                       `contract_to_month`, `contract_from_year`, `contract_to_year`, `value`, `priority`) VALUES
+INSERT INTO `additional_coefficients` (`factor_id`, `tariff_program_id`, `contract_day_down`, `contract_day_up`, `contract_month_down`,
+                                       `contract_month_up`, `contract_year_down`, `contract_year_up`, `value`, `priority`) VALUES
   (@ksd_id, NULL, 5, 5, NULL, NULL, NULL, NULL, 0.05, 0),
   (@ksd_id, NULL,6, 15, NULL, NULL, NULL, NULL, 0.1, 0),
   (@ksd_id, NULL,16, NULL, NULL, 1, NULL, NULL, 0.2, 0),

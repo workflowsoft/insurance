@@ -22,7 +22,7 @@ INSERT INTO `all_factors` (`name`, `description`, `code`, `is_mandatory`, `defau
 
 	
 
-INSERT INTO `front_contract_duration` (`name`, `contract_to_days`, `contract_to_months`, `contract_to_years`) VALUES
+INSERT INTO `front_contract_duration` (`name`, `contract_days_up`, `contract_months_up`, `contract_years_up`) VALUES
 	('до 5-ти дней', 5, NULL, NULL),
 	('до 15-ти дней', 15, NULL, NULL),
 	('до 1-го месяца', NULL, 1, NULL),

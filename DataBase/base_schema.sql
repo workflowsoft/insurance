@@ -138,12 +138,12 @@ CREATE TABLE IF NOT EXISTS `additional_coefficients` (
   `tariff_def_damage_type_id` int(10) DEFAULT NULL REFERENCES tariff_def_damage_type(id),
   `payments_without_references_id` int(10) DEFAULT NULL REFERENCES payments_without_references(id),
   `franchise_type_id` int(10) DEFAULT NULL REFERENCES franchise_type(id),
-  `contract_from_day` int(2) DEFAULT NULL,
-  `contract_to_day` int(2) DEFAULT NULL,
-  `contract_from_month` int(2) DEFAULT NULL,
-  `contract_to_month` int(2) DEFAULT NULL,
-  `contract_from_year` int(2) DEFAULT NULL,
-  `contract_to_year` int(2) DEFAULT NULL,
+  `contract_day_down` int(2) DEFAULT NULL,
+  `contract_day_up` int(2) DEFAULT NULL,
+  `contract_month_down` int(2) DEFAULT NULL,
+  `contract_month_up` int(2) DEFAULT NULL,
+  `contract_year_down` int(2) DEFAULT NULL,
+  `contract_year_up` int(2) DEFAULT NULL,
   `drivers_count_up` varchar(50) COLLATE utf8_bin DEFAULT NULL,
   `drivers_count_down` varchar(50) COLLATE utf8_bin DEFAULT NULL,
   `driver_age_down` int(10) DEFAULT NULL,
@@ -193,9 +193,9 @@ DROP TABLE IF EXISTS `front_contract_duration`;
 CREATE TABLE IF NOT EXISTS `front_contract_duration` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(50) COLLATE utf8_bin DEFAULT NULL,
-  `contract_to_days` int(11) DEFAULT NULL,
-  `contract_to_months` int(11) DEFAULT NULL,
-  `contract_to_years` int(11) DEFAULT NULL,
+  `contract_days_up` int(11) DEFAULT NULL,
+  `contract_months_up` int(11) DEFAULT NULL,
+  `contract_years_up` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Таблица фронтового справочника, длительности договора страховки';
 
