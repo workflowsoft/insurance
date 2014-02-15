@@ -197,14 +197,13 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
                 return $this->toArray();
             }
             $results = $sth->fetchAll(PDO::FETCH_ASSOC);
-            $this->data[] = $results;
 
             if (!$results) {
                 throw new Frapi_Error('CANT_CALC_BASET', 'Wrong ' . implode(', ', array_keys($parameters_known)));
             }
             foreach ($results as $value) {
                 $param_to_front = preg_replace('/_id$/u', '', $param);
-                if (empty($value[$param])) {
+                if (empty($value)) {
                     $validation[$param_to_front] = array();
                 } else {
                     $validation[$param_to_front][] = $value[$param];
@@ -253,8 +252,6 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
                     //TODO если мы изменяем базовую валидацию надо бы все перевалидировать нахуй
                     $results[$column] = array_values(array_intersect($results[$column], $result));
                 }
-
-
             }
         }
 
@@ -288,6 +285,7 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
 
         //Приведем в порядок вилки, оставим только максимальное и минимальные значения в соотв ключах
         foreach ($results as $k => $v) {
+            sort($results[$k]);
             if (strpos($k, '_down')) {
                 $new_k = preg_replace('/_down$/u', '', $k);
                 $results[$new_k]['down'] = min($v);
