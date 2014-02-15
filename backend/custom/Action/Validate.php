@@ -54,6 +54,7 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
         16 => array(),
     );
 
+    private $_mandatory_factor_ids = array(6, 7, 12);
 
 
     private $_parameters = array(
@@ -94,7 +95,7 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
         'is_onetime_payment' => array('type' => self::TYPE_INT,),
         /*is in basis*/
         'tariff_def_damage_type_id' => array('type' => self::TYPE_INT,),
-        'regres_limit_factor_type_id' => array('type' => self::TYPE_INT,),
+        'regres_limit_factor_id' => array('type' => self::TYPE_INT,),
         'payments_without_references_id' => array('type' => self::TYPE_INT,),
     );
 
@@ -146,19 +147,12 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
         return $this->toArray();
     }
 
-    private function _validate() {
-        $base_validation = $this->_validateBase();
-        if(empty($this->data['crashed_on'])) {
-            $this->data = $this->_validateAdditional($base_validation);
+    private function _validate()
+    {
+        $this->_validateBase();
+        if (empty($this->data['crashed_on'])) {
+            $this->_validateAdditional();
         }
-
-
-//        foreach($additional_validation as $k => $v){
-//            if(!empty($base_validation[$k])){
-//
-//            }
-//        }
-
     }
 
     private function _validateBase()
@@ -218,12 +212,11 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
             }
 
         }
-//        $this->data = $validation;
-        return $validation;
 
+        $this->data = $validation;
     }
 
-    private function _validateAdditional(array $base_validation)
+    private function _validateAdditional()
     {
         $db = Frapi_Database::getInstance();
         $parameters_known = array();
@@ -234,57 +227,89 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
                 if (!empty($item['fork'])) $parameters_known[$key]['fork'] = true;
             }
         }
-        $results = $base_validation;
+        $results = $this->data;
+        // валидируем только обязательные
         foreach ($this->_dependences as $factor_id => $dependences) {
-            if (!empty($dependences)) {
-                $sqls = $this->_generateSQL($dependences, $parameters_known);
-                foreach ($sqls as $column => $sql) {
-                    $sth = $db->query($sql);
-                    if (!$sth) {
-                        $this->data = array();
-                        $this->data['crashed_on'] = array(
-                            'param' => $factor_id,
-                            'query' => $sql,
-                        );
-                        return $this->toArray();
-                    }
-                    $result = $sth->fetchAll(PDO::FETCH_COLUMN);
+            if (!in_array($factor_id, $this->_mandatory_factor_ids) || empty($dependences)) {
+                break;
+            }
+            $sqls = $this->_generateSQL($dependences, $parameters_known);
+            foreach ($sqls as $column => $sql) {
+                $sth = $db->query($sql);
+                if (!$sth) {
+                    $this->data = array();
+                    $this->data['crashed_on'] = array(
+                        'param' => $factor_id,
+                        'query' => $sql,
+                    );
+                    return $this->toArray();
+                }
+                $result = $sth->fetchAll(PDO::FETCH_COLUMN);
 
-                    if (empty($results[$column])) {
-                        $results[$column] = $result;
-                    } elseif(empty($base_validation[$column]) || in_array($factor_id, array(6,7,12))) {
-                        // мержим базовую валидацию только в случае обязательных коэф
-                        //TODO если мы изменяем базовую валидацию надо бы все перевалидировать нахуй
-                        $results[$column] = array_values(array_intersect($results[$column], $result));
-                    }
+                if (empty($results[$column])) {
+                    $results[$column] = $result;
+                } else {
+                    // мержим базовую валидацию только в случае обязательных коэф
+                    //TODO если мы изменяем базовую валидацию надо бы все перевалидировать нахуй
+                    $results[$column] = array_values(array_intersect($results[$column], $result));
                 }
 
 
             }
         }
+
+        //валидируем оставшиеся параметры, которых не было в обязательных
+        $additional_to_get = array();
+        foreach ($this->_parameters_additional as $parameter => $val) {
+            if (empty($results[$parameter])) {
+                if (empty($val['fork'])) {
+                    $additional_to_get[] = $parameter;
+                } else {
+                    $additional_to_get[] = $parameter . '_down';
+                    $additional_to_get[] = $parameter . '_up';
+                }
+            }
+        }
+        $sqls = $this->_generateSQL($additional_to_get);
+        foreach ($sqls as $column => $sql) {
+            $sth = $db->query($sql);
+            if (!$sth) {
+                $this->data = array();
+                $this->data['crashed_on'] = array(
+                    'param' => $factor_id,
+                    'query' => $sql,
+                );
+                return $this->toArray();
+            }
+            $result = $sth->fetchAll(PDO::FETCH_COLUMN);
+            $results[$column] = $result;
+        }
+
 
         //Приведем в порядок вилки, оставим только максимальное и минимальные значения в соотв ключах
         foreach ($results as $k => $v) {
             if (strpos($k, '_down')) {
-                $new_k = preg_replace('/_down$/u','', $k );
+                $new_k = preg_replace('/_down$/u', '', $k);
                 $results[$new_k]['down'] = min($v);
                 unset($results[$k]);
             } elseif (strpos($k, '_up')) {
-                $new_k = preg_replace('/_up$/u','', $k );
+                $new_k = preg_replace('/_up$/u', '', $k);
                 //null - бесконечность, он всегда больше
-                if(in_array(null, $v)){
+                if (in_array(null, $v)) {
                     $results[$new_k]['up'] = null;
                 } else {
                     $results[$new_k]['up'] = max($v);
-
                 }
+                unset($results[$k]);
+            } elseif (strpos($k, '_id')) {
+                $new_k = preg_replace('/_up$/u', '', $k);
+                $results[$new_k] = $v;
                 unset($results[$k]);
             }
         }
 
-        return $results;
 
-
+        $this->data = $results;
     }
 
     /**
@@ -292,7 +317,7 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
      * @param array (fork, value) $known_columns
      * @return array
      */
-    private function _generateSQL($columns_to_get, $known_columns)
+    private function _generateSQL($columns_to_get, $known_columns = array())
     {
         $columns_to_get_initial = $columns_to_get;
         // Исключим из искомых уже данные. На всякий пожарный
@@ -329,6 +354,7 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
             }
         }
 
+        $sql = array();
         foreach ($columns_to_get as $k => $column) {
             $sql [$column] = 'SELECT distinct `' . $column . "` as '$column' FROM `additional_coefficients` " . $where;
         }
@@ -356,7 +382,8 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
      *
      * @return array
      */
-    public function executePut()
+    public
+    function executePut()
     {
         return $this->toArray();
     }
