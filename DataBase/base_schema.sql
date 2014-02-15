@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS `ts_model` (
 DROP TABLE IF EXISTS `ts_modification`;
 CREATE TABLE IF NOT EXISTS `ts_modification` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
-  `ts_model_id` int(10) NOT NULL REFERENCES  `ts_model`(id),
+  `ts_model_id` int(10) REFERENCES  `ts_model`(id),
   `ts_type_id` int(10) REFERENCES `ts_type`(id), /*Модификация модели может поменять тип ТС, но обчыно такого не случается*/
   `Name` varchar(50) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`)
