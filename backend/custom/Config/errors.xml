@@ -28,13 +28,13 @@
    <http_code>404</http_code>
    <description>Выдается при вводе чуши (строкового значения при ожидаемом целом и т.п.)</description>
    <hash>0ba2c0922fad141bdc8f3acb3e39e011</hash>
+   <http_phrase></http_phrase>
   </error>
   <error>
    <name>CANT_CORRECE</name>
    <message>Невозможно осуществить корректировку входных факторов</message>
    <http_code>404</http_code>
    <description>В некоторых случаях факторы приходящие с пользовательской стороны нуждаются в корректировке и есть случаи когда корректировка не может быть осуществлена по причине циклической установки корректирующих значений, перекорректировки или некорректных исходных данных.</description>
-   <http_phrase></http_phrase>
    <hash>448659383da7125af9fa8522ec0215f35fb87c3a</hash>
   </error>
  </errors>
