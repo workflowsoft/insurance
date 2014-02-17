@@ -57,6 +57,33 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
     private $_mandatory_factor_ids = array(6, 7, 12);
 
 
+    private $_to_front_types = array(
+        "ts_type" => 'select',
+        "ts_make" => 'select',
+        "ts_model" => 'select',
+        "ts_modification" => 'select',
+        "ts_group" => 'select',
+        "tariff_def_damage_type" => 'select',
+        "ts_age" => 'input',
+        "tariff_program" => 'select',
+        "risk" => 'select',
+        "amortisation" => 'checkbox',
+        "commercial_carting_flag" => 'checkbox',
+        "ts_no_defend_flag" => 'checkbox',
+        "ts_satellite_flag" => 'checkbox',
+        "ts_have_electronic_alarm" => 'checkbox',
+        "is_onetime_payment" => 'checkbox',
+        "franchise_percent" => 'input',
+        "driver_age" => 'input',
+        "driver_exp" => 'input',
+        "drivers_count" => 'input',
+        "car_quantity" => 'input',
+        "contract_day" => 'input',
+        "contract_month" => 'input',
+        "commission_percent" => 'input',
+    );
+
+
     private $_parameters = array(
         'ts_type_id' => self::TYPE_INT,
         'ts_make_id' => self::TYPE_INT,
@@ -303,6 +330,13 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
                 $results[$new_k] = $v;
                 unset($results[$k]);
             }
+
+        }
+        //добавим типы полей для глупого фронта
+        foreach ($results as $k => $v) {
+            unset($results[$k]);
+            $results[$k]['type'] = $this->_to_front_types[$k];
+            $results[$k]['value'] = $v;
         }
 
 
