@@ -111,7 +111,7 @@
 						<select disabled={{!ts_group}} class="form-control" value={{calculate.ts_group_id}}> name="ts_group_id">
 							<option disabled selected>Выберите категорию</option>
 							{{#ts_group}}
-								<option value={{id}}>{{Name}}</option>
+								<option value={{id}}>{{name}}</option>
 							{{/ts_group}}
 						</select>
 					</div>
