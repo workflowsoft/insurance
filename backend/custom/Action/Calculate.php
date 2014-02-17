@@ -34,7 +34,7 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
      */
     private $data = array();
 
-    private function array_group_by(array $arr, callable $key_selector, callable $value_selector)
+    private function array_group_by(array $arr, Closure $key_selector, Closure $value_selector)
     {
         $result = array();
         foreach ($arr as $i) {
