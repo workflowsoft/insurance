@@ -198,7 +198,7 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
             $results = $sth->fetchAll(PDO::FETCH_ASSOC);
 
             if (!$results) {
-                throw new Frapi_Error('CANT_CALC_BASET', 'Wrong ' . implode(', ', array_keys($parameters_known)));
+                throw new Frapi_Error('CANT_VALIDATE', 'Wrong ' . implode(', ', array_keys($parameters_known)));
             }
             foreach ($results as $value) {
                 $param_to_front = preg_replace('/_id$/u', '', $param);
