@@ -23,6 +23,11 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
     );
 
     /**
+     * @var array
+     */
+    private $_calcErrors = array();
+
+    /**
      * The data container to use in toArray()
      *
      * @var A container of data to fill and return in toArray()
@@ -34,7 +39,7 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
         $result = array();
         foreach ($arr as $i) {
             $key = call_user_func($key_selector, $i);
-            $result[$key][] = call_user_func($value_selector, $i);
+            $result[$key][] = $value_selector($i);
         }
         return $result;
     }
@@ -153,7 +158,7 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
         if (count($correct_errors))
             throw new Frapi_Exception('CANT_CORRECT', join(', ', $correct_errors));
 
-        $calcErros = array();
+        $this->_calcErrors = array();
         $result = array();
 
         $this->data['Result'] = array(
@@ -414,7 +419,7 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
         $sth = $db->query($bquery);
         $results = $sth->fetch(PDO::FETCH_ASSOC);
         if (!$results || $sth->rowCount() > 1)
-            array_push($calcErros, 'base');
+            array_push($this->_calcErrors, 'base');
         else
             $result = $results;
 
@@ -426,13 +431,13 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
             function ($coef) {
                 return $coef['code'];
             },
-            function ($coef) use (&$calcErros) {
+            function ($coef) {
                 $value = null;
                 if (is_null($coef['value'])) {
                     if ($coef['is_mandatory'] == 0 && !is_null($coef['default_value']))
                         $value = $coef['default_value'];
                     else
-                        array_push($calcErros, $coef['code']);
+                        array_push($this->_calcErrors, $coef['code']);
                 } else
                     $value = $coef['value'];
                 return $value;
@@ -456,8 +461,8 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
 
         $result = array_merge($result, $results);
 
-        if (count($calcErros))
-            throw new Frapi_Exception('CANT_CALC_COEF', join(', ', $calcErros));
+        if (count($this->_calcErrors))
+            throw new Frapi_Exception('CANT_CALC_COEF', join(', ', $this->_calcErrors));
 
         //Выбираем все значения коэфициентов проходящие по выбранным факторам
         $this->data['Result']['Coefficients'] = $result;
