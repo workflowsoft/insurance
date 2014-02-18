@@ -256,7 +256,7 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
         // валидируем только обязательные
         foreach ($this->_dependences as $factor_id => $dependences) {
             if (!in_array($factor_id, $this->_mandatory_factor_ids) || empty($dependences)) {
-                break;
+                continue;
             }
             $sqls = $this->_generateSQL($dependences, $parameters_known);
             foreach ($sqls as $column => $sql) {
@@ -274,7 +274,6 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
                 if (empty($results[$column])) {
                     $results[$column] = $result;
                 } else {
-                    // мержим базовую валидацию только в случае обязательных коэф
                     //TODO если мы изменяем базовую валидацию надо бы все перевалидировать нахуй
                     $results[$column] = array_values(array_intersect($results[$column], $result));
                 }
