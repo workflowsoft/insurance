@@ -100,6 +100,15 @@ CREATE TABLE IF NOT EXISTS `ts_modification` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Модификация ТС';
 
+-- Связка Тип ТС -> Производитель ТС
+DROP TABLE IF EXISTS `ts_type2ts_make`;
+CREATE TABLE IF NOT EXISTS `ts_type2ts_make` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `ts_type_id` int(10) REFERENCES `ts_type`(id),
+  `ts_make_id` int(10) REFERENCES `ts_make`(id),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Связка Тип ТС -> Производитель ТС';
+
 -- Группа ТС
 DROP TABLE IF EXISTS `ts_group`;
 CREATE TABLE IF NOT EXISTS `ts_group` (

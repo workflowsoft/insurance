@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <frapi-config>
-    <actions>
-        <action>
-            <name>Introduction</name>
-            <enabled>1</enabled>
-            <public>1</public>
-            <route>/</route>
-            <hash>29e39f311db4ca2ef7dacf8d8c493ef69aa29b61</hash>
-        </action>
-        <action>
-            <name>Doc</name>
-            <enabled>1</enabled>
-            <public>1</public>
-            <route>/doc</route>
-            <hash>7a48ae1b7387f8a8159c488fbd850021</hash>
-        </action>
-        <action>
-            <name>Calculate</name>
-            <enabled>1</enabled>
-            <public>1</public>
-            <description>Выполняет вычисление стоимости страховки исходя из всех введенных пользователем данных:&#13;
+ <actions>
+  <action>
+   <name>Introduction</name>
+   <enabled>1</enabled>
+   <public>1</public>
+   <route>/</route>
+   <hash>29e39f311db4ca2ef7dacf8d8c493ef69aa29b61</hash>
+  </action>
+  <action>
+   <name>Doc</name>
+   <enabled>1</enabled>
+   <public>1</public>
+   <route>/doc</route>
+   <hash>7a48ae1b7387f8a8159c488fbd850021</hash>
+  </action>
+  <action>
+   <name>Calculate</name>
+   <enabled>1</enabled>
+   <public>1</public>
+   <description>Выполняет вычисление стоимости страховки исходя из всех введенных пользователем данных:&#13;
 &#13;
 &#13;
 1. (ts_type_id) Тип ТС Id из справочника (Грузовик, Легковая, Мотоцикл и т.д.) &#13;
@@ -230,6 +230,72 @@
     </parameter>
     <parameter>
      <name>amortisation</name>
+     <required>0</required>
+    </parameter>
+   </parameters>
+  </action>
+  <action>
+   <name>Referencesmake</name>
+   <enabled>1</enabled>
+   <public>1</public>
+   <description>Список производителей ТС</description>
+   <route>/reference/make/:ts_type_id</route>
+   <hash>6e5f2adee447cf6c905da09394d2baae5f37c347</hash>
+   <parameters>
+    <parameter>
+     <name>ts_type_id</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>name_pfx</name>
+     <required>0</required>
+    </parameter>
+   </parameters>
+  </action>
+  <action>
+   <name>Referencesmodel</name>
+   <enabled>1</enabled>
+   <public>1</public>
+   <description>Список марок ТС</description>
+   <route>/reference/model/:ts_type_id/:ts_make_id</route>
+   <hash>f0f9734140d52c7072b38b7cd8de6510c39e9a34</hash>
+   <parameters>
+    <parameter>
+     <name>ts_type_id</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>ts_make_id</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>name_pfx</name>
+     <required>0</required>
+    </parameter>
+   </parameters>
+  </action>
+  <action>
+   <name>Tsgroup</name>
+   <enabled>1</enabled>
+   <public>1</public>
+   <description>Получение соответствия группы ТС (задаваемых страховой компанией) для выбранной комбинации &quot;Тип ТC&quot;-&gt; &quot;Производитель ТС&quot;-&gt;&quot;Модель ТС&quot;-&gt; &quot;Модификация ТС&quot;</description>
+   <route>/ts/group</route>
+   <hash>e41b747d83338cbaba831b6ba5662d5f2b54b85d</hash>
+   <parameters>
+    <parameter>
+     <name>ts_type_id</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>ts_make_id</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>ts_model_id</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>ts_modification_id</name>
      <required>0</required>
     </parameter>
    </parameters>

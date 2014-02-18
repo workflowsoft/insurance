@@ -6,8 +6,6 @@ class References
 
     private static $_tables = array(
         'ts_type',
-        'ts_make',
-        'ts_model',
         'ts_modification',
         'ts_group',
         'tariff_def_damage_type',

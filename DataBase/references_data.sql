@@ -3462,5 +3462,8 @@ INSERT INTO `ts_group_match`(`ts_type_id`, `ts_group_id`) VALUES (3, 6);
 INSERT INTO `ts_group_match`(`ts_type_id`, `ts_group_id`) VALUES (4, 5);
 INSERT INTO `ts_group_match`(`ts_type_id`, `ts_group_id`) VALUES (5, 8);
 
+--Заполняем связку тип ТС -> Производитель ТС
+INSERT `ts_type2ts_make` (`ts_type_id`, `ts_make_id`)
+SELECT ts_type_id, ts_make_id FROM ts_model group by ts_make_id, ts_type_id
 
  
