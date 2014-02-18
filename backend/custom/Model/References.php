@@ -15,6 +15,7 @@ class References
         'franchise_type',
         'front_contract_duration',
         'regres_limit',
+        'all_factors',
     );
 
     /**

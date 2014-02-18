@@ -35,9 +35,9 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
         // kps  mandatory
         7 => array('ts_no_defend_flag', 'ts_satellite_flag', 'ts_electronic_alarm_flag',),
         // kkv
-        8 => array('commission_percent_up', 'commission_percent_down',),
+        8 => array( /* doesn't matter 'commission_percent_up', 'commission_percent_down',*/),
         // ko
-        9 => array('is_onetime_payment',),
+        9 => array( /* doesn't matter 'is_onetime_payment',*/),
         // klv
         10 => array('tariff_program_id', 'regres_limit_factor_id',),
         // kctoa
@@ -72,7 +72,7 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
         "ts_no_defend_flag" => array('type' => 'radio'),
         "ts_satellite_flag" => array('type' => 'radio'),
         "ts_electronic_alarm_flag" => array('type' => 'radio', 'default' => 1),
-        "is_onetime_payment" => array('type' => 'checkbox'),
+//        "is_onetime_payment" => array('type' => 'checkbox'),
         "franchise_percent" => array('type' => 'input'),
         "driver_age" => array('type' => 'input'),
         "driver_exp" => array('type' => 'input'),
@@ -80,7 +80,7 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
         "car_quantity" => array('type' => 'input', 'default' => 1),
         "contract_day" => array('type' => 'input'),
         "contract_month" => array('type' => 'input', 'default' => 12),
-        "commission_percent" => array('type' => 'input'),
+//        "commission_percent" => array('type' => 'input'),
     );
 
 
@@ -117,8 +117,8 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
         'ts_no_defend_flag' => array('type' => self::TYPE_INT,),
         'ts_satellite_flag' => array('type' => self::TYPE_INT,),
         'ts_electronic_alarm_flag' => array('type' => self::TYPE_INT,),
-        'commission_percent' => array('type' => self::TYPE_INT, 'fork' => true,),
-        'is_onetime_payment' => array('type' => self::TYPE_INT,),
+//        'commission_percent' => array('type' => self::TYPE_INT, 'fork' => true,),
+//        'is_onetime_payment' => array('type' => self::TYPE_INT,),
         /*is in basis*/
         'tariff_def_damage_type_id' => array('type' => self::TYPE_INT,),
         'regres_limit_factor_id' => array('type' => self::TYPE_INT,),
@@ -205,7 +205,7 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
             foreach ($parameters_known as $key => $param_known) {
                 //dirt for sum
                 if ($key === 'ts_sum') {
-                    $sql_where .= ($first ? ' WHERE' : ' AND') . " `ts_sum_up` >= $param_known AND ts_sum_down <= $param_known";
+                    $sql_where .= ($first ? ' WHERE' : ' AND') . " (`ts_sum_up` >= $param_known OR `ts_sum_up` IS NULL) AND (`ts_sum_down` IS NULL OR `ts_sum_down` <= $param_known)";
                 } else {
                     $sql_where .= ($first ? ' WHERE' : ' AND') . " `$key` = $param_known";
                 }
@@ -225,7 +225,7 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
             $results = $sth->fetchAll(PDO::FETCH_ASSOC);
 
             if (!$results) {
-                throw new Frapi_Error('CANT_VALIDATE', 'Wrong ' . implode(', ', array_keys($parameters_known)));
+                throw new Frapi_Error('CANT_VALIDATE', 'base');
             }
             foreach ($results as $value) {
                 $param_to_front = preg_replace('/_id$/u', '', $param);
@@ -270,6 +270,13 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
                     return $this->toArray();
                 }
                 $result = $sth->fetchAll(PDO::FETCH_COLUMN);
+
+                if (!$result) {
+                    $sth = $db->query('SELECT `code` FROM `all_factors` where `id` = ' . $factor_id);
+                    $factor = $sth->fetch(PDO::FETCH_ASSOC);
+
+                    throw new Frapi_Error('CANT_VALIDATE', $factor['code']);
+                }
 
                 if (empty($results[$column])) {
                     $results[$column] = $result;

@@ -139,7 +139,7 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
 
         $sth = $db->query($correctionQuery);
         if (!$sth) {
-            throw new Frapi_Action_Exception('CANT_CORRECT', $correctionQuery);
+            throw new Frapi_Action_Exception($correctionQuery, 'CANT_CORRECT');
         }
         $corrections = $sth->fetchAll(PDO::FETCH_ASSOC);
         $correct_errors = array();
@@ -156,7 +156,7 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
         }
 
         if (count($correct_errors))
-            throw new Frapi_Exception('CANT_CORRECT', join(', ', $correct_errors));
+            throw new Frapi_Exception(join(', ', $correct_errors), 'CANT_CORRECT');
 
         $this->_calcErrors = array();
         $result = array();
@@ -462,7 +462,7 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
         $result = array_merge($result, $results);
 
         if (count($this->_calcErrors))
-            throw new Frapi_Exception('CANT_CALC_COEF', join(', ', $this->_calcErrors));
+            throw new Frapi_Exception(join(', ', $this->_calcErrors), 'CANT_CALC_COEF');
 
         //Выбираем все значения коэфициентов проходящие по выбранным факторам
         $this->data['Result']['Coefficients'] = $result;
