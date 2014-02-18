@@ -35,9 +35,9 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
         // kps  mandatory
         7 => array('ts_no_defend_flag', 'ts_satellite_flag', 'ts_electronic_alarm_flag',),
         // kkv
-        8 => array(/* doesn't matter 'commission_percent_up', 'commission_percent_down',*/),
+        8 => array( /* doesn't matter 'commission_percent_up', 'commission_percent_down',*/),
         // ko
-        9 => array(/* doesn't matter 'is_onetime_payment',*/),
+        9 => array( /* doesn't matter 'is_onetime_payment',*/),
         // klv
         10 => array('tariff_program_id', 'regres_limit_factor_id',),
         // kctoa
@@ -225,7 +225,7 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
             $results = $sth->fetchAll(PDO::FETCH_ASSOC);
 
             if (!$results) {
-                throw new Frapi_Error('CANT_VALIDATE', 'Wrong ' . implode(', ', array_keys($parameters_known)));
+                throw new Frapi_Error('CANT_VALIDATE', 'base');
             }
             foreach ($results as $value) {
                 $param_to_front = preg_replace('/_id$/u', '', $param);
@@ -270,6 +270,13 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
                     return $this->toArray();
                 }
                 $result = $sth->fetchAll(PDO::FETCH_COLUMN);
+
+                if (!$result) {
+                    $sth = $db->query('SELECT `code` FROM `all_factors` where `id` = ' . $factor_id);
+                    $factor = $sth->fetch(PDO::FETCH_ASSOC);
+
+                    throw new Frapi_Error('CANT_VALIDATE', $factor['code']);
+                }
 
                 if (empty($results[$column])) {
                     $results[$column] = $result;
