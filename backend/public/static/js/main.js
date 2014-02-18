@@ -73,7 +73,13 @@ $(function () {
 						resetData[key] = _.filter(resetData[key], function(elem) {
 
 							return item.value.indexOf(elem.id) != -1;
-						});				
+						});
+
+						// Если поле имеет дефолтное значение, пробрасываем об этом в данные для темплейты
+						if (!!item.default) {
+							resetData[key].hasDefault = true;
+							_.where(resetData[key], {id: '' + item.default})[0].default = true;
+						}
 
 						break;
 

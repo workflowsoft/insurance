@@ -87,19 +87,36 @@
 					<div class="col-lg-6">
 						<label class=" control-label">Программа страхования</label>
 						<select disabled={{!tariff_program}} class="form-control" name="tariff_program_id" value={{calculate.tariff_program_id}}>
-							<option disabled selected>Выберите программу</option>
-							{{#tariff_program}}
-								<option value={{id}}>{{name}}</option>
-							{{/tariff_program}}
+							{{^tariff_program.hasDefault}}
+								<option disabled selected>ыберите программу</option>
+							{{/tariff_program.hasDefault}}
 
+							{{#tariff_program}}
+								{{#default}}
+									<option selected value={{id}}>{{name}}</option>
+								{{/default}}
+
+								{{^default}}
+									<option value={{id}}>{{name}}</option>
+								{{/default}}
+							{{/tariff_program}}
 						</select>
 					</div>
 					<div class="col-lg-6">
 						<label class=" control-label">Тип возмещения</label>
 						<select disabled={{!tariff_def_damage_type}} class="form-control" name="tariff_def_damage_type_id" value={{calculate.tariff_def_damage_type_id}}>
-							<option disabled selected>Выберите тип возмещения</option>
+							{{^tariff_def_damage_type.hasDefault}}
+								<option disabled selected>Выберите тип возмещения</option>
+							{{/tariff_def_damage_type.hasDefault}}
+
 							{{#tariff_def_damage_type}}
-								<option value={{id}}>{{name}}</option>
+								{{#default}}
+									<option selected value={{id}}>{{name}}</option>
+								{{/default}}
+
+								{{^default}}
+									<option value={{id}}>{{name}}</option>
+								{{/default}}
 							{{/tariff_def_damage_type}}
 
 						</select>
@@ -109,9 +126,18 @@
 					<div class="col-lg-12">
 						<label class=" control-label">Категория ТС</label>
 						<select disabled={{!ts_group}} class="form-control" value={{calculate.ts_group_id}}> name="ts_group_id">
-							<option disabled selected>Выберите категорию</option>
+							{{^ts_group.hasDefault}}
+								<option disabled selected>Выберите категорию</option>
+							{{/ts_group.hasDefault}}
+
 							{{#ts_group}}
-								<option value={{id}}>{{name}}</option>
+								{{#default}}
+									<option selected value={{id}}>{{name}}</option>
+								{{/default}}
+
+								{{^default}}
+									<option value={{id}}>{{name}}</option>
+								{{/default}}
 							{{/ts_group}}
 						</select>
 					</div>
