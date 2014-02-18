@@ -275,7 +275,7 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
                     $sth = $db->query('SELECT `code` FROM `all_factors` where `id` = ' . $factor_id);
                     $factor = $sth->fetch(PDO::FETCH_ASSOC);
 
-                    throw new Frapi_Error('CANT_VALIDATE', $factor['code']);
+                    throw new Frapi_Error('CANT_VALIDATE', $factor['code'] . $sql);
                 }
 
                 if (empty($results[$column])) {
@@ -385,7 +385,7 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
             $where .= $first ? ' WHERE ' : ' AND ';
             $first = false;
             if (empty($item['fork'])) {
-                $where .= $column . ' = ' . $item['value'];
+                $where .= '(' . $column . ' = ' . $item['value'] . ' OR ' . $column . ' IS NULL)';
             } else {
                 $down = sprintf('`%s_down`', $column);
                 $up = sprintf('`%s_up`', $column);
