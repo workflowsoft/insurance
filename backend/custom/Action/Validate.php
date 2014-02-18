@@ -57,30 +57,30 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
     private $_mandatory_factor_ids = array(6, 7, 12);
 
 
-    private $_to_front_types = array(
-        "ts_type" => 'select',
-        "ts_make" => 'select',
-        "ts_model" => 'select',
-        "ts_modification" => 'select',
-        "ts_group" => 'select',
-        "tariff_def_damage_type" => 'select',
-        "ts_age" => 'input',
-        "tariff_program" => 'select',
-        "risk" => 'select',
-        "amortisation" => 'checkbox',
-        "commercial_carting_flag" => 'checkbox',
-        "ts_no_defend_flag" => 'radio',
-        "ts_satellite_flag" => 'radio',
-        "ts_electronic_alarm_flag" => 'radio',
-        "is_onetime_payment" => 'checkbox',
-        "franchise_percent" => 'input',
-        "driver_age" => 'input',
-        "driver_exp" => 'input',
-        "drivers_count" => 'input',
-        "car_quantity" => 'input',
-        "contract_day" => 'input',
-        "contract_month" => 'input',
-        "commission_percent" => 'input',
+    private $_to_front = array(
+        "ts_type" => array('type' => 'select'),
+        "ts_make" => array('type' => 'select'),
+        "ts_model" => array('type' => 'select'),
+        "ts_modification" => array('type' => 'select'),
+        "ts_group" => array('type' => 'select', 'default' => 1),
+        "tariff_def_damage_type" => array('type' => 'select', 'default' => 1),
+        "ts_age" => array('type' => 'input'),
+        "tariff_program" => array('type' => 'select', 'default' => 2),
+        "risk" => array('type' => 'select'),
+        "amortisation" => array('type' => 'checkbox'),
+        "commercial_carting_flag" => array('type' => 'checkbox'),
+        "ts_no_defend_flag" => array('type' => 'radio'),
+        "ts_satellite_flag" => array('type' => 'radio'),
+        "ts_electronic_alarm_flag" => array('type' => 'radio', 'default' => 1),
+        "is_onetime_payment" => array('type' => 'checkbox'),
+        "franchise_percent" => array('type' => 'input'),
+        "driver_age" => array('type' => 'input'),
+        "driver_exp" => array('type' => 'input'),
+        "drivers_count" => array('type' => 'input', 'default' => 1),
+        "car_quantity" => array('type' => 'input', 'default' => 1),
+        "contract_day" => array('type' => 'input'),
+        "contract_month" => array('type' => 'input', 'default' => 12),
+        "commission_percent" => array('type' => 'input'),
     );
 
 
@@ -334,7 +334,10 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
         //добавим типы полей для глупого фронта
         foreach ($results as $k => $v) {
             unset($results[$k]);
-            $results[$k]['type'] = $this->_to_front_types[$k];
+            $results[$k]['type'] = $this->_to_front[$k]['type'];
+            if (!empty($this->_to_front[$k]['default'])) {
+                $results[$k]['default'] = $this->_to_front[$k]['default'];
+            }
             $results[$k]['value'] = $v;
         }
 
