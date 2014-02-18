@@ -7,6 +7,8 @@
    <public>1</public>
    <route>/</route>
    <hash>29e39f311db4ca2ef7dacf8d8c493ef69aa29b61</hash>
+   <description>Стартовая страница со View (Сам калькулятор - Фронт)</description>
+   <parameters></parameters>
   </action>
   <action>
    <name>Doc</name>
@@ -14,6 +16,7 @@
    <public>1</public>
    <route>/doc</route>
    <hash>7a48ae1b7387f8a8159c488fbd850021</hash>
+   <description>Описание API (Автодокументация)</description>
   </action>
   <action>
    <name>Calculate</name>
