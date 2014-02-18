@@ -205,7 +205,7 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
             foreach ($parameters_known as $key => $param_known) {
                 //dirt for sum
                 if ($key === 'ts_sum') {
-                    $sql_where .= ($first ? ' WHERE' : ' AND') . " `ts_sum_up` >= $param_known AND ts_sum_down <= $param_known";
+                    $sql_where .= ($first ? ' WHERE' : ' AND') . " (`ts_sum_up` >= $param_known OR `ts_sum_up` IS NULL) AND (`ts_sum_down` IS NULL OR `ts_sum_down` <= $param_known)";
                 } else {
                     $sql_where .= ($first ? ' WHERE' : ' AND') . " `$key` = $param_known";
                 }
