@@ -196,16 +196,24 @@
 					</div>
 				</div>
 				<div class="form-group g-clrfix">
-					<div class="col-lg-6">
+					<div class="col-lg-4">
 						<label class="control-label">Количество ЛДУ</label>
 						<input name="drivers_count" type="text" value="{{calculate.drivers_count}}" class="form-control">
-					</div><!-- /.col-lg-6 -->
-					<div class="col-lg-6">
+					</div>
+					<div class="col-lg-4">
 						<label class=" control-label">Выплаты без справок</label>
 						<select name="payments_without_references_id" value={{calculate.payments_without_references_id}} class="form-control">
 							{{#payments_without_references}}
 								<option value={{id}}>{{name}}</option>
 							{{/payments_without_references}}
+						</select>
+					</div>
+					<div class="col-lg-4">
+					    <label class=" control-label">Тип возмещения</label>
+						<select class="form-control" value="{{calculate.regres_limit_factor_id}}" name="regres_limit_factor_id">
+							{{#regres_limit}}
+							<option value={{id}}>{{name}}</option>
+							{{/regres_limit}}
 						</select>
 					</div>
 				</div>
@@ -232,18 +240,6 @@
 						<input type="text" value="{{calculate.driver_exp}}" class="form-control">
 					</div>
 					<div class="col-lg-4">
-						<label for="additional_sum">Стоимость доп.оборудования<br />&nbsp;</label>
-						<input value="{{calculate.additional_sum}}" name="additional_sum" type="text" class="form-control">
-					</div>
-				</div>
-				<div class="form-group g-clrfix">
-					<div class="col-lg-12">
-						<label class=" control-label">Тип возмещения</label>
-						<select class="form-control" value="{{calculate.regres_limit_factor_id}}" name="regres_limit_factor_id">
-							{{#regres_limit}}
-							<option value={{id}}>{{name}}</option>
-							{{/regres_limit}}
-						</select>
 					</div>
 				</div>
 			</div>
