@@ -73,7 +73,7 @@ esurance
  
  Запрос
  ```
- http://localhost:91/calculate/v1?risk_id=1&franchise_type_id=1&payments_without_references_id=1&regres_limit_factor_id=1&ts_group_id=10&tariff_program_id=2&tariff_def_damage_type_id=3&ts_age=1&ts_sum=600000&ts_no_defend_flag=false&drivers_count=1&contract_month=12&driver_age=28&driver_exp=4&ts_have_electronic_alarm=true&amortisation=true&additional_sum=100000
+ http://localhost:91/calculate/v1?risk_id=1&franchise_type_id=1&payments_without_references_id=1&regres_limit_factor_id=1&ts_group_id=10&tariff_program_id=2&tariff_def_damage_type_id=3&ts_age=1&ts_sum=600000&ts_no_defend_flag=false&drivers_count=1&contract_month=12&driver_age=28&driver_exp=4&ts_electronic_alarm_flag=true&amortisation=true&additional_sum=100000
  ```
  
  ```json
@@ -129,7 +129,7 @@ esurance
 		"driver_exp":"4",
 		"ts_no_defend_flag":"false",
 		"ts_satellite_flag":null,
-		"ts_have_electronic_alarm":"true",
+		"ts_electronic_alarm_flag":"true",
 		"franchise_percent":null,
 		"commercial_carting_flag":null,
 		"additional_sum":"100000"

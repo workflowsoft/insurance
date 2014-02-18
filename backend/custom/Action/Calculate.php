@@ -77,7 +77,7 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
             'driver_exp' => $this->getParam('driver_exp', self::TYPE_OUTPUT),
             'ts_no_defend_flag' => $this->getParam('ts_no_defend_flag', self::TYPE_OUTPUT),
             'ts_satellite_flag' => $this->getParam('ts_satellite_flag', self::TYPE_OUTPUT),
-            'ts_have_electronic_alarm' => $this->getParam('ts_have_electronic_alarm', self::TYPE_OUTPUT),
+            'ts_electronic_alarm_flag' => $this->getParam('ts_electronic_alarm_flag', self::TYPE_OUTPUT),
             'franchise_percent' => $this->getParam('franchise_percent', self::TYPE_OUTPUT),
             'commercial_carting_flag' => $this->getParam('commercial_carting_flag', self::TYPE_OUTPUT),
             'additional_sum' => $this->getParam('additional_sum', self::TYPE_OUTPUT),
@@ -373,12 +373,12 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
 
         $aWhere = $aWhere . $where;
 
-        if (!empty($this->params['ts_have_electronic_alarm'])) {
-            $ts_have_electronic_alarm = $this->getParam('ts_have_electronic_alarm', self::TYPE_BOOL);
+        if (!empty($this->params['ts_electronic_alarm_flag'])) {
+            $ts_electronic_alarm_flag = $this->getParam('ts_electronic_alarm_flag', self::TYPE_BOOL);
             $where = sprintf(
-                ' AND (ts_have_electronic_alarm IS NULL OR ts_have_electronic_alarm=%u)', $ts_have_electronic_alarm);
+                ' AND (ts_electronic_alarm_flag IS NULL OR ts_electronic_alarm_flag=%u)', $ts_electronic_alarm_flag);
         } else
-            $where = ' AND ts_have_electronic_alarm IS NULL';
+            $where = ' AND ts_electronic_alarm_flag IS NULL';
 
         $aWhere = $aWhere . $where;
 

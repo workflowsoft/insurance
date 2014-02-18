@@ -33,7 +33,7 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
         // ksd  mandatory
         6 => array('tariff_program_id', 'contract_day_down', 'contract_day_up', 'contract_month_down', 'contract_month_up',),
         // kps  mandatory
-        7 => array('ts_no_defend_flag', 'ts_satellite_flag', 'ts_have_electronic_alarm',),
+        7 => array('ts_no_defend_flag', 'ts_satellite_flag', 'ts_electronic_alarm_flag',),
         // kkv
         8 => array('commission_percent_up', 'commission_percent_down',),
         // ko
@@ -71,7 +71,7 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
         "commercial_carting_flag" => 'checkbox',
         "ts_no_defend_flag" => 'radio',
         "ts_satellite_flag" => 'radio',
-        "ts_have_electronic_alarm" => 'radio',
+        "ts_electronic_alarm_flag" => 'radio',
         "is_onetime_payment" => 'checkbox',
         "franchise_percent" => 'input',
         "driver_age" => 'input',
@@ -116,7 +116,7 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
         'contract_month' => array('type' => self::TYPE_INT, 'fork' => true,),
         'ts_no_defend_flag' => array('type' => self::TYPE_INT,),
         'ts_satellite_flag' => array('type' => self::TYPE_INT,),
-        'ts_have_electronic_alarm' => array('type' => self::TYPE_INT,),
+        'ts_electronic_alarm_flag' => array('type' => self::TYPE_INT,),
         'commission_percent' => array('type' => self::TYPE_INT, 'fork' => true,),
         'is_onetime_payment' => array('type' => self::TYPE_INT,),
         /*is in basis*/

@@ -123,7 +123,7 @@ INSERT INTO `additional_coefficients` (`factor_id`, `tariff_program_id`, `contra
 -- вставка для kps (Коэфициент противоугонных средств)
 SET @kps_id = (SELECT id FROM all_factors WHERE code='kps');
 
-INSERT INTO `additional_coefficients` (`factor_id`, `ts_no_defend_flag`, `ts_satellite_flag`, `ts_have_electronic_alarm`, `value`, `priority`) VALUES
+INSERT INTO `additional_coefficients` (`factor_id`, `ts_no_defend_flag`, `ts_satellite_flag`, `ts_electronic_alarm_flag`, `value`, `priority`) VALUES
   (@kps_id, 1, NULL, NULL, 1.3, 0),
   (@kps_id, NULL, 1, NULL, 0.87, 2),
   (@kps_id, NULL, NULL, 1, 0.95, 1);

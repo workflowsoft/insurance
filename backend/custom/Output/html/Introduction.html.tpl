@@ -172,7 +172,7 @@
 					</div>
 					<div class="col-lg-3">
 						<label class="checkbox-inline">
-							<input type="checkbox"  id="inlineCheckbox3" checked="{{calculate.ts_have_electronic_alarm}}">Есть эл. сигнализация с обратной связью
+							<input type="checkbox"  id="inlineCheckbox3" checked="{{calculate.ts_electronic_alarm_flag}}">Есть эл. сигнализация с обратной связью
 						</label>
 					</div>
 					<div class="col-lg-3">

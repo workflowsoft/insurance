@@ -152,7 +152,7 @@ CREATE TABLE IF NOT EXISTS `additional_coefficients` (
   `driver_exp_up` int(10) DEFAULT NULL,
   `ts_no_defend_flag` tinyint(1) DEFAULT NULL,
   `ts_satellite_flag` tinyint(1) DEFAULT NULL,
-  `ts_have_electronic_alarm` tinyint(1) DEFAULT NULL,
+  `ts_electronic_alarm_flag` tinyint(1) DEFAULT NULL,
   `is_onetime_payment` tinyint(1) DEFAULT NULL,
   `car_quantity_down` int(10) DEFAULT NULL,
   `car_quantity_up` int(10) DEFAULT NULL,
