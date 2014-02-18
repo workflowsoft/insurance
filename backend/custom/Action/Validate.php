@@ -35,9 +35,9 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
         // kps  mandatory
         7 => array('ts_no_defend_flag', 'ts_satellite_flag', 'ts_electronic_alarm_flag',),
         // kkv
-        8 => array('commission_percent_up', 'commission_percent_down',),
+        8 => array(/* doesn't matter 'commission_percent_up', 'commission_percent_down',*/),
         // ko
-        9 => array('is_onetime_payment',),
+        9 => array(/* doesn't matter 'is_onetime_payment',*/),
         // klv
         10 => array('tariff_program_id', 'regres_limit_factor_id',),
         // kctoa
@@ -72,7 +72,7 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
         "ts_no_defend_flag" => array('type' => 'radio'),
         "ts_satellite_flag" => array('type' => 'radio'),
         "ts_electronic_alarm_flag" => array('type' => 'radio', 'default' => 1),
-        "is_onetime_payment" => array('type' => 'checkbox'),
+//        "is_onetime_payment" => array('type' => 'checkbox'),
         "franchise_percent" => array('type' => 'input'),
         "driver_age" => array('type' => 'input'),
         "driver_exp" => array('type' => 'input'),
@@ -80,7 +80,7 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
         "car_quantity" => array('type' => 'input', 'default' => 1),
         "contract_day" => array('type' => 'input'),
         "contract_month" => array('type' => 'input', 'default' => 12),
-        "commission_percent" => array('type' => 'input'),
+//        "commission_percent" => array('type' => 'input'),
     );
 
 
@@ -117,8 +117,8 @@ class Action_Validate extends Frapi_Action implements Frapi_Action_Interface
         'ts_no_defend_flag' => array('type' => self::TYPE_INT,),
         'ts_satellite_flag' => array('type' => self::TYPE_INT,),
         'ts_electronic_alarm_flag' => array('type' => self::TYPE_INT,),
-        'commission_percent' => array('type' => self::TYPE_INT, 'fork' => true,),
-        'is_onetime_payment' => array('type' => self::TYPE_INT,),
+//        'commission_percent' => array('type' => self::TYPE_INT, 'fork' => true,),
+//        'is_onetime_payment' => array('type' => self::TYPE_INT,),
         /*is in basis*/
         'tariff_def_damage_type_id' => array('type' => self::TYPE_INT,),
         'regres_limit_factor_id' => array('type' => self::TYPE_INT,),
