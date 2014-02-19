@@ -197,25 +197,6 @@ CREATE TABLE IF NOT EXISTS `tariff_coefficients` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Таблица зависимостей базового тарифа от различных факторов';
 
--- Таблица фронтового справочника, длительности договора страховки
-DROP TABLE IF EXISTS `front_contract_duration`;
-CREATE TABLE IF NOT EXISTS `front_contract_duration` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) COLLATE utf8_bin DEFAULT NULL,
-  `contract_days_up` int(11) DEFAULT NULL,
-  `contract_months_up` int(11) DEFAULT NULL,
-  `contract_years_up` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Таблица фронтового справочника, длительности договора страховки';
-
--- Дамп структуры для таблица ubercalc.front_ldu_quantity
-DROP TABLE IF EXISTS `front_ldu_quantity`;
-CREATE TABLE IF NOT EXISTS `front_ldu_quantity` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) COLLATE utf8_bin DEFAULT NULL,
-  `value` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Количество ЛДУ (лиц допущенных к управлению)';
 
 -- Таблица обязательной зависимости значений одних факторов от значений других факторов
 DROP TABLE IF EXISTS `factor_restricions`;

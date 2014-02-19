@@ -13,9 +13,8 @@ class References
         'risks',
         'payments_without_references',
         'franchise_type',
-        'front_contract_duration',
         'regres_limit',
-        'all_factors',
+//        'all_factors',
     );
 
     /**
@@ -37,7 +36,7 @@ class References
     public static function getByTable($table)
     {
         $db = Frapi_Database::getInstance();
-        $query = 'SELECT * FROM `' . $table . '`';
+        $query = 'SELECT `id`, `name` FROM `' . $table . '`';
         $result = $db->query($query);
         return $result->fetchAll(PDO::FETCH_ASSOC);
     }

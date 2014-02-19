@@ -21,24 +21,6 @@ INSERT INTO `all_factors` (`name`, `description`, `code`, `is_mandatory`, `defau
 
 
 	
-
-INSERT INTO `front_contract_duration` (`name`, `contract_days_up`, `contract_months_up`, `contract_years_up`) VALUES
-	('до 5-ти дней', 5, NULL, NULL),
-	('до 15-ти дней', 15, NULL, NULL),
-	('до 1-го месяца', NULL, 1, NULL),
-	('до 2-х месяцев', NULL, 2, NULL),
-	('до 3-х месяцев', NULL, 3, NULL),
-	('до 4-х месяцев', NULL, 4, NULL),
-	('до 5-ти месяцев', NULL, 5, NULL),
-	('до 6-ти месяцев', NULL, 6, NULL),
-	('до 7-ми месяцев', NULL, 7, NULL),
-	('до 8-ми месяцев', NULL, 8, NULL),
-	('до 9-ти месяцев', NULL, 9, NULL),
-	('до 10-ти месяцев', NULL, 10, NULL),
-	('до 11-ти месяцев', NULL, 11, NULL),
-	('до 12-ти месяцев', NULL, 12, NULL),
-	('до 2-х лет', NULL, NULL, 2);
-
 INSERT INTO `franchise_type` (`name`) VALUES
 	('Условная'),
 	('Безусловная');
@@ -53,14 +35,8 @@ INSERT INTO `regres_limit` (`name`) VALUES
 	('Неагрегатный лимит'),
 	('Агрегатный лимит'),
 	('До 1 страхового случая');
-	
-INSERT INTO `front_ldu_quantity` (`name`, `value`) VALUES
- ('Без ограничений', NULL),
- ('Не более 3-х водителей', 3),
- ('4 водителя', 4),
- ('5 водителей', 5),
- ('Любые лица от 33 лет', 33);
- 
+
+
 INSERT INTO `ts_type` (`Id`, `name`) VALUES (1, 'Легковые автомобили');
 INSERT INTO `ts_type` (`Id`, `name`) VALUES (2, 'Грузовые автомобили');
 INSERT INTO `ts_type` (`Id`, `name`) VALUES (3, 'Автобусы');
