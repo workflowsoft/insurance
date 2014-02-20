@@ -4,6 +4,16 @@
 class References
 {
 
+    /*
+     * array(
+     *  'id',
+     *  'name',
+     *  'request_parameter'
+     *  'value',
+     *  'is_default'
+     * )
+     */
+
     private static $_tables = array(
         'ts_type',
         'ts_modification',
@@ -13,21 +23,24 @@ class References
         'risks',
         'payments_without_references',
         'franchise_type',
-        'front_contract_duration',
         'regres_limit',
-        'all_factors',
     );
+
+    private static $_results = array();
 
     /**
      * @return array
      */
     public static function get()
     {
-        $results = array();
         foreach (self::$_tables as $table) {
-            $results[$table] = self::getByTable($table);
+            self::$_results[$table]['request_parameter'] = $table . '_id';
+            self::$_results[$table]['values'] = self::getByTable($table);
         }
-        return $results;
+
+        self::_getSynthetic();
+
+        return self::$_results;
     }
 
     /**
@@ -37,9 +50,62 @@ class References
     public static function getByTable($table)
     {
         $db = Frapi_Database::getInstance();
-        $query = 'SELECT * FROM `' . $table . '`';
+        $query = 'SELECT `id`, `name` FROM `' . $table . '`';
         $result = $db->query($query);
-        return $result->fetchAll(PDO::FETCH_ASSOC);
+        $results = $result->fetchAll(PDO::FETCH_ASSOC);
+        $first = true;
+        foreach ($results as $k => $v) {
+            $results[$k]['value'] = $v['id'];
+            if ($first) {
+                $results[$k]['is_default'] = 1;
+                $first = false;
+            } else {
+                $results[$k]['is_default'] = 0;
+            }
+        }
+
+        return $results;
+
+    }
+
+    private static function _getSynthetic()
+    {
+        //driver count
+        $db = Frapi_Database::getInstance();
+
+        $query = 'SELECT max(`drivers_count_up`) FROM `additional_coefficients`';
+        $result = $db->query($query);
+        $result = $result->fetch();
+        $max = $result[0];
+
+        $query = 'SELECT min(`drivers_count_down`) FROM `additional_coefficients`';
+        $result = $db->query($query);
+        $result = $result->fetch();
+        $min = $result[0];
+
+        self::$_results['drivers_count']['request_parameter'] = 'drivers_count';
+        $first = true;
+        for ($i = $min; $i <= $max; $i++) {
+            self::$_results['drivers_count']['values'][$i]['id'] = $i;
+            self::$_results['drivers_count']['values'][$i]['name'] = $i;
+            if ($first) {
+                self::$_results['drivers_count']['values'][$i]['is_default'] = 1;
+                $first = false;
+            } else {
+                self::$_results['drivers_count']['values'][$i]['is_default'] = 0;
+            }
+
+
+        }
+
+
+        //ts sum
+        //driver exp
+        //driver age
+        //used years
+        // time
+        // alarm to separate table
+
     }
 
 

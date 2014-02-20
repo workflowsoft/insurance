@@ -1,16 +1,16 @@
 use `ubercalc`;
 
 -- вставка для kuts (утрата товарной стоимости))
-SET @kuts_id = (SELECT id FROM all_factors WHERE code='kuts');
+SET @kuts_id = (SELECT id FROM coefficients WHERE code='kuts');
 
-INSERT INTO `additional_coefficients` (`factor_id`, `amortisation`, `value`) VALUES
+INSERT INTO `additional_coefficients` (`coefficient_id`, `amortisation`, `value`) VALUES
   (@kuts_id, 0, 1.3);
 
 -- Вставка для kf - коэф. франшизы
-SET @kf_id = (SELECT id FROM all_factors WHERE code='kf');
+SET @kf_id = (SELECT id FROM coefficients WHERE code='kf');
 -- Коэфициент при безусловной франшизе (минимальный шаг, 10-ые процента)
 SET @UnconditionalFranshiza = (SELECT id FROM franchise_type WHERE name='Безусловная');
-INSERT INTO `additional_coefficients` (`factor_id`, `franchise_percent_down`,
+INSERT INTO `additional_coefficients` (`coefficient_id`, `franchise_percent_down`,
   `franchise_percent_up`, `franchise_type_id`, `value`) VALUES
   (@kf_id, 0.1, 0.5, @UnconditionalFranshiza, 0.93),
   (@kf_id, 0.6, 1, @UnconditionalFranshiza, 0.85),
@@ -24,7 +24,7 @@ INSERT INTO `additional_coefficients` (`factor_id`, `franchise_percent_down`,
 -- Коэфициент при условной франшизе (минимальный шаг, 10-ые процента)
 SET @ConditionalFranshiza = (SELECT id FROM franchise_type WHERE name='Условная');
 
-INSERT INTO `additional_coefficients` (`factor_id`, `franchise_percent_down`,
+INSERT INTO `additional_coefficients` (`coefficient_id`, `franchise_percent_down`,
                                        `franchise_percent_up`, `franchise_type_id`, `value`) VALUES
   (@kf_id, 0.1, 0.5, @ConditionalFranshiza, 0.95),
   (@kf_id, 0.6, 1, @ConditionalFranshiza, 0.9),
@@ -47,7 +47,7 @@ SET @Reges1CC = (SELECT id FROM regres_limit WHERE name='До 1 страхово
 -- ТП Эконом 1СС,
 -- Универсал с лимитом возмещения до 1СС
 -- Оптимал
-INSERT INTO `additional_coefficients` (`factor_id`, `tariff_program_id`, `commercial_carting_flag` , `regres_limit_factor_id`, `value`, `priority`) VALUES
+INSERT INTO `additional_coefficients` (`coefficient_id`, `tariff_program_id`, `commercial_carting_flag` , `regres_limit_factor_id`, `value`, `priority`) VALUES
   (@kf_id, NULL, 1, NULL, 1, 2),
   (@kf_id, @TPEconom, NULL, NULL, 1, 1),
   (@kf_id, @UniversalInsProgram, NULL, @Reges1CC, 1, 1),
@@ -55,11 +55,11 @@ INSERT INTO `additional_coefficients` (`factor_id`, `tariff_program_id`, `commer
 
 
 -- вставка для kvs коэф. возраста-стажа (иметь ввиду, что у нас по-умолчанию не юрлицо.) шаг, один год
-SET @kvs_id = (SELECT id FROM all_factors WHERE code='kvs');
+SET @kvs_id = (SELECT id FROM coefficients WHERE code='kvs');
 
 -- Рассчитывает только при укзании количества водителей, если количество не указано, отрабатывает значение по-умолчанию
 
-INSERT INTO `additional_coefficients` (`factor_id`, `drivers_count_down`, `drivers_count_up`, `driver_age_down`, `driver_age_up`, `driver_exp_down`, `driver_exp_up`, `value`, `is_legal_entity`) VALUES
+INSERT INTO `additional_coefficients` (`coefficient_id`, `drivers_count_down`, `drivers_count_up`, `driver_age_down`, `driver_age_up`, `driver_exp_down`, `driver_exp_up`, `value`, `is_legal_entity`) VALUES
   (@kvs_id, 1, NULL, 0, 23, 0, 2, 1.4, 0),
   (@kvs_id, 1, NULL, 0, 23, 3, 5, 1.3, 0),
   (@kvs_id, 1, NULL, 24, 27, 0, 2, 1.3, 0),
@@ -79,9 +79,9 @@ INSERT INTO `additional_coefficients` (`factor_id`, `drivers_count_down`, `drive
   (@kvs_id, 1, NULL, 41, NULL, 10, NULL, 0.8, 0);
 
 -- вставка для kl (лиц, допущенных к управлению)
-SET @kl_id = (SELECT id FROM all_factors WHERE code='kl');
+SET @kl_id = (SELECT id FROM coefficients WHERE code='kl');
 
-INSERT INTO `additional_coefficients` (`factor_id`, `drivers_count_down`,
+INSERT INTO `additional_coefficients` (`coefficient_id`, `drivers_count_down`,
                                        `drivers_count_up`, `driver_age_down`,
                                        `is_legal_entity` , `value`, `priority`) VALUES
   (@kl_id, NULL, NULL, 33, 0, 1.25, 0),
@@ -91,17 +91,17 @@ INSERT INTO `additional_coefficients` (`factor_id`, `drivers_count_down`,
   (@kl_id, NULL, NULL, NULL, 1, 1, 2);
 
 -- вставка для kp - коэф. парковости (по умолчанию = 1)
-SET @kp_id = (SELECT id FROM all_factors WHERE code='kp');
+SET @kp_id = (SELECT id FROM coefficients WHERE code='kp');
 
-INSERT INTO `additional_coefficients` (`factor_id`, `car_quantity_down`, `car_quantity_up`, `value`) VALUES
+INSERT INTO `additional_coefficients` (`coefficient_id`, `car_quantity_down`, `car_quantity_up`, `value`) VALUES
   (@kp_id, 2, 5, 0.98),
   (@kp_id, 6, 9, 0.95),
   (@kp_id, 10, NULL, 0.9);
 
 -- Вставка для ksd (коэфициент срока действия договора))
-SET @ksd_id = (SELECT id FROM all_factors WHERE code='ksd');
+SET @ksd_id = (SELECT id FROM coefficients WHERE code='ksd');
 
-INSERT INTO `additional_coefficients` (`factor_id`, `tariff_program_id`, `contract_day_down`, `contract_day_up`, `contract_month_down`,
+INSERT INTO `additional_coefficients` (`coefficient_id`, `tariff_program_id`, `contract_day_down`, `contract_day_up`, `contract_month_down`,
                                        `contract_month_up`, `contract_year_down`, `contract_year_up`, `value`, `priority`) VALUES
   (@ksd_id, NULL, 5, 5, NULL, NULL, NULL, NULL, 0.05, 0),
   (@ksd_id, NULL,6, 15, NULL, NULL, NULL, NULL, 0.1, 0),
@@ -121,17 +121,26 @@ INSERT INTO `additional_coefficients` (`factor_id`, `tariff_program_id`, `contra
 
 
 -- вставка для kps (Коэфициент противоугонных средств)
-SET @kps_id = (SELECT id FROM all_factors WHERE code='kps');
+SET @kps_id = (SELECT id FROM coefficients WHERE code='kps');
 
-INSERT INTO `additional_coefficients` (`factor_id`, `ts_no_defend_flag`, `ts_satellite_flag`, `ts_electronic_alarm_flag`, `value`, `priority`) VALUES
-  (@kps_id, 1, NULL, NULL, 1.3, 0),
-  (@kps_id, NULL, 1, NULL, 0.87, 2),
-  (@kps_id, NULL, NULL, 1, 0.95, 1);
+
+INSERT INTO `ts_antitheft` (`name`) VALUES ('Отсутствует');
+SET @ts_antitheft_no = LAST_INSERT_ID();
+INSERT INTO `ts_antitheft` (`name`) VALUES ('Спутниковая сигнализация');
+SET @ts_antitheft_satellite = LAST_INSERT_ID();
+INSERT INTO `ts_antitheft` (`name`) VALUES ('Сигнализация с обратной связью');
+SET @ts_antitheft_alarm = LAST_INSERT_ID();
+
+
+INSERT INTO `additional_coefficients` (`coefficient_id`, `ts_antitheft_id`, `value`, `priority`) VALUES
+  (@kps_id, @ts_antitheft_no, 1.3, 0),
+  (@kps_id, @ts_antitheft_satellite, 0.87, 2),
+  (@kps_id, @ts_antitheft_alarm, 0.95, 1);
 
 -- вставка для kkv - коэф. комиссионного вознаграждения (шаг, один процент)
-SET @kkv_id = (SELECT id FROM all_factors WHERE code='kkv');
+SET @kkv_id = (SELECT id FROM coefficients WHERE code='kkv');
 
-INSERT INTO `additional_coefficients` (`factor_id`, `commission_percent_down`, `commission_percent_up`, `value`) VALUES
+INSERT INTO `additional_coefficients` (`coefficient_id`, `commission_percent_down`, `commission_percent_up`, `value`) VALUES
   (@kkv_id, 1, 1, 0.81),
   (@kkv_id, 2, 2, 0.82),
   (@kkv_id, 3, 3, 0.83),
@@ -159,28 +168,28 @@ INSERT INTO `additional_coefficients` (`factor_id`, `commission_percent_down`, `
   (@kkv_id, 25, 25, 1.08);
 
 -- вставка	для ko - единовременная оплата страх. премии
-SET @ko_id = (SELECT id FROM all_factors WHERE code='ko');
+SET @ko_id = (SELECT id FROM coefficients WHERE code='ko');
 
-INSERT INTO `additional_coefficients` (`factor_id`, `is_onetime_payment`, `value`) VALUES
+INSERT INTO `additional_coefficients` (`coefficient_id`, `is_onetime_payment`, `value`) VALUES
   (@ko_id, 1, 0.97);
 
 -- вставка для klv - Коэффициент лимита возмещения
-SET @klv_id = (SELECT id FROM all_factors WHERE code='klv');
+SET @klv_id = (SELECT id FROM coefficients WHERE code='klv');
 SET @AggregateLimit = (SELECT id FROM regres_limit WHERE name='Агрегатный лимит');
 SET @ToFirstInsEvent = (SELECT id FROM regres_limit WHERE name='До 1 страхового случая');
 
-INSERT INTO `additional_coefficients` (`factor_id`, `tariff_program_id`, `regres_limit_factor_id`, `value`) VALUES
+INSERT INTO `additional_coefficients` (`coefficient_id`, `tariff_program_id`, `regres_limit_factor_id`, `value`) VALUES
   (@klv_id, @UniversalInsProgram, @AggregateLimit, 0.95),
   (@klv_id, @UniversalInsProgram, @ToFirstInsEvent, 0.6);
 
 
 -- вставка для kctoa - Коэффициент возмещения
-SET @kctoa_id = (SELECT id FROM all_factors WHERE code='kctoa');
+SET @kctoa_id = (SELECT id FROM coefficients WHERE code='kctoa');
 SET @1C = (SELECT id FROM tariff_def_damage_type WHERE name='По калькуляции страховщика');
 SET @2C = (SELECT id FROM tariff_def_damage_type WHERE name='По калькуляции страховщика / По счетам СТОА из перечня');
 SET @3C = (SELECT id FROM tariff_def_damage_type WHERE name='По калькуляции страховщика / По счетам СТОА из перечня / По счетам СТОА по выбору');
 
-INSERT INTO `additional_coefficients` (`factor_id`, `tariff_program_id`, `tariff_def_damage_type_id`, `regres_limit_factor_id`, `value`) VALUES
+INSERT INTO `additional_coefficients` (`coefficient_id`, `tariff_program_id`, `tariff_def_damage_type_id`, `regres_limit_factor_id`, `value`) VALUES
   (@kctoa_id, @UniversalInsProgram, @1C, @NonAggregateLimit, 1),
   (@kctoa_id, @UniversalInsProgram, @1C, @AggregateLimit, 1),
   (@kctoa_id, @UniversalInsProgram, @2C, @NonAggregateLimit, 1.05),
@@ -190,14 +199,14 @@ INSERT INTO `additional_coefficients` (`factor_id`, `tariff_program_id`, `tariff
   (@kctoa_id, @UniversalInsProgram, NULL, @ToFirstInsEvent, 1);
 
 -- вставка для vbs - Выплаты без справок (по умолчанию = 1)
-SET @vbs_id = (SELECT id FROM all_factors WHERE code='vbs');
+SET @vbs_id = (SELECT id FROM coefficients WHERE code='vbs');
 SET @pay1time = (SELECT id FROM payments_without_references WHERE name='1 раз за период страхования');
 SET @pay2times = (SELECT id FROM payments_without_references WHERE name='2 раза за период страхования');
 SET @nopay_1 = (SELECT id FROM payments_without_references WHERE name='Не осуществляются (1 вариант)');
 SET @nopay_2 = (SELECT id FROM payments_without_references WHERE name='Не осуществляются (2 вариант)');
 SET @Buisness = (SELECT id FROM tariff_program WHERE name='Бизнес');
 
-INSERT INTO `additional_coefficients` (`factor_id`, `tariff_program_id`, `payments_without_references_id`, `value`, `priority`) VALUES
+INSERT INTO `additional_coefficients` (`coefficient_id`, `tariff_program_id`, `payments_without_references_id`, `value`, `priority`) VALUES
   (@vbs_id, @Buisness, @pay1time, 1, 1),
   (@vbs_id, @Buisness, @pay2times, 1, 1),
   (@vbs_id, @Buisness, @nopay_1, 0.95, 1),

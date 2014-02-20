@@ -5,8 +5,8 @@ CREATE DATABASE IF NOT EXISTS `ubercalc` DEFAULT CHARACTER SET utf8 COLLATE utf8
 USE `ubercalc`;
 
 -- Таблица списка используемых в формуле РАССЧЕТНЫХ операндов, их обязательность и значение по-умолчанию
-DROP TABLE IF EXISTS `all_factors`;
-CREATE TABLE IF NOT EXISTS `all_factors` (
+DROP TABLE IF EXISTS `coefficients`;
+CREATE TABLE IF NOT EXISTS `coefficients` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) COLLATE utf8_bin NOT NULL,
   `description` varchar(50) COLLATE utf8_bin NOT NULL,
@@ -129,12 +129,18 @@ CREATE TABLE IF NOT EXISTS `ts_group_match` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Составление групп транспортных средств и конкретных моделей и марок';
 
+DROP TABLE IF EXISTS `ts_antitheft`;
+CREATE TABLE IF NOT EXISTS `ts_antitheft` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- Поправочные коэфициенты с зависимостью от факторов, которые их формируют
 DROP TABLE IF EXISTS `additional_coefficients`;
 CREATE TABLE IF NOT EXISTS `additional_coefficients` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
-  `factor_id` int(10) NOT NULL REFERENCES all_factors(id),
+  `coefficient_id` int(10) NOT NULL REFERENCES coefficients(id),
   `tariff_program_id` int(10) DEFAULT NULL REFERENCES tariff_program(id),
   `risk_id` int(10) DEFAULT NULL REFERENCES  risks(id),
   `ts_type_id` int(10) REFERENCES `ts_type`(id),
@@ -159,9 +165,7 @@ CREATE TABLE IF NOT EXISTS `additional_coefficients` (
   `driver_age_up` int(10) DEFAULT NULL,
   `driver_exp_down` int(10) DEFAULT NULL,
   `driver_exp_up` int(10) DEFAULT NULL,
-  `ts_no_defend_flag` tinyint(1) DEFAULT NULL,
-  `ts_satellite_flag` tinyint(1) DEFAULT NULL,
-  `ts_electronic_alarm_flag` tinyint(1) DEFAULT NULL,
+  `ts_antitheft_id` int(10) DEFAULT NULL REFERENCES ts_antitheft(id),
   `is_onetime_payment` tinyint(1) DEFAULT NULL,
   `car_quantity_down` int(10) DEFAULT NULL,
   `car_quantity_up` int(10) DEFAULT NULL,
@@ -197,25 +201,6 @@ CREATE TABLE IF NOT EXISTS `tariff_coefficients` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Таблица зависимостей базового тарифа от различных факторов';
 
--- Таблица фронтового справочника, длительности договора страховки
-DROP TABLE IF EXISTS `front_contract_duration`;
-CREATE TABLE IF NOT EXISTS `front_contract_duration` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) COLLATE utf8_bin DEFAULT NULL,
-  `contract_days_up` int(11) DEFAULT NULL,
-  `contract_months_up` int(11) DEFAULT NULL,
-  `contract_years_up` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Таблица фронтового справочника, длительности договора страховки';
-
--- Дамп структуры для таблица ubercalc.front_ldu_quantity
-DROP TABLE IF EXISTS `front_ldu_quantity`;
-CREATE TABLE IF NOT EXISTS `front_ldu_quantity` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) COLLATE utf8_bin DEFAULT NULL,
-  `value` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Количество ЛДУ (лиц допущенных к управлению)';
 
 -- Таблица обязательной зависимости значений одних факторов от значений других факторов
 DROP TABLE IF EXISTS `factor_restricions`;
@@ -232,4 +217,16 @@ CREATE TABLE IF NOT EXISTS `factor_restricions` (
 	`conditional` bit(1) DEFAULT NULL,
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Определение значений одних факторов значеним других на праве перезаписи';
+
+-- Таблица факторов
+DROP TABLE IF EXISTS `factors`;
+CREATE TABLE IF NOT EXISTS `factors` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `default` int(10) unsigned,
+  `reference_table` varchar(50),
+  `description` varchar(255),
+  `is_reference` TINYINT UNSIGNED ,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Факторы, участвующие в расчете коэффициентов';
 

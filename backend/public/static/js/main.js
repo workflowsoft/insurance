@@ -44,6 +44,8 @@ $(function () {
 						data: response
 					})
 
+					this.validate();
+
 				}.bind(this))
 				.then(function() {
 					this.afterLoad();
@@ -62,6 +64,40 @@ $(function () {
 			$.get('/validate',
 				data
 			).then(function(response) {
+				var resetData = _.clone(this.initialData);
+
+				_.each(response, function(item, key, list) {
+					switch (item.type) {
+						case 'select':
+
+						resetData[key] = _.filter(resetData[key], function(elem) {
+
+							return item.value.indexOf(elem.id) != -1;
+						});
+
+						// Если поле имеет дефолтное значение, пробрасываем об этом в данные для темплейты
+						if (!!item.default) {
+							resetData[key].hasDefault = true;
+							_.where(resetData[key], {id: '' + item.default})[0].default = true;
+						}
+
+						break;
+
+						case 'radio':
+
+						break;
+
+						case 'input':
+
+						break;
+					}
+
+					this.templates.CalcTemplate.set(resetData);
+
+					if (item.hasOwnProperty('default')) {
+						// проставить флаг по умолчанию
+					}
+				}, this);				
 
 				this.toggleLoader(false);
 			}.bind(this))
@@ -84,10 +120,6 @@ $(function () {
 		// Дата биндинг, обработка событий, вот это вот всё
 		initBindings: function() {
 			// Описываем события Ractivejs вьюшек
-			// this.templates.MainInfoTemplate.on({
-			// 	showDatepickerModal: function(event) {
-					
-			// }});
 
 			this.templates.CalcTemplate.on({
 				// Обработчик, срабатывающий при изменении любого контрола в калькуляторе
@@ -113,12 +145,10 @@ $(function () {
 						}
 					}
 
-					if (submitReady) {
-						this.set('additional.submitReady', submitReady);
+					this.set('additional.submitReady', submitReady);
 
-						insurance.toggleLoader(true);
-						insurance.validate(this.data.calculate);
-					}
+					insurance.toggleLoader(true);
+					insurance.validate(this.data.calculate);
 
 					return false;
 				},
