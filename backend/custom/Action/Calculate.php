@@ -19,7 +19,8 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
         'tariff_def_damage_type_id',
         'ts_age',
         'payments_without_references_id',
-        'ts_sum'
+        'ts_sum',
+        'ts_antitheft_id',
     );
 
     /**
@@ -75,9 +76,7 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
             'drivers_count' => $this->getParam('drivers_count', self::TYPE_OUTPUT),
             'driver_age' => $this->getParam('driver_age', self::TYPE_OUTPUT),
             'driver_exp' => $this->getParam('driver_exp', self::TYPE_OUTPUT),
-            'ts_no_defend_flag' => $this->getParam('ts_no_defend_flag', self::TYPE_OUTPUT),
-            'ts_satellite_flag' => $this->getParam('ts_satellite_flag', self::TYPE_OUTPUT),
-            'ts_electronic_alarm_flag' => $this->getParam('ts_electronic_alarm_flag', self::TYPE_OUTPUT),
+            'ts_antitheft_id' => $this->getParam('ts_antitheft_id', self::TYPE_OUTPUT),
             'franchise_percent' => $this->getParam('franchise_percent', self::TYPE_OUTPUT),
             'commercial_carting_flag' => $this->getParam('commercial_carting_flag', self::TYPE_OUTPUT),
             'additional_sum' => $this->getParam('additional_sum', self::TYPE_OUTPUT),
@@ -355,30 +354,12 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
 
         $aWhere = $aWhere . $where;
 
-        if (!empty($this->params['ts_no_defend_flag'])) {
-            $ts_no_defend_flag = $this->getParam('ts_no_defend_flag', self::TYPE_BOOL);
+        if (!empty($this->params['ts_antitheft_id'])) {
+            $ts_antitheft_id = $this->getParam('ts_antitheft_id', self::TYPE_INT);
             $where = sprintf(
-                ' AND (ts_no_defend_flag IS NULL OR ts_no_defend_flag=%u)', $ts_no_defend_flag);
+                ' AND (ts_antitheft_id IS NULL OR ts_antitheft_id=%u)', $ts_antitheft_id);
         } else
-            $where = ' AND ts_no_defend_flag IS NULL';
-
-        $aWhere = $aWhere . $where;
-
-        if (!empty($this->params['ts_satellite_flag'])) {
-            $ts_satellite_flag = $this->getParam('ts_satellite_flag', self::TYPE_BOOL);
-            $where = sprintf(
-                ' AND (ts_satellite_flag IS NULL OR ts_satellite_flag=%u)', $ts_satellite_flag);
-        } else
-            $where = ' AND ts_satellite_flag IS NULL';
-
-        $aWhere = $aWhere . $where;
-
-        if (!empty($this->params['ts_electronic_alarm_flag'])) {
-            $ts_electronic_alarm_flag = $this->getParam('ts_electronic_alarm_flag', self::TYPE_BOOL);
-            $where = sprintf(
-                ' AND (ts_electronic_alarm_flag IS NULL OR ts_electronic_alarm_flag=%u)', $ts_electronic_alarm_flag);
-        } else
-            $where = ' AND ts_electronic_alarm_flag IS NULL';
+            $where = ' AND ts_antitheft_id IS NULL';
 
         $aWhere = $aWhere . $where;
 
