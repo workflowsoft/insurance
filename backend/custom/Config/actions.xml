@@ -309,7 +309,7 @@
      <required>1</required>
     </parameter>
     <parameter>
-     <name>ts_antitheft</name>
+     <name>ts_antitheft_id</name>
      <required>1</required>
     </parameter>
     <parameter>

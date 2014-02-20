@@ -21,7 +21,7 @@ class Action_Programs extends Frapi_Action implements Frapi_Action_Interface
     protected $requiredParams = array(
         'ts_age',
         'ts_sum',
-        'ts_antitheft',
+        'ts_antitheft_id',
         'commercial_carting_flag',
         'drivers_count',
         'driver_age',
@@ -48,7 +48,7 @@ class Action_Programs extends Frapi_Action implements Frapi_Action_Interface
         $this->data['inputParams'] = array(
             'ts_age' => $this->getParam('ts_age', self::TYPE_OUTPUT),
             'ts_sum' => $this->getParam('ts_sum', self::TYPE_OUTPUT),
-            'ts_antitheft' => $this->getParam('ts_antitheft', self::TYPE_OUTPUT),
+            'ts_antitheft_id' => $this->getParam('ts_antitheft', self::TYPE_OUTPUT),
             'commercial_carting_flag' => $this->getParam('commercial_carting_flag', self::TYPE_OUTPUT),
             'drivers_count' => $this->getParam('drivers_count', self::TYPE_OUTPUT),
             'driver_age' => $this->getParam('driver_age', self::TYPE_OUTPUT),
@@ -99,7 +99,7 @@ class Action_Programs extends Frapi_Action implements Frapi_Action_Interface
                           (SELECT TC.tariff_program_id FROM tariff_coefficients TC WHERE %s GROUP BY TC.tariff_program_id) RC
 		                   INNER JOIN
                               (SELECT AC.tariff_program_id FROM additional_coefficients AC
-				                INNER JOIN all_factors AF ON AF.id = AC.factor_id
+				                INNER JOIN coefficients AF ON AF.id = AC.coefficient_id
 				               WHERE AF.is_mandatory = 1 AND %s
 			               GROUP BY AC.tariff_program_id) ACF
 	                       ON RC.tariff_program_id = ACF.tariff_program_id OR ACF.tariff_program_id IS NULL
@@ -113,7 +113,7 @@ class Action_Programs extends Frapi_Action implements Frapi_Action_Interface
 
         $additionalWhereParts = array(
             sprintf('(ts_age = %u OR ts_age IS NULL)', $this->getParam('ts_age', self::TYPE_INT)),
-            sprintf('(ts_antitheft = %u OR ts_antitheft IS NULL)', $this->getParam('ts_antitheft', self::TYPE_INT)),
+            sprintf('(ts_antitheft_id = %u OR ts_antitheft_id IS NULL)', $this->getParam('ts_antitheft_id', self::TYPE_INT)),
             sprintf('(commercial_carting_flag = %u OR commercial_carting_flag IS NULL)', $this->getParam('commercial_carting_flag', self::TYPE_INT)),
             sprintf('(drivers_count_down IS NULL OR drivers_count_down<=%F) AND (drivers_count_up IS NULL OR drivers_count_up>=%F)', $this->getParam('drivers_count', self::TYPE_INT), $this->getParam('drivers_count', self::TYPE_INT)),
             sprintf('(driver_age_down IS NULL OR driver_age_down<=%F) AND (driver_age_up IS NULL OR driver_age_up>=%F)', $this->getParam('driver_age', self::TYPE_INT), $this->getParam('driver_age', self::TYPE_INT)),
