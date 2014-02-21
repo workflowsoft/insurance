@@ -205,12 +205,12 @@ CREATE TABLE IF NOT EXISTS `tariff_coefficients` (
 DROP TABLE IF EXISTS `factor_restricions`;
 CREATE TABLE IF NOT EXISTS `factor_restricions` (
 	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-	`factor_name` varchar(50) NOT NULL COLLATE utf8_bin,
-	`dependent_factor_name` varchar(50) NOT NULL COLLATE utf8_bin,
+	`factor_name` varchar(50) NOT NULL,
+	`dependent_factor_name` varchar(50) NOT NULL,
 	`factor_value_down` double,
 	`factor_value_up` double,
-	`factor_value` varchar(50) NULL COLLATE utf8_bin,
-	`dependent_factor_value` varchar(50) NULL COLLATE utf8_bin,
+	`factor_value` varchar(50) NULL,
+	`dependent_factor_value` varchar(50) NULL,
 	`dependent_factor_down` double,
 	`dependent_factor_up` double,
 	`conditional` bit(1) DEFAULT NULL,
@@ -228,4 +228,66 @@ CREATE TABLE IF NOT EXISTS `factors` (
   `is_reference` TINYINT UNSIGNED ,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Факторы, участвующие в расчете коэффициентов';
+
+
+-- Поправочные коэфициенты с зависимостью от факторов, которые их формируют
+DROP TABLE IF EXISTS `calc_history`;
+CREATE TABLE IF NOT EXISTS `calc_history` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+# факторы
+  `ts_age` int(10) NOT NULL,
+  `ts_sum` double DEFAULT NULL,
+  `tariff_program_id` int(10) DEFAULT NULL REFERENCES tariff_program(id),
+  `risk_id` int(10) DEFAULT NULL REFERENCES  risks(id),
+  `ts_type_id` int(10) REFERENCES `ts_type`(id),
+  `ts_group_id` int(10) REFERENCES `ts_group`(id),
+  `ts_make` int(10) REFERENCES `ts_make`(id),
+  `ts_model` int(10) REFERENCES `ts_model`(id),
+  `ts_modification_id` int(10) REFERENCES `ts_modification`(id),
+  `regres_limit_factor_id` int(10) DEFAULT NULL REFERENCES regres_limit(id),
+  `tariff_def_damage_type_id` int(10) DEFAULT NULL REFERENCES tariff_def_damage_type(id),
+  `payments_without_references_id` int(10) DEFAULT NULL REFERENCES payments_without_references(id),
+  `franchise_type_id` int(10) DEFAULT NULL REFERENCES franchise_type(id),
+  `contract_day` int(2) DEFAULT NULL,
+  `contract_month` int(2) DEFAULT NULL,
+  `contract_year` int(2) DEFAULT NULL,
+  `drivers_count` varchar(50) COLLATE utf8_bin DEFAULT NULL,
+  `driver_age` int(10) DEFAULT NULL,
+  `driver_exp` int(10) DEFAULT NULL,
+  `ts_antitheft_id` int(10) DEFAULT NULL REFERENCES ts_antitheft(id),
+  `is_onetime_payment` tinyint(1) DEFAULT NULL,
+  `car_quantity` int(10) DEFAULT NULL,
+  `franchise_percent` double DEFAULT NULL,
+  `commercial_carting_flag` tinyint(1) DEFAULT NULL,
+  `commission_percent` double DEFAULT NULL,
+  `is_legal_entity` tinyint(1) DEFAULT NULL,
+  `amortisation` bit(1) DEFAULT NULL,
+# значения коэфициентов
+  `kuts` DOUBLE,
+  `kf` DOUBLE,
+  `kvs` DOUBLE,
+  `kl` DOUBLE,
+  `kp` DOUBLE,
+  `ksd` DOUBLE,
+  `kps` DOUBLE,
+  `kkv` DOUBLE,
+  `ko` DOUBLE,
+  `klv` DOUBLE,
+  `kctoa` DOUBLE,
+  `vbs` DOUBLE,
+  `ksp` DOUBLE,
+  `ki` DOUBLE,
+  `kbm` DOUBLE,
+  `ka` DOUBLE,
+# сумма или ошибка
+  `sum` double,
+  `errors` VARCHAR(512),
+# прочие
+  `timestamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Таблица истории калькуляций';
+
+
 
