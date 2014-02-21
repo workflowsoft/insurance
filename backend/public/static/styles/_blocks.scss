@@ -1,0 +1,30 @@
+$dark-blue: #31708F;
+
+.l-body {
+	background-image: url(../img/blocks/white_wall_hash.png);
+}
+
+.l-content {
+	background: #fff;
+	padding-bottom: 20px;
+}
+
+.l-wrapper {
+	width: 960px;
+	position: relative;
+	margin: 12px auto;
+
+	@include border-radius(8px);
+
+	@include box-shadow(0 0 4px 0 #7296C5);
+}
+
+.col-lg-6 {
+	margin-bottom: 8px;
+}
+
+.b-total_sum {
+	color: #0571A3;
+	float: left;
+	margin: 6px 0 0 4px;
+}

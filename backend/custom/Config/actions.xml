@@ -2,285 +2,140 @@
 <frapi-config>
  <actions>
   <action>
-   <name>Collection</name>
-   <enabled>1</enabled>
-   <public>1</public>
-   <description>This is an example of a collection. A collection is a bucket of resources. In this case, you can only POST and DELETE this collection.&#13;
-&#13;
-POST: A post will add a new resource to a collection. You have to pass a &quot;name&quot; parameter.&#13;
-&#13;
-DELETE: Delete collection will remove the collection of resources from the system.&#13;
-&#13;
-Try it with &quot;curl -X POST http://api.frapi/collection -d '{&quot;name&quot;:&quot;new&quot;}' -H 'Content-Type: application/json'&#13;
-&#13;
-</description>
-   <route>/collection</route>
-   <hash>a0caa1c9f6c5ba636005b312918e7ce6acf70ccb</hash>
-   <parameters>
-    <parameter>
-     <name>name</name>
-     <required>0</required>
-    </parameter>
-   </parameters>
-  </action>
-  <action>
-   <name>Resource</name>
-   <enabled>1</enabled>
-   <public>1</public>
-   <description>This is the resource contained in a certain collection group. &#13;
-&#13;
-PUT: A put with the &quot;name&quot; parameter will update the name of the resource&#13;
-&#13;
-DELETE: Deletes the resource.&#13;
-&#13;
-GET: This retrieves the information relative to the resource contained in the collection</description>
-   <route>/collection/:resource</route>
-   <hash>3ecc1f98f5c2292d41150143083df87ea81dca08</hash>
-   <parameters>
-    <parameter>
-     <name>name</name>
-     <required>0</required>
-    </parameter>
-   </parameters>
-  </action>
-  <action>
-   <name>Siblings</name>
-   <enabled>1</enabled>
-   <public>1</public>
-   <description>This is a collection of sibling for a resource. This only accepts POST, DELETE, GET and HEAD. &#13;
-&#13;
-POST: A post will add a new sibling using the name parameter&#13;
-&#13;
-DELETE: This deletes the siblings connections, it removes all siblings in the collection&#13;
-&#13;
-GET: Retrieve a list of siblings and the relative information.&#13;
-&#13;
-HEAD: Fetch the meta information for the siblings.</description>
-   <route>/collection/:resource/siblings</route>
-   <hash>2f4d1cefc3bbb184dda9da882fac349558b8bb70</hash>
-   <parameters>
-    <parameter>
-     <name>name</name>
-     <required>0</required>
-    </parameter>
-   </parameters>
-  </action>
-  <action>
-   <name>Sibling</name>
-   <enabled>1</enabled>
-   <public>1</public>
-   <description>This is used to execute operations on a sibling resource. &#13;
-&#13;
-GET: Retrieve the information relative to a sibling&#13;
-&#13;
-DELETE: Remove a sibling for this resource&#13;
-&#13;
-HEAD: Retrieve the meta information relative to a sibling.&#13;
-&#13;
-</description>
-   <route>/collection/:resource/siblings/:sibling</route>
-   <hash>836d88aacf5906048737893dd4dc0469e353dc33</hash>
-  </action>
-  <action>
    <name>Introduction</name>
    <enabled>1</enabled>
    <public>1</public>
    <route>/</route>
    <hash>29e39f311db4ca2ef7dacf8d8c493ef69aa29b61</hash>
+   <description>Стартовая страница со View (Сам калькулятор - Фронт)</description>
+  </action>
+  <action>
+   <name>Doc</name>
+   <enabled>1</enabled>
+   <public>1</public>
+   <route>/doc</route>
+   <hash>7a48ae1b7387f8a8159c488fbd850021</hash>
+   <description>Описание API (Автодокументация)</description>
   </action>
   <action>
    <name>Calculate</name>
    <enabled>1</enabled>
    <public>1</public>
-   <description>Выполняет вычисление стоимости страховки исходя из всех введенных пользователем данных</description>
-   <route>/calculate/web/v1</route>
+   <description>Выполняет вычисление стоимости страховки исходя из всех введенных пользователем данных:&#13;
+&#13;
+&#13;
+1. (ts_type_id) Тип ТС Id из справочника (Грузовик, Легковая, Мотоцикл и т.д.) &#13;
+Выбор этого Id определяет значения для справочника марок ТС.&#13;
+2. (ts_make_id) Марку ТС Id из справочника (Honda, Yamaha, Audi и т.д.)&#13;
+Выбор этого Id определяет значения для справочника Моделей ТС&#13;
+3. (ts_model_id) Модель ТС Id из справочника (CX5, Priora, и т.д.)&#13;
+Выбор этого Id определяет значения для справочника Модификаций ТС&#13;
+4. (ts_modification_id) Модификация TC Id из спраочника (Hatchback, Forester SX и т.д.)&#13;
+Вышеперечисленные параметры отражаются в значение из следующего справочника.&#13;
+Значение из этого справочника может быть выбрано и вручную, при остутсвии в базе данных по&#13;
+маркам-моделям&#13;
+5. (ts_group_id) Группа ТС по квалификации страховой компании. Их собственная группировка. Id из&#13;
+справочника (Иномарки, Наши ведра, Газели и т.д.)&#13;
+Определяет доступные программы страхования и предельный срок эксплуатации ТС (сколько лет бегает с&#13;
+момента первой регистрации ГИБДД).&#13;
+6. (tariff_def_damage_type_id) Тип определения возмещения при наступлении страхового случая&#13;
+Определяет доступные программы страхования и предельный срок эксплуатации ТС (сколько лет бегает с	&#13;
+7. (ts_age) Срок эксплуатации ТС (сколько лет бегает с момента первой регистрации ГИБДД).&#13;
+8. (ts_sum) Оценочная стоимость ТС, она же страховая сумма (та самая сумма на которую осущетсвляется страхование и которая выплачивается в случае полной гибели или угона).&#13;
+9. (tariff_program_id) Программа страхования Id из справочника, у каждой страховой свои программы.&#13;
+10.(risk_id) Набор рисков по которому осуществляется страховое покрытие, у каждой страховой могут быть свои пакеты, никто не мешает делать вырожденные пакеты с одним риском для случая &quot;конструкторов&quot; тарифов.&#13;
+11. (amortisation) Признак учета амортизации при выплатах по страховым случаем, связанным с ущербом имеет смысл только для тарифа УНИВЕРСАЛ.&#13;
+&#13;
+Для рассчета поправочных коэфициентов:&#13;
+&#13;
+&#13;
+1. (payments_without_references_id) Вариант выплат компенсации без предоставления справок Id из справочника. Каждая страховая сама определяет список таких вариантов.&#13;
+2. (franchise_type_id) Тип франшизы при страховании Id из справочника. (Условная, Безусловная)&#13;
+3. (contract_day) (contract_month) (contract_year) Длительность договора страхования.  Число, которое определяется из справочника. Причем какое поле будет присылаться зависит от значений в справочнике.&#13;
+Особенность данных полей в том, что контракт может исчисляться в днях, может в месяцах, может в годах. (в нашем случае есть вариант в днях, остальные в месяцах)&#13;
+4. (drivers_count) Количество лиц, допущеных к управлению ТС&#13;
+5. (driver_age) Возраст самого старшего водителя среди лиц допущеных к управлению ТС&#13;
+6. (driver_exp) Водительский стаж самого неопытного среди лиц допущенных к управлению ТС&#13;
+7. (ts_antitheft_id) Тип противоугонной системы ТС id из справочника&#13;
+8. -(is_onetime_payment) Оплата полиса единовременно. Может быть false если полис еще и в рассрочку берется&#13;
+9. -(car_quantity) Количество машин, страхуемых одновременно (в парке)&#13;
+10. (franchise_percent) процент от страховой суммы, &#13;
+которую страхователь не получит в случае наступления страхового случая (безусловная франшиза) или при определенных условиях получит (условная франшиза)&#13;
+наличие данного параметра автоматически включает рассчет коэфициента франшизы&#13;
+11. (commercial_carting_flag) Признак того, что ТС сдается в прокат или состоит в парке такси&#13;
+12. -(commission_percent) Процент комиссионного вознаграждения от суммы стоимости полиса&#13;
+13. -(is_legal_entity) Признак страхователя, Юридическое лицо&#13;
+14. (regres_limit_factor_id) Тип лимита возмещения по риску ущерб. Т.е. можешь ли ты на всю страховую сумму царапин наставить или нет. Id из справочника, там у них какие-то свои типы лимитов&#13;
+15. (additional_sum) Стоимость допоборудования на ТС (всякие там магнитофоны, навигаторы, багажники и проч. все что можно с машины скрутить и прикарманить)</description>
+   <route>/calculate/v1</route>
    <hash>91e7163f6af4f35ed5b43f490809979749cd0fad</hash>
    <parameters>
     <parameter>
-     <name>ksp_value</name>
+     <name>ts_make_id</name>
      <required>0</required>
     </parameter>
     <parameter>
-     <name>tariff_program</name>
+     <name>ts_model_id</name>
      <required>0</required>
     </parameter>
     <parameter>
-     <name>ldu_quantity</name>
+     <name>is_modification_id</name>
      <required>0</required>
     </parameter>
     <parameter>
-     <name>driver_age</name>
+     <name>ts_group_id</name>
      <required>0</required>
     </parameter>
     <parameter>
-     <name>driver_exp</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>ki_value</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>no_defend_flag</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>satellite_flag</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>have_electronic_alarm</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>risks</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>ksd_description</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>kp_description</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>kp_flag</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>ko_is_checked</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>regres_limit_factor</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>tariff_def_damage_type</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>klv_value</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>payments_without_references</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>b_ts_group</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>b_ts_producer</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>b_ts_model</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>b_ts_modification</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>b_tariff_program</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>b_ts_age</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>b_ts_sum</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>b_risk</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>b_damage_det_type</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>b_amortisation</name>
-     <required>0</required>
-    </parameter>
-   </parameters>
-  </action>
-  <action>
-   <name>Test1</name>
-   <enabled>1</enabled>
-   <public>1</public>
-   <description>test_description</description>
-   <route>/test_url_1</route>
-   <hash>cdd768290985ce24e23a297da825db058a933c77</hash>
-   <parameters>
-    <parameter>
-     <name>id</name>
+     <name>tariff_program_id</name>
      <required>1</required>
     </parameter>
     <parameter>
-     <name>ttt</name>
+     <name>risk_id</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>tariff_def_damage_type_id</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>ts_age</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>ts_sum</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>amortisation</name>
      <required>0</required>
     </parameter>
     <parameter>
-     <name>ppp</name>
+     <name>payments_without_references_id</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>ts_type_id</name>
      <required>0</required>
     </parameter>
     <parameter>
-     <name>a1</name>
+     <name>franchise_type_id</name>
      <required>0</required>
     </parameter>
     <parameter>
-     <name>a2</name>
+     <name>contract_day</name>
      <required>0</required>
     </parameter>
     <parameter>
-     <name>a3</name>
+     <name>contract_month</name>
      <required>0</required>
     </parameter>
     <parameter>
-     <name>a4</name>
+     <name>contract_year</name>
      <required>0</required>
     </parameter>
     <parameter>
-     <name>b1</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>b2</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>b3</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>b4</name>
-     <required>0</required>
-    </parameter>
-   </parameters>
-  </action>
-  <action>
-   <name>Datarequest</name>
-   <enabled>1</enabled>
-   <public>1</public>
-   <route>/datarequest/web/v1</route>
-   <hash>175848526e2d040778c06a44d7543b345c7930af</hash>
-   <parameters>
-    <parameter>
-     <name>ksp_value</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>tariff_program</name>
-     <required>0</required>
-    </parameter>
-    <parameter>
-     <name>ldu_quantity</name>
+     <name>drivers_count</name>
      <required>0</required>
     </parameter>
     <parameter>
@@ -292,55 +147,209 @@ HEAD: Retrieve the meta information relative to a sibling.&#13;
      <required>0</required>
     </parameter>
     <parameter>
-     <name>ki_value</name>
+     <name>ts_antitheft_id</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>franchise_percent</name>
      <required>0</required>
     </parameter>
     <parameter>
-     <name>no_defend_flag</name>
+     <name>commercial_carting_flag</name>
      <required>0</required>
     </parameter>
     <parameter>
-     <name>satellite_flag</name>
+     <name>regres_limit_factor_id</name>
      <required>0</required>
     </parameter>
     <parameter>
-     <name>have_electronic_alarm</name>
+     <name>additional_sum</name>
+     <required>0</required>
+    </parameter>
+   </parameters>
+  </action>
+  <action>
+   <name>References</name>
+   <enabled>1</enabled>
+   <public>1</public>
+   <description>Получение справочников</description>
+   <route>/references</route>
+   <hash>0a408adf5844a3c974d0970f106079077f0c969a</hash>
+  </action>
+  <action>
+   <name>Validate</name>
+   <enabled>1</enabled>
+   <public>1</public>
+   <description>Валидация входящих параметров</description>
+   <route>/validate</route>
+   <hash>2a092ead6003cdef67654aad4a4c8b5a413d9aec</hash>
+   <parameters>
+    <parameter>
+     <name>ts_make_id</name>
      <required>0</required>
     </parameter>
     <parameter>
-     <name>risks</name>
+     <name>ts_model_id</name>
      <required>0</required>
     </parameter>
     <parameter>
-     <name>ksd_description</name>
+     <name>is_modification_id</name>
      <required>0</required>
     </parameter>
     <parameter>
-     <name>kp_description</name>
+     <name>ts_group_id</name>
      <required>0</required>
     </parameter>
     <parameter>
-     <name>kp_flag</name>
+     <name>tariff_program_id</name>
      <required>0</required>
     </parameter>
     <parameter>
-     <name>ko_is_checked</name>
+     <name>risk_id</name>
      <required>0</required>
     </parameter>
     <parameter>
-     <name>regres_limit_factor</name>
+     <name>tariff_def_damage_type_id</name>
      <required>0</required>
     </parameter>
     <parameter>
-     <name>tariff_def_damage_type</name>
+     <name>ts_age</name>
      <required>0</required>
     </parameter>
     <parameter>
-     <name>klv_value</name>
+     <name>ts_sum</name>
      <required>0</required>
     </parameter>
     <parameter>
-     <name>payments_without_references</name>
+     <name>amortisation</name>
+     <required>0</required>
+    </parameter>
+   </parameters>
+  </action>
+  <action>
+   <name>Referencesmake</name>
+   <enabled>1</enabled>
+   <public>1</public>
+   <description>Список производителей ТС</description>
+   <route>/reference/make/:ts_type_id</route>
+   <hash>6e5f2adee447cf6c905da09394d2baae5f37c347</hash>
+   <parameters>
+    <parameter>
+     <name>ts_type_id</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>name_pfx</name>
+     <required>0</required>
+    </parameter>
+   </parameters>
+  </action>
+  <action>
+   <name>Referencesmodel</name>
+   <enabled>1</enabled>
+   <public>1</public>
+   <description>Список марок ТС</description>
+   <route>/reference/model/:ts_type_id/:ts_make_id</route>
+   <hash>f0f9734140d52c7072b38b7cd8de6510c39e9a34</hash>
+   <parameters>
+    <parameter>
+     <name>ts_type_id</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>ts_make_id</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>name_pfx</name>
+     <required>0</required>
+    </parameter>
+   </parameters>
+  </action>
+  <action>
+   <name>Tsgroup</name>
+   <enabled>1</enabled>
+   <public>1</public>
+   <description>Получение соответствия группы ТС (задаваемых страховой компанией) для выбранной комбинации &quot;Тип ТC&quot;-&gt; &quot;Производитель ТС&quot;-&gt;&quot;Модель ТС&quot;-&gt; &quot;Модификация ТС&quot;</description>
+   <route>/ts/group</route>
+   <hash>e41b747d83338cbaba831b6ba5662d5f2b54b85d</hash>
+   <parameters>
+    <parameter>
+     <name>ts_type_id</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>ts_make_id</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>ts_model_id</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>ts_modification_id</name>
+     <required>0</required>
+    </parameter>
+   </parameters>
+  </action>
+  <action>
+   <name>Programs</name>
+   <enabled>1</enabled>
+   <public>1</public>
+   <description>Возвращает доступные при заданых параметрах программы страхования</description>
+   <route>/programs</route>
+   <hash>5e6a84e9cb4e3bfb9fafed84a11b653582b38f31</hash>
+   <parameters>
+    <parameter>
+     <name>ts_age</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>ts_sum</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>ts_antitheft_id</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>commercial_carting_flag</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>drivers_count</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>driver_age</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>driver_exp</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>ts_type_id</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>ts_make_id</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>ts_model_id</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>ts_group_id</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>additional_sum</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>ts_modification_id</name>
      <required>0</required>
     </parameter>
    </parameters>

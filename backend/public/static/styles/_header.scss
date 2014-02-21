@@ -1,0 +1,23 @@
+.b-header {
+	font-family: Helvetica;
+	position: relative;
+	padding: 2px 16px;
+	@include border-radius(8px);
+	background-color: #f0f8ff; // Old browsers
+	@include filter-gradient(#f0f8ff, #ffffff, vertical); // IE6-9
+	@include background-image(linear-gradient(top,  #f0f8ff 0%,#ffffff 100%));
+
+
+	.page-header {
+		margin: 0px;
+	}
+}
+
+.b-header-title {
+}
+
+.b-header-ingroup_info {
+	position: relative;
+	margin: 8px 0;
+	color: $dark-blue;
+}
