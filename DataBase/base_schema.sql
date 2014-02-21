@@ -148,7 +148,6 @@ CREATE TABLE IF NOT EXISTS `additional_coefficients` (
   `ts_make_id` int(10) REFERENCES `ts_make`(id),
   `ts_model_id` int(10) REFERENCES `ts_model`(id),
   `ts_modification_id` int(10) REFERENCES `ts_modification`(id),
-  `ts_age` int(10) NULL,
   `regres_limit_factor_id` int(10) DEFAULT NULL REFERENCES regres_limit(id),
   `tariff_def_damage_type_id` int(10) DEFAULT NULL REFERENCES tariff_def_damage_type(id),
   `payments_without_references_id` int(10) DEFAULT NULL REFERENCES payments_without_references(id),
