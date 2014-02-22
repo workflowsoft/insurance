@@ -364,6 +364,7 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
    	                    (SELECT `factor_id`, `value` FROM `additional_coefficients` ' . $aWhere .
             ' ORDER BY `priority` DESC) AS c ON f.`id` = c.`factor_id`';
 
+        $db = Frapi_Database::getInstance();
         $sth = $db->query($bquery);
         $results = $sth->fetch(PDO::FETCH_ASSOC);
         if (!$results || $sth->rowCount() > 1)
