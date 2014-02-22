@@ -250,7 +250,7 @@ class References
         $i = 0;
         foreach ($result as $age) {
             self::$_results[$ref_key]['values'][$i]['name'] = $age;
-            self::$_results[$ref_key]['values'][$i]['value'] = $age;
+            self::$_results[$ref_key]['values'][$i]['value'] = (int)$age;
             self::$_results[$ref_key]['values'][$i]['is_default'] = 0;
             $i++;
         }
