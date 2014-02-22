@@ -10,6 +10,13 @@ $(function () {
 
 		initialData: {},
 
+		defaults: {
+			visible_ts_age: 0,
+			calculate: {
+				ts_age: 0
+			}
+		},
+
 		toggleLoader: function (toggle) {
 			toggle = toggle || false;
 
@@ -36,11 +43,12 @@ $(function () {
 
 			$.get('/references')
 				.then(function(response) {
-					response = this.preprocessResponseData(response);
+					console.log(response);
+
 					templateFactory('CalcTemplate', {
 						el: 'calc',
 						template: '#calcTemplate',
-						data: response
+						data: _.extend(response, this.defaults)
 					})
 
 				}.bind(this))
@@ -94,17 +102,11 @@ $(function () {
 					tpl.set('calculate.ts_sum', parseInt(val));
 				}
 				break;
+				case 'ts_antitheft_id':
+				tpl.set('calculate.ts_antitheft_id', $('input[name=ts_antitheft_id]:checked').val());
+				
+				break;
 			}
-		},
-
-		preprocessResponseData: function(data) {
-			// Если справочник — пустой массив, превращаем его в false
-			_.each(data, function(item, key) {
-				_.isArray(item) && !item.length && (data[key] = false);
-			});
-
-			_.isEmpty(this.initialData) && (this.initialData = data);
-			return data;
 		},
 
 		// Дата биндинг, обработка событий, вот это вот всё
@@ -115,7 +117,7 @@ $(function () {
 				// Обработчик, срабатывающий при изменении любого контрола в калькуляторе
 				processFormData: function(event) {
 					var excludes = ['additional_equip'],
-						requiredFields = ['tariff_program_id', 'risk_id', 'tariff_def_damage_type_id', 'ts_age','payments_without_references_id', 'ts_sum'],
+						requiredFields = ['ts_sum'],
 						self = insurance,
 						data = this.data.calculate || {},
 						submitReady;

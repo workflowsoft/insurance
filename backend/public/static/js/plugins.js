@@ -1,4 +1,5 @@
 (function() {
+	// Навешиваем всяческие UI-компонентны после того, как справочники получены и форма отрендерена
 	$(document).on('webAppReady', function (argument) {
 
 		_.extend(insurance, {
@@ -61,9 +62,34 @@
 						}.bind(this));
 					}
 				});
+			},
+
+			initSliders: function() {
+				var tpl = this.templates.CalcTemplate;
+
+				_.each($('.js-slider'), function(el) {
+					el = $(el);
+
+					el.slider({
+						min: 1,
+						max: tpl.get('ts_age').values.length,
+						slide: function(event, ui) {
+							var val = ui.value - 1,
+								agesList = tpl.get('ts_age').values,
+								newVal = _.findWhere(agesList, {
+									value: val
+								});
+
+							tpl.set('visible_ts_age', newVal.name);
+							tpl.set('calculate.ts_age', val);
+						}
+					});
+
+				});
 			}
 		});
 
 		insurance.initSuggest();
+		insurance.initSliders();
 	})
 }());
