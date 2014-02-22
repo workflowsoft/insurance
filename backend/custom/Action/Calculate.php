@@ -108,63 +108,27 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
      */
     public function executeGet()
     {
-//        $this->hasRequiredParameters($this->requiredParams);
+        $this->hasRequiredParameters($this->requiredParams);
         $calc_history = new CalcHistory;
+        $db = Frapi_Database::getInstance();
 
         //Сначала надо установить поправки на входные параметры и поругаться, если корректировка не проходит
         /* При заполнении корректирующих параметров надо учитывать множественное назначение от разных источников
          * Также стоит учитываеть циклические выставления значений. Пока все тупо.
          * В цикле просто будут ставиться новые значения, если отрабает условие срабатывания
          */
-        $correctionQuery = 'SELECT `factor_name` as `source`, `dependent_factor_name` as `name`, `dependent_factor_value` as `value`, `conditional` FROM `factor_restricions` WHERE ';
-        $predicateArray = array();
-        foreach ($this->params as $key => $value) {
-            if (is_bool($value)) {
-                $this->params[$key] = (int)$value;
-            }
-            if (!empty($value)) {
-                array_push($predicateArray,
-                    '(`factor_name` = \'' . $key . '\' AND
-                 (`factor_value` IS NULL OR `factor_value` = ' . $value . ') AND
-                 (`factor_value_down` IS NULL OR `factor_value_down`<=' . $value . ') AND
-                 (`factor_value_up` IS NULL OR `factor_value_up`>=' . $value . ')
-                )'
-                );
-            }
-        }
-
-        $correctionQuery = $correctionQuery . join(' OR ', $predicateArray);
-
-        $db = Frapi_Database::getInstance();
-
-        $sth = $db->query($correctionQuery);
-        if (!$sth) {
+        try {
+            $correctedParams = Calculation::GetCorrectedParameters($this->params);
+        } catch (Exception $e) {
             $calc_history->fillByArray($this->params);
-            $calc_history->errors = 'CANT_CORRECT ' . $correctionQuery;
+            $calc_history->errors = 'CANT_CORRECT ' . $e->getMessage();
             $calc_history->save();
 
-            throw new Frapi_Action_Exception($correctionQuery, 'CANT_CORRECT');
-        }
-        $corrections = $sth->fetchAll(PDO::FETCH_ASSOC);
-        $correct_errors = array();
-
-        foreach ($corrections as $correction) {
-            $cor_value = $correction['value'];
-            if (!is_null($cor_value)) {
-                //Осущестляем корректировку
-                $this->params[$correction['name']] = $cor_value;
-            } else {
-                //Ругаемся, что не можем осуществить корректировку
-                array_push($correct_errors, $correction['source'] . '=>' . $correction['name']);
-            }
+            throw new Frapi_Action_Exception($e->getMessage(), 'CANT_CORRECT');
         }
 
-        if (count($correct_errors)) {
-            $calc_history->fillByArray($this->params);
-            $calc_history->errors = 'CANT_CORRECT ' . join(', ', $correct_errors);
-            $calc_history->save();
-
-            throw new Frapi_Exception(join(', ', $correct_errors), 'CANT_CORRECT');
+        foreach ($correctedParams as $name => $value) {
+            $this->params[$name] = $value;
         }
 
         $this->_calcErrors = array();
@@ -417,7 +381,7 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
                 'is_legal_entity' => $is_legal_entity,
                 'is_onetime_payment' => $is_onetime_payment,
                 'car_quantity' => $car_quantity,
-                'commission_percent' =>$commission_percent,
+                'commission_percent' => $commission_percent,
             )
         );
 
