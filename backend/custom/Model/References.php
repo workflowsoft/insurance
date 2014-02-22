@@ -136,20 +136,12 @@ class References
         self::_getDriversAge();
         self::_getDriversExp();
         self::_getTsAge();
-
-
-        //ts_age
-        //drivers age exp
-
-
     }
 
     private static function _getDriversCount()
     {
-
         $db = Frapi_Database::getInstance();
         $ref_key = 'drivers_count';
-
 
         $query = 'SELECT max(`drivers_count_up`) FROM `additional_coefficients`';
         $result = $db->query($query);
@@ -269,6 +261,5 @@ class References
         self::$_results[$ref_key]['values'][$i]['is_default'] = 0;
 
     }
-
 
 } 
