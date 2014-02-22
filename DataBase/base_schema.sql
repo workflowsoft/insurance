@@ -224,9 +224,27 @@ CREATE TABLE IF NOT EXISTS `factors` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
   `default` int(10) unsigned,
-  `reference_table` varchar(50),
-  `description` varchar(255),
-  `is_reference` TINYINT UNSIGNED ,
+  `description` varchar(255)
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Факторы, участвующие в расчете коэффициентов';
+
+DROP TABLE IF EXISTS `factor_references`
+CREATE TABLE IF NOT EXISTS `factor_references` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(50),
+  `reference_table` varchar(50),
+  `type` varchar(50),
+   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Справочники в системе и их типы';
+
+DROP TABLE IF EXISTS `factor_references`
+CREATE TABLE IF NOT EXISTS `factor2references` (
+   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+   `factor_id` int(10) unsigned NOT NULL REFERENCES `factors`(id),
+   `reference_id` int(10) unsigned NOT NULL REFERENCES `factor_references`(id),
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Привязка справочников к факторам';
+
+
+
 
