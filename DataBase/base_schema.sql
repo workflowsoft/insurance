@@ -69,6 +69,7 @@ DROP TABLE IF EXISTS `ts_type`;
 CREATE TABLE IF NOT EXISTS `ts_type` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) COLLATE utf8_bin NOT NULL,
+  `icon` varchar(256),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Тип ТС';
 
