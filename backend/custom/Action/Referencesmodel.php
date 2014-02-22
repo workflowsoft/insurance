@@ -69,7 +69,7 @@ class Action_Referencesmodel extends Frapi_Action implements Frapi_Action_Interf
         $name_pfx = $this->getParam('name_pfx', self::TYPE_STRING);
         $selectStr = 'SELECT * FROM ts_model where ts_type_id = '.$ts_type_id.' AND ts_make_id = '.$ts_make_id;
         if (!empty($name_pfx))
-            $selectStr =  $selectStr.' AND name LIKE \''.$name_pfx.'%\'';
+            $selectStr =  $selectStr.' AND LOWER(name) LIKE \''.strtolower($name_pfx).'%\'';
 
         $groupMatchSql = 'SELECT ts_group_id FROM ts_group_match WHERE (ts_type_id = '.$ts_type_id.' OR ts_type_id IS NULL)
                             AND ts_make_id = '.$ts_make_id.' AND ts_model_id IS NULL AND ts_modification_id IS NULL';

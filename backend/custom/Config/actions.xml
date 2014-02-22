@@ -292,5 +292,67 @@
     </parameter>
    </parameters>
   </action>
+  <action>
+   <name>Programs</name>
+   <enabled>1</enabled>
+   <public>1</public>
+   <description>Возвращает доступные при заданых параметрах программы страхования</description>
+   <route>/programs</route>
+   <hash>5e6a84e9cb4e3bfb9fafed84a11b653582b38f31</hash>
+   <parameters>
+    <parameter>
+     <name>ts_age</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>ts_sum</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>ts_antitheft_id</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>commercial_carting_flag</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>drivers_count</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>driver_age</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>driver_exp</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>ts_type_id</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>ts_make_id</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>ts_model_id</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>ts_group_id</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>additional_sum</name>
+     <required>0</required>
+    </parameter>
+    <parameter>
+     <name>ts_modification_id</name>
+     <required>0</required>
+    </parameter>
+   </parameters>
+  </action>
  </actions>
 </frapi-config>
