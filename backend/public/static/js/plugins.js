@@ -52,9 +52,6 @@
 					select: function(event, item) {
 						template.set('calculate.ts_model', item.item.id);
 
-
-						console.log(calculate.ts_make, calculate.ts_model, calculate.ts_type_id);
-
 						$.get('/ts/group', {
 							ts_type_id: calculate.ts_type_id,
 							ts_make_id: calculate.ts_make,
@@ -66,7 +63,6 @@
 				});
 
 			}
-
 		});
 
 		insurance.initSuggest();
