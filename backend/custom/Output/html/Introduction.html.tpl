@@ -15,9 +15,11 @@
 <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 <link rel="stylesheet" href="static/css/main.css">
 <link rel="stylesheet" href="static/css/bootstrap.min.css">
-<script src="static/js/vendor/modernizr-2.6.2.min.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/cupertino/jquery-ui.css">
+
 <script src="static/js/vendor/lodash.min.js"></script>
 <script src="static/js/jquery/jquery-1.9.1.min.js"></script>
+<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 <script src="static/js/vendor/bootstrap.min.js"></script>
 </head>
 <body class="l-body">
@@ -47,98 +49,58 @@
 
 			<div class="panel-body">
 				<div class="form-group g-clrfix">
-					<div class="col-lg-6">
+					<div class="col-lg-3">
 						<label class=" control-label">Тип транспортного средства</label>
-						<select class="form-control" disabled={{!ts_type}} name="ts_type_id" value={{calculate.ts_type_id}}>
-							<option disabled selected>Выберите тип ТС</option>
-							{{#ts_type}}
-								<option value={{id}}>{{name}}</option>
-							{{/ts_type}}
+						<select class="form-control" disabled={{!ts_type.values}} name="ts_type_id" value={{calculate.ts_type_id}}>
+							{{#ts_type.values}}
+								{{^is_default}}
+									<option value={{value}}>{{name}}</option>
+								{{/is_default}}
 
+								{{#is_default}}
+									<option selected="selected" value={{value}}>{{name}}</option>
+								{{/is_default}}
+							{{/ts_type.values}}
 						</select>
 					</div>
-					<div class="col-lg-6">
+					<div class="col-lg-3">
 						<label class=" control-label">Марка транспортного средства</label>
-						<select disabled={{!ts_make}} class="form-control" name="ts_make_id" value={{calculate.ts_make_id}}>
-							<option disabled selected>Выберите марку ТС</option>
-							{{#ts_make}}
-								<option value={{id}}>{{name}}</option>
-							{{/ts_make}}
-						</select>
+						<input type="text" name="ts_make" class="form-control">
 					</div>
-					<div class="col-lg-6">
+					<div class="col-lg-3">
 						<label class=" control-label">Модель транспортного средства</label>
-						<select disabled={{!ts_model}} class="form-control" name="ts_model_id" value={{calculate.ts_model_id}}>
-							<option disabled selected>Выберите модель ТС</option>
-							{{#ts_model}}
-								<option value={{id}}>{{name}}</option>
-							{{/ts_model}}
-						</select>
+						<input name="ts_model" type="text" class="form-control">
 					</div>
-					<div class="col-lg-6">
+					<div class="col-lg-3">
 						<label class=" control-label">Модификация транспортного средства</label>
-						<select disabled={{!ts_modification}} class="form-control" name="ts_modification_id" value={{calculate.ts_modification_id}}>
-							<option disabled selected>Выберите модификацию ТС</option>
-							{{#ts_modification}}
-								<option value={{id}}>{{name}}</option>
-							{{/ts_modification}}
-						</select>
-					</div>
-					<div class="col-lg-6">
-						<label class=" control-label">Программа страхования</label>
-						<select disabled={{!tariff_program}} class="form-control" name="tariff_program_id" value={{calculate.tariff_program_id}}>
-							{{^tariff_program.hasDefault}}
-								<option disabled selected>ыберите программу</option>
-							{{/tariff_program.hasDefault}}
+						<select disabled={{!ts_modification.values}} class="form-control" name="ts_modification_id" value={{calculate.ts_modification_id}}>
+							<option disabled>Выберите модификацию ТС</option>
+							{{#ts_modification.values}}
+								{{#is_default}}
+									<option selected="selected" value={{value}}>{{name}}</option>
+								{{/is_default}}
 
-							{{#tariff_program}}
-								{{#default}}
-									<option selected value={{id}}>{{name}}</option>
-								{{/default}}
-
-								{{^default}}
-									<option value={{id}}>{{name}}</option>
-								{{/default}}
-							{{/tariff_program}}
-						</select>
-					</div>
-					<div class="col-lg-6">
-						<label class=" control-label">Тип возмещения</label>
-						<select disabled={{!tariff_def_damage_type}} class="form-control" name="tariff_def_damage_type_id" value={{calculate.tariff_def_damage_type_id}}>
-							{{^tariff_def_damage_type.hasDefault}}
-								<option disabled selected>Выберите тип возмещения</option>
-							{{/tariff_def_damage_type.hasDefault}}
-
-							{{#tariff_def_damage_type}}
-								{{#default}}
-									<option selected value={{id}}>{{name}}</option>
-								{{/default}}
-
-								{{^default}}
-									<option value={{id}}>{{name}}</option>
-								{{/default}}
-							{{/tariff_def_damage_type}}
-
+								{{^is_default}}
+									<option value={{value}}>{{name}}</option>
+								{{/is_default}}
+							{{/ts_modification.values}}
 						</select>
 					</div>
 				</div>
 				<div class="form-group g-clrfix">
 					<div class="col-lg-12">
 						<label class=" control-label">Категория ТС</label>
-						<select disabled={{!ts_group}} class="form-control" value={{calculate.ts_group_id}}> name="ts_group_id">
-							{{^ts_group.hasDefault}}
+						<select id="category_select" disabled={{!ts_group}} class="form-control" value={{calculate.ts_group_id}} name="ts_group_id">
 								<option disabled selected>Выберите категорию</option>
-							{{/ts_group.hasDefault}}
+							{{#ts_group.values}}
+								{{#is_default}}
+									<option selected value={{value}}>{{name}}</option>
+								{{/is_default}}
 
-							{{#ts_group}}
-								{{#default}}
-									<option selected value={{id}}>{{name}}</option>
-								{{/default}}
-
-								{{^default}}
-									<option value={{id}}>{{name}}</option>
-								{{/default}}
-							{{/ts_group}}
+								{{^is_default}}
+									<option value={{value}}>{{name}}</option>
+								{{/is_default}}
+							{{/ts_group.values}}
 						</select>
 					</div>
 				</div>
@@ -321,5 +283,6 @@
 
 <script src="static/js/core/Ractive.js"></script>
 <script src="static/js/main.js"></script>
+<script src="static/js/plugins.js"></script>
 </body>
 </html>

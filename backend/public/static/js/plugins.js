@@ -1,24 +1,70 @@
-// Avoid `console` errors in browsers that lack a console.
 (function() {
-    var method;
-    var noop = function () {};
-    var methods = [
-        'assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error',
-        'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log',
-        'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd',
-        'timeStamp', 'trace', 'warn'
-    ];
-    var length = methods.length;
-    var console = (window.console = window.console || {});
+	$(document).on('webAppReady', function (argument) {
 
-    while (length--) {
-        method = methods[length];
+		_.extend(insurance, {
 
-        // Only stub undefined methods.
-        if (!console[method]) {
-            console[method] = noop;
-        }
-    }
+			initSuggest: function() {
+				var template = insurance.templates.CalcTemplate,
+					calculate = template.get('calculate'),
+					processResponse = function(response, res) {
+						if (response.reference.length) {
+							res(_.map(response.reference, function (item) {
+								return {
+									label: item.name,
+									value: item.name,
+									id: item.id
+								};
+							}));
+						}
+
+						if (response.ts_group_id) {
+							insurance.selectCategory(response.ts_group_id);
+						}
+					};
+
+				$(document.getElementById('calcForm').ts_make).autocomplete({
+					source: function(req, res) {
+						$.get('/reference/make/' + calculate.ts_type_id, {
+								name_pfx: req.term
+							}
+						).then(function(response){
+							processResponse(response, res);
+						});
+					},
+					select: function(event, item) {
+						template.set('calculate.ts_make', item.item.id);					
+					}
+				});
+
+				$(document.getElementById('calcForm').ts_model).autocomplete({
+					source: function(req, res) {
+						var makeId = calculate.ts_make;
+
+						if (makeId) {
+							$.get(['/reference', 'model', calculate.ts_type_id, makeId].join('/'), {
+								name_pfx: req.term
+							}
+							).then(function(response){
+								processResponse(response, res);
+							});
+						}
+					},
+					select: function(event, item) {
+						template.set('calculate.ts_model', item.item.id);
+
+						$.get('/ts/group', {
+							ts_type_id: calculate.ts_type_id,
+							ts_make_id: calculate.ts_make,
+							ts_model_id: calculate.ts_model
+						}).then(function (response) {
+							response && insurance.selectCategory(response.ts_group_id);
+						}.bind(this));
+					}
+				});
+
+			}
+		});
+
+		insurance.initSuggest();
+	})
 }());
-
-// Place any jQuery/helper plugins in here.

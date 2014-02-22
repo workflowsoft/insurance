@@ -37,14 +37,11 @@ $(function () {
 			$.get('/references')
 				.then(function(response) {
 					response = this.preprocessResponseData(response);
-
 					templateFactory('CalcTemplate', {
 						el: 'calc',
 						template: '#calcTemplate',
 						data: response
 					})
-
-					this.validate();
 
 				}.bind(this))
 				.then(function() {
@@ -52,59 +49,42 @@ $(function () {
 				}.bind(this));
 		},
 
+		selectCategory: function(id) {
+			var categorySelect = $('#category_select');
+
+			if (id) {
+				categorySelect.find('option:selected').each(function(){
+					this.selected=false;
+				});
+
+				categorySelect.find('[value="' + id +'"]').attr('selected', 'selected');
+			} else {
+				categorySelect.find('[value="1"]').attr('selected', 'selected');
+			}
+		},
+
 		afterLoad: function() {
 			this.toggleLoader(false);
 
 			this.initBindings();
+
+			$(document).trigger('webAppReady');
 		},
 
-		validate: function(data) {
-			this.toggleLoader(true);
+		validate: function(name) {
+			var form = document.getElementById('calcForm'),
+				el = form[name];
+			
+			switch(name) {
+				case 'ts_type_id':
 
-			$.get('/validate',
-				data
-			).then(function(response) {
-				var resetData = _.clone(this.initialData);
-
-				_.each(response, function(item, key, list) {
-					switch (item.type) {
-						case 'select':
-
-						resetData[key] = _.filter(resetData[key], function(elem) {
-
-							return item.value.indexOf(elem.id) != -1;
-						});
-
-						// Если поле имеет дефолтное значение, пробрасываем об этом в данные для темплейты
-						if (!!item.default) {
-							resetData[key].hasDefault = true;
-							_.where(resetData[key], {id: '' + item.default})[0].default = true;
-						}
-
-						break;
-
-						case 'radio':
-
-						break;
-
-						case 'input':
-
-						break;
-					}
-
-					this.templates.CalcTemplate.set(resetData);
-
-					if (item.hasOwnProperty('default')) {
-						// проставить флаг по умолчанию
-					}
-				}, this);				
-
-				this.toggleLoader(false);
-			}.bind(this))
-			.fail(function(message){
-				console.error(message.statusText);
-				this.toggleLoader(false);
-			}.bind(this));
+				$.get('/ts/group', {
+					ts_type_id: el.value
+				}).then(function (response) {
+					response && this.selectCategory(response.ts_group_id);
+				}.bind(this));
+				break;
+			}
 		},
 
 		preprocessResponseData: function(data) {
@@ -147,8 +127,7 @@ $(function () {
 
 					this.set('additional.submitReady', submitReady);
 
-					insurance.toggleLoader(true);
-					insurance.validate(this.data.calculate);
+					self.validate(event.original.target.name);
 
 					return false;
 				},
