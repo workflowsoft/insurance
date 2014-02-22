@@ -28,7 +28,8 @@ class References
     public static function get()
     {
         foreach (self::$_tables as $table) {
-            self::$_results[$table]['request_parameter'] = $table . '_id';
+            self::$_results[$table]['request_parameter'] = $table;
+            self::$_results[$table]['request_parameter'] .= $table == ts_modification ? '' : '_id';
             self::$_results[$table]['values'] = self::getByTable($table);
         }
 
