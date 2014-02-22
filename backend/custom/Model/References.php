@@ -29,7 +29,7 @@ class References
     {
         foreach (self::$_tables as $table) {
             self::$_results[$table]['request_parameter'] = $table;
-            self::$_results[$table]['request_parameter'] .= $table == ts_modification ? '' : '_id';
+            self::$_results[$table]['request_parameter'] .= $table == 'ts_modification' ? '' : '_id';
             self::$_results[$table]['values'] = self::getByTable($table);
         }
 
