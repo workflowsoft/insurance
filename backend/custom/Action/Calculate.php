@@ -115,7 +115,7 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
          * Также стоит учитываеть циклические выставления значений. Пока все тупо.
          * В цикле просто будут ставиться новые значения, если отрабает условие срабатывания
          */
-        $correctedParams = Calculation::GetCorrectedParameters($this->params);
+        $correctedParams = Calculation::getCorrectedParameters($this->params);
 
         foreach ($correctedParams as $name => $value)
         {
@@ -132,93 +132,11 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
         );
 
         //Сначала заберем обязательные факторы и основную часть WHERE
-        $bWhere =
-            sprintf(
-                'WHERE tariff_program_id = %u AND risk_id = %u AND tariff_def_damage_type_id = %u AND ts_age = %u',
-                $this->getParam('tariff_program_id', self::TYPE_INT),
-                $this->getParam('risk_id', self::TYPE_INT),
-                $this->getParam('tariff_def_damage_type_id', self::TYPE_INT),
-                $this->getParam('ts_age', self::TYPE_INT)
-            );
-        $aWhere =
-            sprintf('
-                 WHERE
-                    (tariff_program_id IS NULL OR tariff_program_id = %u) AND
-                    (risk_id IS NULL OR risk_id = %u) AND
-                    (tariff_def_damage_type_id IS NULL OR tariff_def_damage_type_id = %u) AND
-                    (ts_age IS NULL OR ts_age = %u)',
-                $this->getParam('tariff_program_id', self::TYPE_INT),
-                $this->getParam('risk_id', self::TYPE_INT),
-                $this->getParam('tariff_def_damage_type_id', self::TYPE_INT),
-                $this->getParam('ts_age', self::TYPE_INT)
-            );
+
 
 
         //Далее берем необязательные и для них добиваем
         //TODO: Чует мое сердце этот код может быть сгенерен по схеме БД по конвенциям. Но сейчас ВЛОБ
-
-        $where = '';
-
-        if (!empty($this->params['ts_sum'])) {
-            $sum = $this->getParam('ts_sum', self::TYPE_DOUBLE);
-            $where = sprintf(
-                ' AND (ts_sum_down IS NULL OR ts_sum_down<=%u) AND (ts_sum_up IS NULL OR ts_sum_up>=%u)',
-                $sum, $sum);
-        } else
-            $where = ' AND ts_sum_down IS NULL AND ts_sum_up IS NULL';
-
-        $bWhere = $bWhere . $where;
-
-        if (!empty($this->params['ts_group_id'])) {
-            $ts_group_id = $this->getParam('ts_group_id', self::TYPE_INT);
-            $where = sprintf(
-                ' AND (ts_group_id IS NULL OR ts_group_id=%u)', $ts_group_id);
-        } else
-            $where = ' AND ts_group_id IS NULL';
-
-        $bWhere = $bWhere . $where;
-        $aWhere = $aWhere . $where;
-
-        if (!empty($this->params['ts_type_id'])) {
-            $ts_type_id = $this->getParam('ts_type_id', self::TYPE_INT);
-            $where = sprintf(
-                ' AND (ts_type_id IS NULL OR ts_type_id=%u)', $ts_type_id);
-        } else
-            $where = ' AND ts_type_id IS NULL';
-
-        $bWhere = $bWhere . $where;
-        $aWhere = $aWhere . $where;
-
-        if (!empty($this->params['ts_make_id'])) {
-            $ts_make_id = $this->getParam('ts_make_id', self::TYPE_INT);
-            $where = sprintf(
-                ' AND (ts_make_id IS NULL OR ts_make_id=%u)', $ts_make_id);
-
-        } else
-            $where = ' AND ts_make_id IS NULL';
-
-        $bWhere = $bWhere . $where;
-        $aWhere = $aWhere . $where;
-
-        if (!empty($this->params['ts_model_id'])) {
-            $ts_model_id = $this->getParam('ts_model_id', self::TYPE_INT);
-            $where = sprintf(
-                ' AND (ts_model_id IS NULL OR ts_model_id=%u)', $ts_model_id);
-        } else
-            $where = ' AND ts_model_id IS NULL';
-
-        $bWhere = $bWhere . $where;
-        $aWhere = $aWhere . $where;
-
-        if (!empty($this->params['ts_modification_id'])) {
-            $ts_modification_id = $this->getParam('ts_modification_id', self::TYPE_INT);
-            $where = sprintf(
-                ' AND (ts_modification_id IS NULL OR ts_modification_id=%u)', $ts_modification_id);
-        } else
-            $where = ' AND ts_modification_id IS NULL';
-
-        $bWhere = $bWhere . $where;
-        $aWhere = $aWhere . $where;
 
         if (isset($this->params['amortisation'])) {
             $amortisation = $this->getParam('amortisation', self::TYPE_BOOL);

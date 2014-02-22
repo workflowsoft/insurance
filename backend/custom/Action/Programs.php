@@ -226,7 +226,7 @@ class Action_Programs extends Frapi_Action implements Frapi_Action_Interface
                 $concrete_params = array('tariff_program_id'=>$program['id']);
                 $concrete_params = array_merge($concrete_params, $this->params);
                 //Получить корректировки для тарифа, если есть корректировка, соотв. справочник уже не нужен.
-                $corrections = Calculation::GetCorrectedParameters($concrete_params);
+                $corrections = Calculation::getCorrectedParameters($concrete_params);
                 //Осуществляем корректировку параметров
                 foreach ($corrections as $name => $value)
                 {
