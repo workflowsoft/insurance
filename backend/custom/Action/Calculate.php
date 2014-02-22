@@ -56,10 +56,10 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
     public function toArray()
     {
         $this->data['inputParams'] = array(
-            'ts_make_id' => $this->getParam('ts_make_id', self::TYPE_OUTPUT),
-            'ts_model_id' => $this->getParam('ts_model_id', self::TYPE_OUTPUT),
+            'ts_make' => $this->getParam('ts_make_id', self::TYPE_OUTPUT),
+            'ts_model' => $this->getParam('ts_model_id', self::TYPE_OUTPUT),
             'ts_type_id' => $this->getParam('ts_model_id', self::TYPE_OUTPUT),
-            'ts_modification_id' => $this->getParam('ts_modification_id', self::TYPE_OUTPUT),
+            'ts_modification' => $this->getParam('ts_modification_id', self::TYPE_OUTPUT),
             'ts_group_id' => $this->getParam('ts_group_id', self::TYPE_OUTPUT),
             'tariff_program_id' => $this->getParam('tariff_program_id', self::TYPE_OUTPUT),
             'risk_id' => $this->getParam('risk_id', self::TYPE_OUTPUT),
@@ -109,53 +109,27 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
     public function executeGet()
     {
         $this->hasRequiredParameters($this->requiredParams);
+        $calc_history = new CalcHistory;
+        $db = Frapi_Database::getInstance();
 
         //Сначала надо установить поправки на входные параметры и поругаться, если корректировка не проходит
         /* При заполнении корректирующих параметров надо учитывать множественное назначение от разных источников
          * Также стоит учитываеть циклические выставления значений. Пока все тупо.
          * В цикле просто будут ставиться новые значения, если отрабает условие срабатывания
          */
-        $correctionQuery = 'SELECT `factor_name` as `source`, `dependent_factor_name` as `name`, `dependent_factor_value` as `value`, `conditional` FROM `factor_restricions` WHERE ';
-        $predicateArray = array();
-        foreach ($this->params as $key => $value) {
-            if (is_bool($value)) {
-                $this->params[$key] = (int)$value;
-            }
-            if (!empty($value)) {
-                array_push($predicateArray,
-                    '(`factor_name` = \'' . $key . '\' AND
-                 (`factor_value` IS NULL OR `factor_value` = ' . $value . ') AND
-                 (`factor_value_down` IS NULL OR `factor_value_down`<=' . $value . ') AND
-                 (`factor_value_up` IS NULL OR `factor_value_up`>=' . $value . ')
-                )'
-                );
-            }
+        try {
+            $correctedParams = Calculation::GetCorrectedParameters($this->params);
+        } catch (Exception $e) {
+            $calc_history->fillByArray($this->params);
+            $calc_history->errors = 'CANT_CORRECT ' . $e->getMessage();
+            $calc_history->save();
+
+            throw new Frapi_Action_Exception($e->getMessage(), 'CANT_CORRECT');
         }
 
-        $correctionQuery = $correctionQuery . join(' OR ', $predicateArray);
-
-        $db = Frapi_Database::getInstance();
-
-        $sth = $db->query($correctionQuery);
-        if (!$sth) {
-            throw new Frapi_Action_Exception($correctionQuery, 'CANT_CORRECT');
+        foreach ($correctedParams as $name => $value) {
+            $this->params[$name] = $value;
         }
-        $corrections = $sth->fetchAll(PDO::FETCH_ASSOC);
-        $correct_errors = array();
-
-        foreach ($corrections as $correction) {
-            $cor_value = $correction['value'];
-            if (!is_null($cor_value)) {
-                //Осущестляем корректировку
-                $this->params[$correction['name']] = $cor_value;
-            } else {
-                //Ругаемся, что не можем осуществить корректировку
-                array_push($correct_errors, $correction['source'] . '=>' . $correction['name']);
-            }
-        }
-
-        if (count($correct_errors))
-            throw new Frapi_Exception(join(', ', $correct_errors), 'CANT_CORRECT');
 
         $this->_calcErrors = array();
         $result = array();
@@ -186,6 +160,9 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
                 $this->getParam('ts_age', self::TYPE_INT)
             );
 
+
+        //Запишем входные пааметры в историю
+        $calc_history->fillByArray($this->params);
 
         //Далее берем необязательные и для них добиваем
         //TODO: Чует мое сердце этот код может быть сгенерен по схеме БД по конвенциям. Но сейчас ВЛОБ
@@ -222,36 +199,36 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
         $bWhere = $bWhere . $where;
         $aWhere = $aWhere . $where;
 
-        if (!empty($this->params['ts_make_id'])) {
-            $ts_make_id = $this->getParam('ts_make_id', self::TYPE_INT);
-            $where = sprintf(
-                ' AND (ts_make_id IS NULL OR ts_make_id=%u)', $ts_make_id);
-
-        } else
-            $where = ' AND ts_make_id IS NULL';
-
-        $bWhere = $bWhere . $where;
-        $aWhere = $aWhere . $where;
-
-        if (!empty($this->params['ts_model_id'])) {
-            $ts_model_id = $this->getParam('ts_model_id', self::TYPE_INT);
-            $where = sprintf(
-                ' AND (ts_model_id IS NULL OR ts_model_id=%u)', $ts_model_id);
-        } else
-            $where = ' AND ts_model_id IS NULL';
-
-        $bWhere = $bWhere . $where;
-        $aWhere = $aWhere . $where;
-
-        if (!empty($this->params['ts_modification_id'])) {
-            $ts_modification_id = $this->getParam('ts_modification_id', self::TYPE_INT);
-            $where = sprintf(
-                ' AND (ts_modification_id IS NULL OR ts_modification_id=%u)', $ts_modification_id);
-        } else
-            $where = ' AND ts_modification_id IS NULL';
-
-        $bWhere = $bWhere . $where;
-        $aWhere = $aWhere . $where;
+//        if (!empty($this->params['ts_make_id'])) {
+//            $ts_make_id = $this->getParam('ts_make_id', self::TYPE_INT);
+//            $where = sprintf(
+//                ' AND (ts_make_id IS NULL OR ts_make_id=%u)', $ts_make_id);
+//
+//        } else
+//            $where = ' AND ts_make_id IS NULL';
+//
+//        $bWhere = $bWhere . $where;
+//        $aWhere = $aWhere . $where;
+//
+//        if (!empty($this->params['ts_model_id'])) {
+//            $ts_model_id = $this->getParam('ts_model_id', self::TYPE_INT);
+//            $where = sprintf(
+//                ' AND (ts_model_id IS NULL OR ts_model_id=%u)', $ts_model_id);
+//        } else
+//            $where = ' AND ts_model_id IS NULL';
+//
+//        $bWhere = $bWhere . $where;
+//        $aWhere = $aWhere . $where;
+//
+//        if (!empty($this->params['ts_modification_id'])) {
+//            $ts_modification_id = $this->getParam('ts_modification_id', self::TYPE_INT);
+//            $where = sprintf(
+//                ' AND (ts_modification_id IS NULL OR ts_modification_id=%u)', $ts_modification_id);
+//        } else
+//            $where = ' AND ts_modification_id IS NULL';
+//
+//        $bWhere = $bWhere . $where;
+//        $aWhere = $aWhere . $where;
 
         if (isset($this->params['amortisation'])) {
             $amortisation = $this->getParam('amortisation', self::TYPE_BOOL);
@@ -392,10 +369,21 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
                 ' AND (commission_percent_down IS NULL OR commission_percent_down<=%u) AND (commission_percent_up IS NULL OR commission_percent_up>=%u)', $commission_percent, $commission_percent);
 
         $bquery = 'SELECT `value` as base_tariff FROM `tariff_coefficients` ' . $bWhere;
-        $aquery = 'SELECT f.`code`, f.`is_mandatory`, f.`default_value`, c.`value` FROM `all_factors` f
+        $aquery = 'SELECT f.`code`, f.`is_mandatory`, f.`default_value`, c.`value` FROM `coefficients` f
                       LEFT OUTER JOIN
-   	                    (SELECT `factor_id`, `value` FROM `additional_coefficients` ' . $aWhere .
-            ' ORDER BY `priority` DESC) AS c ON f.`id` = c.`factor_id`';
+   	                    (SELECT `coefficient_id`, `value` FROM `additional_coefficients` ' . $aWhere .
+            ' ORDER BY `priority` DESC) AS c ON f.`id` = c.`coefficient_id`';
+
+
+        //Добавим в историю параметры, задаваемые нами
+        $calc_history->fillByArray(
+            array(
+                'is_legal_entity' => $is_legal_entity,
+                'is_onetime_payment' => $is_onetime_payment,
+                'car_quantity' => $car_quantity,
+                'commission_percent' => $commission_percent,
+            )
+        );
 
         $sth = $db->query($bquery);
         $results = $sth->fetch(PDO::FETCH_ASSOC);
@@ -441,9 +429,17 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
 
 
         $result = array_merge($result, $results);
+        //Добавим коэффициенты в историю
+        $calc_history->fillByArray($result);
 
-        if (count($this->_calcErrors))
-            throw new Frapi_Exception(join(', ', $this->_calcErrors), 'CANT_CALC_COEF');
+
+        if (count($this->_calcErrors)) {
+            $error_string = join(', ', $this->_calcErrors);
+            $calc_history->errors = 'CANT_CALC_COEF ' . $error_string;
+            $calc_history->save();
+
+            throw new Frapi_Exception($error_string, 'CANT_CALC_COEF');
+        }
 
         //Выбираем все значения коэфициентов проходящие по выбранным факторам
         $this->data['Result']['Coefficients'] = $result;
@@ -455,6 +451,7 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
             $tariff = 10 * $result['ksd'] * $result['ka'] * $result['kkv'];
             $sum = Round($additional_sum * $tariff / 100, 2);
             $dbg = $tariff . ': Тариф по доп. оборудованию = 10%. Ксд =' . $result['ksd'] . '. Ка=' . $result['ka'] . '. Ккв=' . $result['kkv'] . '. Премия по доп. оборудованию = ' . $sum;
+            $calc_history->sum_additional = $sum;
             $this->data['Result']['Additional'] = array(
                 'Sum' => $sum,
                 'Dbg' => $dbg
@@ -473,6 +470,7 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
             'Tariff' => $base_tariff,
             'Sum' => Round($sum * $base_tariff / 100, 2)
         );
+        $calc_history->sum = $this->data['Result']['Contract']['Sum'];
         return $this->toArray();
     }
 

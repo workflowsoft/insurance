@@ -95,7 +95,7 @@ class Action_Referencesmake extends Frapi_Action implements Frapi_Action_Interfa
             array_push($whereElements, 'T2M.ts_type_id = '.$type_id);
         }
         if (!empty($name_pfx))
-           array_push($whereElements, 'M.name LIKE \''.$name_pfx.'%\'');
+           array_push($whereElements, 'LOWER(M.name) LIKE \''. strtolower($name_pfx).'%\'');
         if (count($whereElements))
             $selectStr = $selectStr.' WHERE '.join(' AND ',$whereElements);
         $selectStr = $selectStr.' GROUP BY M.Id';
