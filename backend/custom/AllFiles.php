@@ -7,6 +7,7 @@ define('FRAPI_CACHE_ADAPTER', 'dummy');
 // Or add an autolaoder if you are brave.
 
 require_once CUSTOM_MODEL . DIRECTORY_SEPARATOR . 'References.php';
+require_once CUSTOM_MODEL . DIRECTORY_SEPARATOR . 'Calculation.php';
 require_once CUSTOM_MODEL . DIRECTORY_SEPARATOR . 'CalcHistory.php';
 
 // Other data

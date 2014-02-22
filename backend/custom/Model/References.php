@@ -63,6 +63,72 @@ class References
 
     }
 
+    public static function getNameByValue($referenceDef, $value)
+    {
+        $result = $value;
+        if ($referenceDef['type'] == 'simple')
+        {
+            $db = Frapi_Database::getInstance();
+            $sth = $db->query(sprintf('SELECT name FROM %s WHERE id = %u', $referenceDef['name'], $value));
+            $result = $sth->fetchColumn();
+            if (!$result)
+                $result = $value;
+        }
+        return $result;
+    }
+
+    public static function getReferenceByRequestParams($paramName, $referenceDef, $params)
+    {
+        $reference = null;
+        $referenceOut = array();
+        if ($referenceDef)
+        {
+            $db = Frapi_Database::getInstance();
+            if ($referenceDef['type'] == 'simple')
+            {
+                foreach($referenceDef['tables'] as $tableName)
+                {
+                    /*name, columns[0], $tableName, columns[0],columns[0],columns[0],columns[0]*/
+                    $simpleQuery = 'SELECT GF.name,GF.id as value, CASE WHEN F.`default` IS NULL THEN 0 ELSE 1 END AS is_default FROM
+                                      (SELECT distinct T.id, T.name FROM %s T INNER  JOIN
+                                          (SELECT %s FROM %s AC GROUP BY AC.%s) G
+                                           ON T.id = G.%s OR G.%s IS NULL) GF
+                                           LEFT JOIN factors F ON F.`default` = GF.id AND F.name = \'%s\'
+                    ';
+                    $column = $referenceDef['columns'][0];
+                    $sth = $db->query(sprintf($simpleQuery, $referenceDef['name'], $column, $tableName, $column, $column, $column, $column));
+                    $res = $sth->fetchAll(PDO::FETCH_ASSOC);
+                    if (is_null($reference))
+                        $reference = $res;
+                    else
+                        $reference = array_udiff($reference, $res, function ($first, $second)
+                        {
+                            if ($first['value'] == $second['value'])
+                                return 0;
+                            else if ($first['value'] > $second['value'])
+                                return 1;
+                            else
+                                return -1;
+                        });
+                }
+            }
+            if (!is_null($reference))
+            {
+                foreach($reference as $item)
+                {
+                    array_push($referenceOut,
+                    array(
+                        'request_parameter' => $paramName,
+                        'name' => $item['name'],
+                        'value' => $item['value'],
+                        'is_default'=> $item['is_default'])
+                    );
+                }
+            }
+        }
+        return $referenceOut;
+    }
+
     private static function _getSynthetic()
     {
         self::_getDriversCount();
