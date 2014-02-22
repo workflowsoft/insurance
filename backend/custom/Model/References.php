@@ -155,7 +155,7 @@ class References
 
         self::$_results[$ref_key]['request_parameter'] = $ref_key;
         $first = true;
-        for ($i = $min; $i <= $max; $i++) {
+        for ($i = (int)$min; $i <= $max; $i++) {
             self::$_results[$ref_key]['values'][$i]['name'] = $i;
             self::$_results[$ref_key]['values'][$i]['value'] = $i;
             if ($first) {
