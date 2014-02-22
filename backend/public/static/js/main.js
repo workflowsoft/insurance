@@ -73,7 +73,9 @@ $(function () {
 
 		validate: function(name) {
 			var form = document.getElementById('calcForm'),
-				el = form[name];
+				el = form[name],
+				val = el.value,
+				tpl = this.templates.CalcTemplate;
 			
 			switch(name) {
 				case 'ts_type_id':
@@ -83,6 +85,14 @@ $(function () {
 				}).then(function (response) {
 					response && this.selectCategory(response.ts_group_id);
 				}.bind(this));
+				break;
+
+				case 'ts_sum':
+				if (_.isNaN(parseInt(val))) {			
+					tpl.set('calculate.ts_sum', '');
+				} else {
+					tpl.set('calculate.ts_sum', parseInt(val));
+				}
 				break;
 			}
 		},

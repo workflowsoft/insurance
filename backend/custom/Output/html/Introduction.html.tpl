@@ -109,7 +109,7 @@
 						<div class="input-group"><span class="input-group-addon">Срок эксплуатации ТС</span><input value={{calculate.ts_age}} type="text" name="ts_age" class="form-control"></div>
 					</div>
 					<div class="col-lg-6">
-						<div class="input-group"><span class="input-group-addon">Стоимость ТС</span><input value={{calculate.ts_sum}} type="text" name="ts_sum" class="form-control"></div>
+						<div class="input-group"><span class="input-group-addon">Стоимость ТС</span><input value={{calculate.ts_sum}} placeholder="Введите число" type="text" name="ts_sum" class="form-control"></div>
 					</div>
 				</div>
 				<div class="form-group g-clrfix">
