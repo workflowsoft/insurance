@@ -123,7 +123,6 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
             $calc_history->fillByArray($this->params);
             $calc_history->errors = 'CANT_CORRECT ' . $e->getMessage();
             $calc_history->save();
-
             throw new Frapi_Action_Exception($e->getMessage(), 'CANT_CORRECT');
         }
 
@@ -145,7 +144,9 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
                       LEFT OUTER JOIN
    	                    (SELECT `coefficient_id`, `value` FROM `additional_coefficients` ' . join(' AND ', \Calculation\Calculation::getWhereParts($this->params, true)['additional_coefficients']) .
             ' ORDER BY `priority` DESC) AS c ON f.`id` = c.`factor_id`';
+
         $sth = $db->query($bquery);
+
         $results = $sth->fetch(PDO::FETCH_ASSOC);
         if (!$results || $sth->rowCount() > 1)
             array_push($this->_calcErrors, 'base');
