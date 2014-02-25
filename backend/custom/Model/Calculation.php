@@ -6,9 +6,62 @@
  * Time: 16:53
  */
 
+namespace Calculation;
+
 class Calculation {
 
-    public static function  GetCorrectedParameters($params)
+    public static function getWhereParts($parameters, $is_strict = false)
+    {
+        $simpleFormat = '(%s = %u OR %s IS NULL)';
+        $simpleFormatEmpty = '%s IS NULL';
+        $rangeFormat = '(%s IS NULL OR %s<=%u) AND (%s IS NULL OR %s>=%u)';
+        $rangeFormatEmpty = '%s IS NULL AND %s IS NULL';
+
+        $factors = Configuration::getFactorsDefinitions();
+
+        $whereParts = array();
+
+        foreach($factors as $key=>$factor_def)
+        {
+            $currentPart = null;
+            $column = $factor_def['columns'][0];
+            switch ($factor_def['type'])
+            {
+                case 'simple':
+                    if (array_key_exists($key, $parameters))
+                    {
+                        $value = $parameters[$key];
+                        $currentPart = sprintf($simpleFormat, $column, $value, $column);
+                    }
+                    elseif ($is_strict)
+                        $currentPart = sprintf($simpleFormatEmpty, $column);
+                    break;
+                case 'range':
+                case 'complex_range':
+                    $column_up = $factor_def['columns'][1];
+                    if (array_key_exists($key, $parameters))
+                    {
+                        $value = $parameters[$key];
+                        $currentPart = sprintf($rangeFormat,  $column, $column, $value, $column_up, $column_up, $value);
+                    }
+                    elseif ($is_strict)
+                        $currentPart = sprintf($rangeFormatEmpty, $column, $column_up);
+                    break;
+                default:
+                    break;
+            }
+            foreach($factor_def['tables'] as $tableName)
+            {
+                if (!array_key_exists($tableName, $whereParts))
+                    $whereParts = array_merge($whereParts, array($tableName => array()));
+                if (!is_null($currentPart))
+                    array_push($whereParts[$tableName], $currentPart);
+            }
+        }
+        return $whereParts;
+    }
+
+    public static function  getCorrectedParameters($params)
     {
         $correctionQuery = 'SELECT `factor_name` as `source`, `dependent_factor_name` as `name`, `dependent_factor_value` as `value`, `conditional` FROM `factor_restricions` WHERE ';
         $predicateArray = array();
@@ -28,14 +81,14 @@ class Calculation {
         }
         $correctionQuery = $correctionQuery . join(' OR ', $predicateArray);
 
-        $db = Frapi_Database::getInstance();
+        $db = \Frapi_Database::getInstance();
 
         $sth = $db->query($correctionQuery);
         if (!$sth) {
-            throw new Frapi_Action_Exception($correctionQuery, 'CANT_CORRECT');
+            throw new \Frapi_Action_Exception($correctionQuery, 'CANT_CORRECT');
         }
 
-        $corrections = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $corrections = $sth->fetchAll(\PDO::FETCH_ASSOC);
         $correct_errors = array();
 
         $correcting_params = array();
@@ -51,7 +104,7 @@ class Calculation {
         }
 
         if (count($correct_errors))
-            throw new Frapi_Exception(join(', ', $correct_errors), 'CANT_CORRECT');
+            throw new \Frapi_Exception(join(', ', $correct_errors), 'CANT_CORRECT');
 
         return $correcting_params;
     }

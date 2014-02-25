@@ -45,7 +45,6 @@ class Frapi_Database extends PDO
     {
         if (!isset(self::$instance[$name])) {
             $configs = Frapi_Internal::getCachedDbConfig();
-
             $dsn = self::buildDsn($configs);
 
             // I iz not happy with this. We already have a switch
