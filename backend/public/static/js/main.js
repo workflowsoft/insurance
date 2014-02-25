@@ -13,9 +13,9 @@ $(function () {
 		defaults: {
 			visible_ts_age: 0,
 			calculate: {
+				commercial_carting_flag: 0,
 				ts_age: 0
-			},
-			ts_antitheft_id: 0
+			}
 		},
 
 		toggleLoader: function (toggle) {
@@ -31,6 +31,16 @@ $(function () {
 
 			_.each(data.driver_age.values, function(item) {
 				temp.push(item);
+			}, this);
+
+			_.each(data, function(item, key) {
+				var defaultItem = _.findWhere(item.values, {
+					is_default: 1
+				});
+
+				if (defaultItem) {
+					this.defaults.calculate[item.request_parameter] = defaultItem.value;
+				}
 			}, this);
 
 			data.drivers_count.values = _.toArray(data.drivers_count.values);
@@ -64,12 +74,18 @@ $(function () {
 						el: 'calc',
 						template: '#calcTemplate',
 						data: _.extend(this.preprocessResponse(response), this.defaults)
-					})
+					});
 
 				}.bind(this))
 				.then(function() {
 					this.afterLoad();
 				}.bind(this));
+
+			templateFactory('ProgramsTemplate', {
+				el: 'programs',
+				template: '#programsTemplate',
+				data: {}
+			});
 		},
 
 		selectCategory: function(id) {
@@ -170,14 +186,27 @@ $(function () {
 						data
 					).then(function(response) {
 						if (response.Result) {
-							this.set('totalSum', response.Result.Contract.Sum);
+							console.log(response.Result);
+							response.Result.references = _.toArray(response.Result.references);
+							insurance.templates.ProgramsTemplate.set({
+								programs: response.Result,
+								inputParams: response.inputParams
+							});
 						}
 					}.bind(this));
 
 					event.original.preventDefault();
 					return false;
 				}
-			})
+			});
+
+		this.templates.ProgramsTemplate.on({
+			recalc: function(event) {
+				debugger
+				$.get('/calculate/v1');
+
+			}
+		});
 
 		}
 	}

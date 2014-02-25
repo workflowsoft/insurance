@@ -127,7 +127,6 @@
 				<div class="form-group g-clrfix">
 
 					{{#ts_antitheft.values}}
-					{{value}}
 						<div class="col-lg-3">
 							<div class="radio">
 								<label>
@@ -221,8 +220,54 @@
 		{{/additional.submitReady}}
 	</form>
 </script>
+
+<script id="programsTemplate" type="ractive">
+	<h2><small>Калькулятор тарифов по страхованию средств наземного транспорта</small></h2>
+	<form id="programsForm" role="form" class="g-clrfix" on-submit="re" on-change="recalc">
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				<h3 class="panel-title">Страховые программы</h3>
+			</div>
+
+			{{#programs:num}}
+				<div class="form-group g-clrfix">
+					<div class="col-lg-3">
+						<h4>
+							{{name}}
+						</h4>
+					</div>
+					<div class="col-lg-6">
+
+					{{#references:key}}
+						<div class="col-lg-6">	
+							<label for="">{{label}}</label>
+							<select class="form-control" name={{key}} >
+								{{#references[key]}}
+									{{#is_default}}
+										<option selected value={{value}}>{{name}}</option>
+									{{/is_default}}
+
+									{{^is_default}}
+										<option value={{value}}>{{name}}</option>
+									{{/is_default}}
+								{{/references[key]}}
+							</select>
+						</div>
+					{{/references}}
+					</div>
+					<div class="col-lg-3">
+						<h4><small>Стоимость полиса</small><h4>
+					</div>
+				</div>
+			{{/programs}}
+			
+		</div>
+	</form>
+
+</script>
 		<!-- Контейнер шаблона с калькулятором -->
 		<div class="b-calc" id="calc"></div>
+		<div class="b-programs" id="programs"></div>
 	</div>
 	<div class="b-footer">
 	</div>

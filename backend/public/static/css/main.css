@@ -243,6 +243,15 @@ body {
   padding: 0 16px;
 }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_programs\.scss}line{font-family:\000031}}
+.b-programs {
+  padding: 0 16px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_programs\.scss}line{font-family:\000034}}
+.b-programs .form-group:nth-of-type(even) {
+  background: #F4FAFF;
+}
+
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_footer\.scss}line{font-family:\000031}}
 .b-footer {
   position: relative;
