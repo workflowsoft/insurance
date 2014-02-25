@@ -15,9 +15,11 @@
 <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 <link rel="stylesheet" href="static/css/main.css">
 <link rel="stylesheet" href="static/css/bootstrap.min.css">
-<script src="static/js/vendor/modernizr-2.6.2.min.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/cupertino/jquery-ui.css">
+
 <script src="static/js/vendor/lodash.min.js"></script>
 <script src="static/js/jquery/jquery-1.9.1.min.js"></script>
+<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 <script src="static/js/vendor/bootstrap.min.js"></script>
 </head>
 <body class="l-body">
@@ -37,7 +39,6 @@
 		</div>
 
 <script id="calcTemplate" type="ractive">
-
 	<h2><small>Калькулятор тарифов по страхованию средств наземного транспорта</small></h2>
 	<form id="calcForm" role="form" class="g-clrfix" on-submit="getTotal" on-change="processFormData">
 		<div class="panel panel-info">
@@ -47,118 +48,71 @@
 
 			<div class="panel-body">
 				<div class="form-group g-clrfix">
-					<div class="col-lg-6">
+					<div class="col-lg-3">
 						<label class=" control-label">Тип транспортного средства</label>
-						<select class="form-control" disabled={{!ts_type}} name="ts_type_id" value={{calculate.ts_type_id}}>
-							<option disabled selected>Выберите тип ТС</option>
-							{{#ts_type}}
-								<option value={{id}}>{{name}}</option>
-							{{/ts_type}}
+						<select class="form-control" disabled={{!ts_type.values}} name="ts_type_id" value={{calculate.ts_type_id}}>
+							{{#ts_type.values}}
+								{{^is_default}}
+									<option value={{value}}>{{name}}</option>
+								{{/is_default}}
 
+								{{#is_default}}
+									<option selected="selected" value={{value}}>{{name}}</option>
+								{{/is_default}}
+							{{/ts_type.values}}
 						</select>
 					</div>
-					<div class="col-lg-6">
+					<div class="col-lg-3">
 						<label class=" control-label">Марка транспортного средства</label>
-						<select disabled={{!ts_make}} class="form-control" name="ts_make_id" value={{calculate.ts_make_id}}>
-							<option disabled selected>Выберите марку ТС</option>
-							{{#ts_make}}
-								<option value={{id}}>{{name}}</option>
-							{{/ts_make}}
-						</select>
+						<input type="text" name="ts_make" class="form-control">
 					</div>
-					<div class="col-lg-6">
+					<div class="col-lg-3">
 						<label class=" control-label">Модель транспортного средства</label>
-						<select disabled={{!ts_model}} class="form-control" name="ts_model_id" value={{calculate.ts_model_id}}>
-							<option disabled selected>Выберите модель ТС</option>
-							{{#ts_model}}
-								<option value={{id}}>{{name}}</option>
-							{{/ts_model}}
-						</select>
+						<input name="ts_model" type="text" class="form-control">
 					</div>
-					<div class="col-lg-6">
+					<div class="col-lg-3">
 						<label class=" control-label">Модификация транспортного средства</label>
-						<select disabled={{!ts_modification}} class="form-control" name="ts_modification_id" value={{calculate.ts_modification_id}}>
-							<option disabled selected>Выберите модификацию ТС</option>
-							{{#ts_modification}}
-								<option value={{id}}>{{name}}</option>
-							{{/ts_modification}}
-						</select>
-					</div>
-					<div class="col-lg-6">
-						<label class=" control-label">Программа страхования</label>
-						<select disabled={{!tariff_program}} class="form-control" name="tariff_program_id" value={{calculate.tariff_program_id}}>
-							{{^tariff_program.hasDefault}}
-								<option disabled selected>ыберите программу</option>
-							{{/tariff_program.hasDefault}}
+						<select disabled={{!ts_modification.values}} class="form-control" name="ts_modification_id" value={{calculate.ts_modification_id}}>
+							<option disabled>Выберите модификацию ТС</option>
+							{{#ts_modification.values}}
+								{{#is_default}}
+									<option selected="selected" value={{value}}>{{name}}</option>
+								{{/is_default}}
 
-							{{#tariff_program}}
-								{{#default}}
-									<option selected value={{id}}>{{name}}</option>
-								{{/default}}
-
-								{{^default}}
-									<option value={{id}}>{{name}}</option>
-								{{/default}}
-							{{/tariff_program}}
-						</select>
-					</div>
-					<div class="col-lg-6">
-						<label class=" control-label">Тип возмещения</label>
-						<select disabled={{!tariff_def_damage_type}} class="form-control" name="tariff_def_damage_type_id" value={{calculate.tariff_def_damage_type_id}}>
-							{{^tariff_def_damage_type.hasDefault}}
-								<option disabled selected>Выберите тип возмещения</option>
-							{{/tariff_def_damage_type.hasDefault}}
-
-							{{#tariff_def_damage_type}}
-								{{#default}}
-									<option selected value={{id}}>{{name}}</option>
-								{{/default}}
-
-								{{^default}}
-									<option value={{id}}>{{name}}</option>
-								{{/default}}
-							{{/tariff_def_damage_type}}
-
+								{{^is_default}}
+									<option value={{value}}>{{name}}</option>
+								{{/is_default}}
+							{{/ts_modification.values}}
 						</select>
 					</div>
 				</div>
 				<div class="form-group g-clrfix">
 					<div class="col-lg-12">
 						<label class=" control-label">Категория ТС</label>
-						<select disabled={{!ts_group}} class="form-control" value={{calculate.ts_group_id}}> name="ts_group_id">
-							{{^ts_group.hasDefault}}
+						<select id="category_select" disabled={{!ts_group}} class="form-control" value={{calculate.ts_group_id}} name="ts_group_id">
 								<option disabled selected>Выберите категорию</option>
-							{{/ts_group.hasDefault}}
+							{{#ts_group.values}}
+								{{#is_default}}
+									<option selected value={{value}}>{{name}}</option>
+								{{/is_default}}
 
-							{{#ts_group}}
-								{{#default}}
-									<option selected value={{id}}>{{name}}</option>
-								{{/default}}
-
-								{{^default}}
-									<option value={{id}}>{{name}}</option>
-								{{/default}}
-							{{/ts_group}}
+								{{^is_default}}
+									<option value={{value}}>{{name}}</option>
+								{{/is_default}}
+							{{/ts_group.values}}
 						</select>
 					</div>
 				</div>
 				<div class="form-group g-clrfix">
 					<div class="col-lg-6">
-						<div class="input-group"><span class="input-group-addon">Срок эксплуатации ТС</span><input value={{calculate.ts_age}} type="text" name="ts_age" class="form-control"></div>
+						<label class="control-label">Срок эксплуатации ТС ({{visible_ts_age}})</label>
+						<div id="ts_age" class="js-slider"></div>
 					</div>
 					<div class="col-lg-6">
-						<div class="input-group"><span class="input-group-addon">Стоимость ТС</span><input value={{calculate.ts_sum}} type="text" name="ts_sum" class="form-control"></div>
+						<div class="input-group"><span class="input-group-addon">Стоимость ТС</span><input value={{calculate.ts_sum}} placeholder="Введите число" type="text" name="ts_sum" class="form-control"></div>
 					</div>
 				</div>
 				<div class="form-group g-clrfix">
-					<div class="col-lg-6">
-						<label class=" control-label">Набор рисков</label>
-						<select disabled={{!risks}} name="risk_id" value={{calculate.risk_id}} class="form-control">
-							{{#risks}}
-								<option value="{{id}}">{{name}}</option>
-							{{/risks}}
-						</select>
-					</div>
 					<div class="col-lg-6">
 						<label class=" control-label">Есть доп.оборудование на сумму</label>
 						<div class="input-group">
@@ -169,41 +123,30 @@
 						</div>
 					</div>
 				</div>
-				<div class="form-group g-clrfix">
-					<div class="col-lg-6">
-						<label class=" control-label">Франшиза</label>
-						<select disabled={{!franchise_type}} name="franchise_type_id" value={{calculate.franchise_type_id}} class="form-control">
-							<option value="1">Не выбрано</option>
-							{{#franchise_type}}
-								<option value="{{id}}">{{name}}</option>
-							{{/franchise_type}}
-						</select>
-					 </div>
-					 <div class="col-lg-6">
-						<label for="">Процент от страховой суммы</label>
-						<input type="text" value="{{calculate.franchise_percent}}" class="form-control">
-					</div>
-				</div>
 
 				<div class="form-group g-clrfix">
+
+					{{#ts_antitheft.values}}
+					{{value}}
+						<div class="col-lg-3">
+							<div class="radio">
+								<label>
+									{{#is_default}}
+										<input type="radio" name="ts_antitheft_id" checked="checked" value={{value}}>{{name}}
+									{{/is_default}}
+
+									{{^is_default}}
+										<input type="radio" name="ts_antitheft_id" value={{value}}>{{name}}
+									{{/is_default}}
+								</label>
+							</div>
+						</div>
+					{{/ts_antitheft.values}}
+
 					<div class="col-lg-3">
+					<br />
 						<label class="checkbox-inline">
-							<input type="checkbox" id="inlineCheckbox1" checked="{{calculate.ts_satellite_flag}}">Есть спутниковая поисковая система
-						</label>
-					</div>
-					<div class="col-lg-3">
-						<label class="checkbox-inline">
-							<input type="checkbox" id="inlineCheckbox2" checked="{{calculate.ts_no_defend_flag}}">Нет противоугонной системы (для грузовиков, автобусов…)
-						</label>
-					</div>
-					<div class="col-lg-3">
-						<label class="checkbox-inline">
-							<input type="checkbox"  id="inlineCheckbox3" checked="{{calculate.ts_electronic_alarm_flag}}">Есть эл. сигнализация с обратной связью
-						</label>
-					</div>
-					<div class="col-lg-3">
-						<label class="checkbox-inline">
-							<input type="checkbox"  id="inlineCheckbox3" checked="{{calculate.amortisation}}">Учёт амортизации (для тарифа УНИВЕРСАЛ)
+							<input name="commercial_carting_flag" type="checkbox" checked={{calculate.commercial_carting_flag}}>ТС сдаётся в прокат
 						</label>
 					</div>
 				</div>
@@ -215,55 +158,50 @@
 			</div>
 			<div class="panel-body">
 				<div class="form-group g-clrfix">
-					<div class="col-lg-6">
-						<label class="checkbox-inline">
-							<input type="checkbox" checked={{calculate.commercial_carting_flag}}>ТС сдаётся в прокат
-						</label>
-					</div>
-				</div>
-				<div class="form-group g-clrfix">
 					<div class="col-lg-4">
-						<label class="control-label">Количество ЛДУ</label>
-						<input name="drivers_count" type="text" value="{{calculate.drivers_count}}" class="form-control">
-					</div>
-					<div class="col-lg-4">
-						<label class=" control-label">Выплаты без справок</label>
-						<select name="payments_without_references_id" value={{calculate.payments_without_references_id}} class="form-control">
-							{{#payments_without_references}}
-								<option value={{id}}>{{name}}</option>
-							{{/payments_without_references}}
-						</select>
-					</div>
-					<div class="col-lg-4">
-					    <label class=" control-label">Тип возмещения</label>
-						<select class="form-control" value="{{calculate.regres_limit_factor_id}}" name="regres_limit_factor_id">
-							{{#regres_limit}}
-							<option value={{id}}>{{name}}</option>
-							{{/regres_limit}}
-						</select>
-					</div>
-				</div>
-				<div class="form-group g-clrfix">
-					<div class="col-lg-4">
-					<label for="contract_day">День</label>
-							<input name="contract_day" type="text" value="{{calculate.contract_day}}" class="form-control">
-						</div>
-						<div class="col-lg-4">
-							<label for="contract_month">Месяц</label>
-							<input value="{{calculate.contract_month}}" name="contract_month" type="text" class="form-control">
-						</div>
-						<div class="col-lg-4">
-							<label for="contract_year">Год</label>
-							<input type="text" name="contract_year" value="{{calculate.contract_year}}" class="form-control">
-						</div>
+						<label class="control-label">Количество ЛДУ<br>&nbsp;</label>
+						<select disabled={{!drivers_count}} class="form-control" value={{calculate.drivers_count}} name="drivers_count">
+								<option disabled selected>Укажите количество</option>
+							{{#drivers_count.values}}
+								{{#is_default}}
+									<option selected value={{value}}>{{name}}</option>
+								{{/is_default}}
 
+								{{^is_default}}
+									<option value={{value}}>{{name}}</option>
+								{{/is_default}}
+							{{/drivers_count.values}}
+						</select>
+					</div>
 					<div class="col-lg-4">
 						<label for="">Возраст водителей(По самому «плохому» показателю)</label>
-						<input type="text" value="{{calculate.driver_age}}" class="form-control">
+						<select disabled={{!driver_age}} class="form-control" value={{calculate.driver_age}} name="driver_age">
+							<option disabled selected>Укажите возраст</option>
+							{{#driver_age.values}}
+								{{#is_default}}
+									<option selected value={{value}}>{{name}}</option>
+								{{/is_default}}
+
+								{{^is_default}}
+									<option value={{value}}>{{name}}</option>
+								{{/is_default}}
+							{{/driver_age.values}}
+						</select>
 					</div>
 					<div class="col-lg-4">
 						<label for="">Стаж водителей(По самому «плохому» показателю)</label>
-						<input type="text" value="{{calculate.driver_exp}}" class="form-control">
+						<select disabled={{!driver_exp}} class="form-control" value={{calculate.driver_exp}} name="driver_exp">
+								<option disabled selected>Укажите количество</option>
+							{{#driver_exp.values}}
+								{{#is_default}}
+									<option selected value={{value}}>{{name}}</option>
+								{{/is_default}}
+
+								{{^is_default}}
+									<option value={{value}}>{{name}}</option>
+								{{/is_default}}
+							{{/driver_exp.values}}
+						</select>
 					</div>
 					<div class="col-lg-4">
 					</div>
@@ -276,22 +214,15 @@
 		{{/totalSum}}
 		
 		{{^additional.submitReady}}
-			<button type="submit" disabled  class="btn btn-lg btn-default pull-right">Рассчитать</button>
+			<button type="submit" disabled  class="btn btn-lg btn-default pull-right">Далее</button>
 		{{/additional.submitReady}}
 		{{#additional.submitReady}}
-			<button type="submit"  class="btn btn-lg btn-info pull-right">Рассчитать</button>
+			<button type="submit"  class="btn btn-lg btn-info pull-right">Далее</button>
 		{{/additional.submitReady}}
 	</form>
 </script>
-
-<div class="b-calc" id="calc">
-	
-</div>
-		
 		<!-- Контейнер шаблона с калькулятором -->
-		<div id="calc2" class="b-calc">
-
-		</div>
+		<div class="b-calc" id="calc"></div>
 	</div>
 	<div class="b-footer">
 	</div>
@@ -321,5 +252,6 @@
 
 <script src="static/js/core/Ractive.js"></script>
 <script src="static/js/main.js"></script>
+<script src="static/js/plugins.js"></script>
 </body>
 </html>

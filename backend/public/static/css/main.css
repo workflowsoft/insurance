@@ -164,6 +164,11 @@ body {
   font-weight: bold;
 }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_global\.scss}line{font-family:\0000357}}
+.g-hidden {
+  display: none;
+}
+
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_blocks\.scss}line{font-family:\000033}}
 .l-body {
   background-image: url(../img/blocks/white_wall_hash.png);

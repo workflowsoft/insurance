@@ -109,20 +109,27 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
     public function executeGet()
     {
         $this->hasRequiredParameters($this->requiredParams);
+        $calc_history = new CalcHistory;
+        $db = Frapi_Database::getInstance();
 
         //Сначала надо установить поправки на входные параметры и поругаться, если корректировка не проходит
         /* При заполнении корректирующих параметров надо учитывать множественное назначение от разных источников
          * Также стоит учитываеть циклические выставления значений. Пока все тупо.
          * В цикле просто будут ставиться новые значения, если отрабает условие срабатывания
          */
-        $correctedParams = Calculation\Calculation::getCorrectedParameters($this->params);
+        try {
+            $correctedParams = Calculation\Calculation::GetCorrectedParameters($this->params);
+        } catch (Exception $e) {
+            $calc_history->fillByArray($this->params);
+            $calc_history->errors = 'CANT_CORRECT ' . $e->getMessage();
+            $calc_history->save();
 
-        foreach ($correctedParams as $name => $value)
-        {
-            $this->params[$name] =  $value;
+            throw new Frapi_Action_Exception($e->getMessage(), 'CANT_CORRECT');
         }
 
-        //Далее непосредственно рассчет
+        foreach ($correctedParams as $name => $value) {
+            $this->params[$name] = $value;
+        }
 
         $this->_calcErrors = array();
         $result = array();
@@ -138,8 +145,6 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
                       LEFT OUTER JOIN
    	                    (SELECT `coefficient_id`, `value` FROM `additional_coefficients` ' . join(' AND ', \Calculation\Calculation::getWhereParts($this->params, true)['additional_coefficients']) .
             ' ORDER BY `priority` DESC) AS c ON f.`id` = c.`factor_id`';
-
-        $db = Frapi_Database::getInstance();
         $sth = $db->query($bquery);
         $results = $sth->fetch(PDO::FETCH_ASSOC);
         if (!$results || $sth->rowCount() > 1)
@@ -184,9 +189,17 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
 
 
         $result = array_merge($result, $results);
+        //Добавим коэффициенты в историю
+        $calc_history->fillByArray($result);
 
-        if (count($this->_calcErrors))
-            throw new Frapi_Exception(join(', ', $this->_calcErrors), 'CANT_CALC_COEF');
+
+        if (count($this->_calcErrors)) {
+            $error_string = join(', ', $this->_calcErrors);
+            $calc_history->errors = 'CANT_CALC_COEF ' . $error_string;
+            $calc_history->save();
+
+            throw new Frapi_Exception($error_string, 'CANT_CALC_COEF');
+        }
 
         //Выбираем все значения коэфициентов проходящие по выбранным факторам
         $this->data['Result']['Coefficients'] = $result;
@@ -198,6 +211,7 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
             $tariff = 10 * $result['ksd'] * $result['ka'] * $result['kkv'];
             $sum = Round($additional_sum * $tariff / 100, 2);
             $dbg = $tariff . ': Тариф по доп. оборудованию = 10%. Ксд =' . $result['ksd'] . '. Ка=' . $result['ka'] . '. Ккв=' . $result['kkv'] . '. Премия по доп. оборудованию = ' . $sum;
+            $calc_history->sum_additional = $sum;
             $this->data['Result']['Additional'] = array(
                 'Sum' => $sum,
                 'Dbg' => $dbg
@@ -216,6 +230,7 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
             'Tariff' => $base_tariff,
             'Sum' => Round($sum * $base_tariff / 100, 2)
         );
+        $calc_history->sum = $this->data['Result']['Contract']['Sum'];
         return $this->toArray();
     }
 

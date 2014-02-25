@@ -69,6 +69,7 @@ DROP TABLE IF EXISTS `ts_type`;
 CREATE TABLE IF NOT EXISTS `ts_type` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) COLLATE utf8_bin NOT NULL,
+  `icon` varchar(256),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Тип ТС';
 
@@ -143,11 +144,7 @@ CREATE TABLE IF NOT EXISTS `additional_coefficients` (
   `coefficient_id` int(10) NOT NULL REFERENCES coefficients(id),
   `tariff_program_id` int(10) DEFAULT NULL REFERENCES tariff_program(id),
   `risk_id` int(10) DEFAULT NULL REFERENCES  risks(id),
-  `ts_type_id` int(10) REFERENCES `ts_type`(id),
   `ts_group_id` int(10) REFERENCES `ts_group`(id),
-  `ts_make_id` int(10) REFERENCES `ts_make`(id),
-  `ts_model_id` int(10) REFERENCES `ts_model`(id),
-  `ts_modification_id` int(10) REFERENCES `ts_modification`(id),
   `regres_limit_factor_id` int(10) DEFAULT NULL REFERENCES regres_limit(id),
   `tariff_def_damage_type_id` int(10) DEFAULT NULL REFERENCES tariff_def_damage_type(id),
   `payments_without_references_id` int(10) DEFAULT NULL REFERENCES payments_without_references(id),
@@ -184,11 +181,7 @@ CREATE TABLE IF NOT EXISTS `additional_coefficients` (
 DROP TABLE IF EXISTS `tariff_coefficients`;
 CREATE TABLE IF NOT EXISTS `tariff_coefficients` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
-  `ts_type_id` int(10) REFERENCES `ts_type`(id),
   `ts_group_id` int(10) REFERENCES `ts_group`(id),
-  `ts_make_id` int(10) REFERENCES `ts_make`(id),
-  `ts_model_id` int(10) REFERENCES `ts_model`(id),
-  `ts_modification_id` int(10) REFERENCES `ts_modification`(id),
   `tariff_program_id` int(10) NOT NULL REFERENCES `tariff_program`(id),
   `risk_id` int(10) NOT NULL REFERENCES `risks`(id),
   `tariff_def_damage_type_id` int(10) NULL  REFERENCES `tariff_def_damage_type`(id),
@@ -259,8 +252,8 @@ CREATE TABLE IF NOT EXISTS `calc_history` (
   `risk_id` int(10) DEFAULT NULL REFERENCES  risks(id),
   `ts_type_id` int(10) REFERENCES `ts_type`(id),
   `ts_group_id` int(10) REFERENCES `ts_group`(id),
-  `ts_make` int(10) REFERENCES `ts_make`(id),
-  `ts_model` int(10) REFERENCES `ts_model`(id),
+  `ts_make` VARCHAR (128),
+  `ts_model` VARCHAR (128),
   `ts_modification_id` int(10) REFERENCES `ts_modification`(id),
   `regres_limit_factor_id` int(10) DEFAULT NULL REFERENCES regres_limit(id),
   `tariff_def_damage_type_id` int(10) DEFAULT NULL REFERENCES tariff_def_damage_type(id),
@@ -281,6 +274,7 @@ CREATE TABLE IF NOT EXISTS `calc_history` (
   `is_legal_entity` tinyint(1) DEFAULT NULL,
   `amortisation` bit(1) DEFAULT NULL,
 # значения коэфициентов
+  `base` DOUBLE,
   `kuts` DOUBLE,
   `kf` DOUBLE,
   `kvs` DOUBLE,
@@ -299,6 +293,7 @@ CREATE TABLE IF NOT EXISTS `calc_history` (
   `ka` DOUBLE,
 # сумма или ошибка
   `sum` double,
+  `sum_additional` double,
   `errors` VARCHAR(512),
 # прочие
   `timestamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

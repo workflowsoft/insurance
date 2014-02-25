@@ -28,7 +28,8 @@ class References
     public static function get()
     {
         foreach (self::$_tables as $table) {
-            self::$_results[$table]['request_parameter'] = $table . '_id';
+            self::$_results[$table]['request_parameter'] = $table;
+            self::$_results[$table]['request_parameter'] .= $table == 'ts_modification' ? '' : '_id';
             self::$_results[$table]['values'] = self::getByTable($table);
         }
 
@@ -329,20 +330,12 @@ class References
         self::_getDriversAge();
         self::_getDriversExp();
         self::_getTsAge();
-
-
-        //ts_age
-        //drivers age exp
-
-
     }
 
     private static function _getDriversCount()
     {
-
         $db = Frapi_Database::getInstance();
         $ref_key = 'drivers_count';
-
 
         $query = 'SELECT max(`drivers_count_up`) FROM `additional_coefficients`';
         $result = $db->query($query);
@@ -356,7 +349,7 @@ class References
 
         self::$_results[$ref_key]['request_parameter'] = $ref_key;
         $first = true;
-        for ($i = $min; $i <= $max; $i++) {
+        for ($i = (int)$min; $i <= $max; $i++) {
             self::$_results[$ref_key]['values'][$i]['name'] = $i;
             self::$_results[$ref_key]['values'][$i]['value'] = $i;
             if ($first) {
@@ -451,7 +444,7 @@ class References
         $i = 0;
         foreach ($result as $age) {
             self::$_results[$ref_key]['values'][$i]['name'] = $age;
-            self::$_results[$ref_key]['values'][$i]['value'] = $age;
+            self::$_results[$ref_key]['values'][$i]['value'] = (int)$age;
             self::$_results[$ref_key]['values'][$i]['is_default'] = 0;
             $i++;
         }
@@ -462,6 +455,5 @@ class References
         self::$_results[$ref_key]['values'][$i]['is_default'] = 0;
 
     }
-
 
 } 

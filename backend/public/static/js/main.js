@@ -10,12 +10,34 @@ $(function () {
 
 		initialData: {},
 
+		defaults: {
+			visible_ts_age: 0,
+			calculate: {
+				ts_age: 0
+			},
+			ts_antitheft_id: 0
+		},
+
 		toggleLoader: function (toggle) {
 			toggle = toggle || false;
 
 			var loader = $('.b-loader-backdrop');
 
 			loader.toggle(toggle);
+		},
+
+		preprocessResponse: function(data) {
+			var temp = [];
+
+			_.each(data.driver_age.values, function(item) {
+				temp.push(item);
+			}, this);
+
+			data.drivers_count.values = _.toArray(data.drivers_count.values);
+
+			data.driver_age.values = temp;
+
+			return data;
 		},
 
 		// Заводим инстансы Ractive.js
@@ -36,15 +58,13 @@ $(function () {
 
 			$.get('/references')
 				.then(function(response) {
-					response = this.preprocessResponseData(response);
+					console.log(response);
 
 					templateFactory('CalcTemplate', {
 						el: 'calc',
 						template: '#calcTemplate',
-						data: response
+						data: _.extend(this.preprocessResponse(response), this.defaults)
 					})
-
-					this.validate();
 
 				}.bind(this))
 				.then(function() {
@@ -52,69 +72,58 @@ $(function () {
 				}.bind(this));
 		},
 
+		selectCategory: function(id) {
+			var categorySelect = $('#category_select');
+
+			if (id) {
+				categorySelect.find('option:selected').each(function(){
+					this.selected=false;
+				});
+
+				categorySelect.find('[value="' + id +'"]').attr('selected', 'selected');
+			} else {
+				categorySelect.find('[value="1"]').attr('selected', 'selected');
+			}
+		},
+
 		afterLoad: function() {
 			this.toggleLoader(false);
 
 			this.initBindings();
+
+			$(document).trigger('webAppReady');
 		},
 
-		validate: function(data) {
-			this.toggleLoader(true);
+		validate: function(name) {
+			var form = document.getElementById('calcForm'),
+				el = form[name],
+				val = el.value,
+				tpl = this.templates.CalcTemplate;
+			
+			switch(name) {
+				case 'ts_type_id':
 
-			$.get('/validate',
-				data
-			).then(function(response) {
-				var resetData = _.clone(this.initialData);
+				$.get('/ts/group', {
+					ts_type_id: el.value
+				}).then(function (response) {
+					response && this.selectCategory(response.ts_group_id);
+				}.bind(this));
+				break;
 
-				_.each(response, function(item, key, list) {
-					switch (item.type) {
-						case 'select':
-
-						resetData[key] = _.filter(resetData[key], function(elem) {
-
-							return item.value.indexOf(elem.id) != -1;
-						});
-
-						// Если поле имеет дефолтное значение, пробрасываем об этом в данные для темплейты
-						if (!!item.default) {
-							resetData[key].hasDefault = true;
-							_.where(resetData[key], {id: '' + item.default})[0].default = true;
-						}
-
-						break;
-
-						case 'radio':
-
-						break;
-
-						case 'input':
-
-						break;
-					}
-
-					this.templates.CalcTemplate.set(resetData);
-
-					if (item.hasOwnProperty('default')) {
-						// проставить флаг по умолчанию
-					}
-				}, this);				
-
-				this.toggleLoader(false);
-			}.bind(this))
-			.fail(function(message){
-				console.error(message.statusText);
-				this.toggleLoader(false);
-			}.bind(this));
-		},
-
-		preprocessResponseData: function(data) {
-			// Если справочник — пустой массив, превращаем его в false
-			_.each(data, function(item, key) {
-				_.isArray(item) && !item.length && (data[key] = false);
-			});
-
-			_.isEmpty(this.initialData) && (this.initialData = data);
-			return data;
+				case 'ts_sum':
+				if (_.isNaN(parseInt(val))) {			
+					tpl.set('calculate.ts_sum', '');
+				} else {
+					tpl.set('calculate.ts_sum', parseInt(val));
+				}
+				break;
+				case 'ts_antitheft_id':
+				debugger;
+				
+				tpl.set('calculate.ts_antitheft_id', $('input[name=ts_antitheft_id]:checked').val());	
+				
+				break;
+			}
 		},
 
 		// Дата биндинг, обработка событий, вот это вот всё
@@ -125,7 +134,7 @@ $(function () {
 				// Обработчик, срабатывающий при изменении любого контрола в калькуляторе
 				processFormData: function(event) {
 					var excludes = ['additional_equip'],
-						requiredFields = ['tariff_program_id', 'risk_id', 'tariff_def_damage_type_id', 'ts_age','payments_without_references_id', 'ts_sum'],
+						requiredFields = ['ts_sum'],
 						self = insurance,
 						data = this.data.calculate || {},
 						submitReady;
@@ -147,8 +156,7 @@ $(function () {
 
 					this.set('additional.submitReady', submitReady);
 
-					insurance.toggleLoader(true);
-					insurance.validate(this.data.calculate);
+					self.validate(event.original.target.name);
 
 					return false;
 				},
@@ -156,7 +164,9 @@ $(function () {
 					var data = this.data.calculate || {},
 						submitReady = false;
 
-					$.get('/calculate/v1',
+					console.log(data);				
+
+					$.get('/programs',
 						data
 					).then(function(response) {
 						if (response.Result) {
