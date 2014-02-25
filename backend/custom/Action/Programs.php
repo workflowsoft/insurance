@@ -132,31 +132,42 @@ class Action_Programs extends Frapi_Action implements Frapi_Action_Interface
                 foreach ($corrections as $name => $value)
                 {
                     $concrete_params[$name] =  $value;
-
-                    $referenceDef =  $targetReferences[$name];
-
-                    if ($referenceDef)
+                    if (array_key_exists($name, $targetReferences))
                     {
-                        $referenceName = $referenceDef['name'];
-                        if (!array_key_exists($referenceName, $references))
-                            $references[$referenceName] = array();
-                        $references[$referenceName] =
-                            array_merge($references[$referenceName],
-                                array(
-                                    'request_parameter' => $name,
-                                    'name' => References::getNameByValue($referenceDef, $value),
-                                    'value' => $value,
-                                    'is_default'=> 1
-                                )
-                            );
+                        $referenceDef =  $targetReferences[$name];
+                        if ($referenceDef)
+                        {
+                            $referenceName = $referenceDef['name'];
+                            if (!array_key_exists($referenceName, $references))
+                                $references[$referenceName] = array();
+                            $references[$referenceName] =
+                                array_merge($references[$referenceName],
+                                    array(
+                                        'request_parameter' => $name,
+                                        'name' => References::getNameByValue($referenceDef, $value),
+                                        'value' => $value,
+                                        'is_default'=> 1
+                                    )
+                                );
+                        }
                     }
                 }
                 //Корректировка завершена. Осуществляем подбор значений справочников
+                $contact_got = false; //TODO: Это костыль, пока нужен, для контракта
                 foreach($targetReferences as $param=>$referenceDef)
                 {
                     //Только если по параметру справочника не проходила корректировка
                     if (!array_key_exists($param, $corrections))
                     {
+                        //TODO:Костыль для контракта
+                        if ($referenceDef['type'] == 'complex_range')
+                        {
+                            if (!$contact_got)
+                                $contact_got = true;
+                            else
+                                continue;
+                        }
+                        //TODO: Конец костыля для контракта
                         $referenceValues = References::getReferenceByRequestParams($param, $referenceDef, $concrete_params);
                         if (count($referenceValues))
                         {
@@ -164,11 +175,31 @@ class Action_Programs extends Frapi_Action implements Frapi_Action_Interface
                             if (!array_key_exists($referenceName, $references))
                                 $references[$referenceName] = array();
                             $references[$referenceName] = array_merge($references[$referenceName], $referenceValues);
+                            //Добавляем параметры для рассчета
+                            $paramSet = false;
+                            foreach($referenceValues as $i => $refValue)
+                            {
+                                //Мы берем или значение по-умолчснию из справочника или первое из перечисленных, если среди них нет по-умолчанию
+                                if ($refValue['is_default'] == 1)
+                                {
+                                    $concrete_params[$refValue['request_parameter']] = $refValue['value'];
+                                    $paramSet = true;
+                                }
+                                if (!$paramSet && $i == count($referenceValues)-1)
+                                {
+                                    $concrete_params[$referenceValues[0]['request_parameter']] = $referenceValues[0]['value'];
+                                }
+                            }
                         }
                     }
                 }
 
                 $program['references'] = $references;
+                //Рассчитываем с нужным набором параметров
+                //TODO: Здесь нужна поправка на факторы, которые являются флажками и не являются справочниками, сейчас подпорка для амортизации
+                $concrete_params['amortisation'] = 0; //TODO:По-умолчниаю амортизацию не считаем
+                $program['cost'] = \Calculation\Calculation::calculateCost($concrete_params);
+                $program['cost_params'] = $concrete_params;
             }
         }
 

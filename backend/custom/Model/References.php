@@ -83,20 +83,19 @@ class References
         $reference = null;
         $referenceOut = array();
         $res = array();
-        $contact_got = false; //Это костыль, пока нужен.
         if ($referenceDef)
         {
             $db = Frapi_Database::getInstance();
             foreach($referenceDef['tables'] as $tableName)
             {
                 $wherePart = join(' AND ', Calculation\Calculation::getWhereParts($params)[$tableName]);
-                $name = $referenceDef['name'];
                 switch($referenceDef['type'])
                 {
                     case 'simple':
                         if (array_key_exists('reference_table', $referenceDef))
                         {
                                 /*column, ref_table, column, table, where, column, column, column, name */
+                                //TODO: Запрос будет сложнее, нужно еще учитывать разрешимость конечного рассчета
                                 $simpleQuery = 'SELECT GF.name,GF.id as value, CASE WHEN F.`default` IS NULL THEN 0 ELSE 1 END AS is_default, GF.is_any FROM
                                                   (SELECT  GF1.id, GF1.name, MIN(GF1.is_any) AS is_any FROM
                                                       (SELECT T.id, T.name, CASE WHEN G.%s IS NULL THEN 1 ELSE 0 END AS is_any FROM %s T
@@ -107,7 +106,7 @@ class References
                                                   )GF LEFT JOIN factors F
                                                     ON F.`default` = GF.id AND F.name = \'%s\'';
                                 $column = $referenceDef['columns'][0];
-                                $sth = $db->query(sprintf($simpleQuery, $column, $referenceDef['reference_table'], $column, $tableName, $wherePart, $column, $column, $column, $name));
+                                $sth = $db->query(sprintf($simpleQuery, $column, $referenceDef['reference_table'], $column, $tableName, $wherePart, $column, $column, $column, $paramName));
                                 $res = $sth->fetchAll(PDO::FETCH_ASSOC);
                             }
                         break;
@@ -115,7 +114,7 @@ class References
                         // $col_down, $col_up, $col_down, $col_up, $col_down, $col_up, $col_up, $col_down, $col_down, $col_up, $tableName, $wherePart, $col_down, $col_up, $col_down, $name, $col_down, $col_up, $col_down, $col_down, $col_up, $col_up, $col_down, $col_up
                         $col_down = $referenceDef['columns'][0];
                         $col_up = $referenceDef['columns'][1];
-
+                        //TODO: Запрос будет сложнее, нужно еще учитывать разрешимость конечного рассчета
                         $rangeQuery = 'SELECT VAL.`name`,
                                         CASE WHEN F.id IS NULL THEN VAL.`value` ELSE F.`default` END AS `value`,
                                           CASE WHEN VAL.%s IS NULL AND VAL.%s IS NULL THEN 1 ELSE 0 END AS is_any,
@@ -150,136 +149,158 @@ class References
                                                     (VAL.%s IS NULL AND VAL.%s IS NULL AND F.`default` = 0)
                                               )';
                         $sth = $db->query(sprintf($rangeQuery, $col_down, $col_up, $col_down, $col_up, $col_down, $col_up, $col_up, $col_down,
-                                                               $col_down, $col_up, $tableName, $wherePart, $col_down, $col_up, $col_down, $name, $col_down, $col_up,
+                                                               $col_down, $col_up, $tableName, $wherePart, $col_down, $col_up, $col_down, $paramName, $col_down, $col_up,
                                                                $col_down, $col_down, $col_up, $col_up, $col_down, $col_up));
                         $res = $sth->fetchAll(PDO::FETCH_ASSOC);
                         break;
                     case 'complex_range':
                         //TODO: Здесь костыль специально для contract. Генерализировать запрос будет непросто, но это прямо сейчас и не нужно
-                        if (!$contact_got)
-                        {
-                            $contact_got = true;
-                            $complexRange = 'SELECT VAL.*, CASE WHEN F.id IS NULL THEN 0 ELSE 1 END AS is_default FROM
-                                              (
-                                                SELECT
-                                                   CASE WHEN AC.contract_day_down IS NULL AND
-                                                            AC.contract_day_up IS NULL AND
-                                                            AC.contract_month_down IS NULL AND
-                                                            AC.contract_month_up IS NULL AND
-                                                            AC.contract_year_down IS NULL AND
-                                                            AC.contract_year_up IS NULL THEN 1
-                                                   ELSE 0 END AS is_any,
-                                                  CASE WHEN AC.contract_day_down IS NULL AND
-                                                            AC.contract_day_up IS NULL AND
-                                                            AC.contract_month_down IS NULL AND
-                                                            AC.contract_month_up IS NULL AND
-                                                            AC.contract_year_down IS NULL AND
-                                                            AC.contract_year_up IS NULL THEN \'Отсутствует\'
-                                                  ELSE
-                                                    CONCAT(
-                                                        CASE WHEN
-                                                          AC.contract_day_down IS NULL THEN
-                                                          CASE WHEN AC.contract_month_down IS NULL THEN
-                                                            CASE WHEN AC.contract_year_down IS NULL THEN
-                                                              \'\'
-                                                            ELSE
-                                                              CASE WHEN AC.contract_year_down = AC.contract_year_up THEN
-                                                                CONCAT(AC.contract_year_down, \' лет\')
-                                                              ELSE
-                                                                CONCAT(\'от \', AC.contract_year_down, \' лет\')
-                                                              END
-                                                            END
-                                                          ELSE
-                                                            CASE WHEN AC.contract_month_down = AC.contract_month_up THEN
-                                                              CONCAT(AC.contract_month_down, \' мес.\')
-                                                            ELSE
-                                                              CONCAT(\'от \', AC.contract_month_down, \' мес.\')
-                                                            END
-                                                          END
+                        //TODO: Запрос будет сложнее, нужно еще учитывать разрешимость конечного рассчета
+                        $complexRange = 'SELECT VAL.*, CASE WHEN F.id IS NULL THEN 0 ELSE 1 END AS is_default FROM
+                                          (
+                                            SELECT
+                                               MAX(AC.priority) AS `priority`,
+                                               CASE WHEN AC.contract_day_down IS NULL AND
+                                                        AC.contract_day_up IS NULL AND
+                                                        AC.contract_month_down IS NULL AND
+                                                        AC.contract_month_up IS NULL AND
+                                                        AC.contract_year_down IS NULL AND
+                                                        AC.contract_year_up IS NULL THEN 1
+                                               ELSE 0 END AS is_any,
+                                              CASE WHEN AC.contract_day_down IS NULL AND
+                                                        AC.contract_day_up IS NULL AND
+                                                        AC.contract_month_down IS NULL AND
+                                                        AC.contract_month_up IS NULL AND
+                                                        AC.contract_year_down IS NULL AND
+                                                        AC.contract_year_up IS NULL THEN \'Отсутствует\'
+                                              ELSE
+                                                CONCAT(
+                                                    CASE WHEN
+                                                      AC.contract_day_down IS NULL THEN
+                                                      CASE WHEN AC.contract_month_down IS NULL THEN
+                                                        CASE WHEN AC.contract_year_down IS NULL THEN
+                                                          \'\'
                                                         ELSE
-                                                          CASE WHEN AC.contract_day_down = AC.contract_day_up THEN
-                                                            CONCAT(AC.contract_day_down, \' дн.\')
+                                                          CASE WHEN AC.contract_year_down = AC.contract_year_up THEN
+                                                            CONCAT(AC.contract_year_down, \' лет\')
                                                           ELSE
-                                                            CONCAT(\'от \', AC.contract_day_down, \' дн.\')
+                                                            CONCAT(\'от \', AC.contract_year_down, \' лет\')
                                                           END
-                                                        END,
-                                                        CASE WHEN
-                                                          AC.contract_day_up IS NULL THEN
-                                                          CASE WHEN AC.contract_month_up IS NULL THEN
-                                                            CASE WHEN AC.contract_year_up IS NULL THEN
-                                                              \' и более\'
-                                                            WHEN IFNULL(AC.contract_year_down,-1) <> IFNULL(AC.contract_year_up, -1) THEN
-                                                              CONCAT(\' до \', AC.contract_year_up, \' лет\')
-                                                            ELSE \'\'
-                                                            END
-                                                          WHEN IFNULL(AC.contract_month_down,-1) <> IFNULL(AC.contract_month_up, -1) THEN
-                                                            CONCAT(\' до \', AC.contract_month_up, \' мес.\')
-                                                          ELSE \'\'
-                                                          END
-                                                        WHEN IFNULL(AC.contract_day_down,-1)  <> IFNULL(AC.contract_day_up,-1) THEN
-                                                          CONCAT(\' до \', AC.contract_day_up, \' дн.\')
+                                                        END
+                                                      ELSE
+                                                        CASE WHEN AC.contract_month_down = AC.contract_month_up THEN
+                                                          CONCAT(AC.contract_month_down, \' мес.\')
+                                                        ELSE
+                                                          CONCAT(\'от \', AC.contract_month_down, \' мес.\')
+                                                        END
+                                                      END
+                                                    ELSE
+                                                      CASE WHEN AC.contract_day_down = AC.contract_day_up THEN
+                                                        CONCAT(AC.contract_day_down, \' дн.\')
+                                                      ELSE
+                                                        CONCAT(\'от \', AC.contract_day_down, \' дн.\')
+                                                      END
+                                                    END,
+                                                    CASE WHEN
+                                                      AC.contract_day_up IS NULL THEN
+                                                      CASE WHEN AC.contract_month_up IS NULL THEN
+                                                        CASE WHEN AC.contract_year_up IS NULL THEN
+                                                          \' и более\'
+                                                        WHEN IFNULL(AC.contract_year_down,-1) <> IFNULL(AC.contract_year_up, -1) THEN
+                                                          CONCAT(\' до \', AC.contract_year_up, \' лет\')
                                                         ELSE \'\'
-                                                        END)
-                                                  END AS `name`,
-                                                  CASE WHEN AC.contract_day_down IS NULL AND
-                                                            AC.contract_day_up IS NULL AND
-                                                            AC.contract_month_down IS NULL AND
-                                                            AC.contract_month_up IS NULL AND
-                                                            AC.contract_year_down IS NULL AND
-                                                            AC.contract_year_up IS NULL THEN 0
-                                                  ELSE
-                                                    CASE WHEN
-                                                      AC.contract_day_up IS NULL THEN
-                                                      CASE WHEN AC.contract_month_up IS NULL THEN
-                                                        CASE WHEN AC.contract_year_up IS NULL THEN
-                                                          0
-                                                        ELSE
-                                                          AC.contract_year_up
                                                         END
-                                                      ELSE
-                                                        AC.contract_month_up
+                                                      WHEN IFNULL(AC.contract_month_down,-1) <> IFNULL(AC.contract_month_up, -1) THEN
+                                                        CONCAT(\' до \', AC.contract_month_up, \' мес.\')
+                                                      ELSE \'\'
                                                       END
+                                                    WHEN IFNULL(AC.contract_day_down,-1)  <> IFNULL(AC.contract_day_up,-1) THEN
+                                                      CONCAT(\' до \', AC.contract_day_up, \' дн.\')
+                                                    ELSE \'\'
+                                                    END)
+                                              END AS `name`,
+                                              CASE WHEN AC.contract_day_down IS NULL AND
+                                                        AC.contract_day_up IS NULL AND
+                                                        AC.contract_month_down IS NULL AND
+                                                        AC.contract_month_up IS NULL AND
+                                                        AC.contract_year_down IS NULL AND
+                                                        AC.contract_year_up IS NULL THEN 0
+                                              ELSE
+                                                CASE WHEN
+                                                  AC.contract_day_up IS NULL THEN
+                                                  CASE WHEN AC.contract_month_up IS NULL THEN
+                                                    CASE WHEN AC.contract_year_up IS NULL THEN
+                                                      0
                                                     ELSE
-                                                      AC.contract_day_up
+                                                      AC.contract_year_up
                                                     END
-                                                  END AS `value`,
-                                                  CASE WHEN AC.contract_day_down IS NULL AND
-                                                            AC.contract_day_up IS NULL AND
-                                                            AC.contract_month_down IS NULL AND
-                                                            AC.contract_month_up IS NULL AND
-                                                            AC.contract_year_down IS NULL AND
-                                                            AC.contract_year_up IS NULL THEN \'contract_day\'
                                                   ELSE
-                                                    CASE WHEN
-                                                      AC.contract_day_up IS NULL THEN
-                                                      CASE WHEN AC.contract_month_up IS NULL THEN
-                                                        CASE WHEN AC.contract_year_up IS NULL THEN
-                                                          0
-                                                        ELSE
-                                                          \'contract_year\'
-                                                        END
-                                                      ELSE
-                                                        \'contract_month\'
-                                                      END
+                                                    AC.contract_month_up
+                                                  END
+                                                ELSE
+                                                  AC.contract_day_up
+                                                END
+                                              END AS `value`,
+                                              CASE WHEN AC.contract_day_down IS NULL AND
+                                                        AC.contract_day_up IS NULL AND
+                                                        AC.contract_month_down IS NULL AND
+                                                        AC.contract_month_up IS NULL AND
+                                                        AC.contract_year_down IS NULL AND
+                                                        AC.contract_year_up IS NULL THEN \'contract_day\'
+                                              ELSE
+                                                CASE WHEN
+                                                  AC.contract_day_up IS NULL THEN
+                                                  CASE WHEN AC.contract_month_up IS NULL THEN
+                                                    CASE WHEN AC.contract_year_up IS NULL THEN
+                                                      0
                                                     ELSE
-                                                      \'contract_day\'
+                                                      \'contract_year\'
                                                     END
-                                                  END AS `request_parameter`
-                                            FROM additional_coefficients AC WHERE %s
-                                            GROUP BY
-                                              AC.contract_day_down, AC.contract_day_up,
-                                              AC.contract_month_down, contract_month_up,
-                                              AC.contract_year_down, AC.contract_year_up
-                                            ORDER BY AC.contract_year_down, AC.contract_year_up,
-                                              AC.contract_month_down, AC.contract_month_up,
-                                              AC.contract_day_down, AC.contract_day_up
-                                              ) VAL
-                                              LEFT JOIN factors F ON F.name = VAL.request_parameter AND F.`default` = VAL.value';
-                            $sth = $db->query(sprintf($complexRange, $wherePart));
-                            $res = $sth->fetchAll(PDO::FETCH_ASSOC);
-                        }
+                                                  ELSE
+                                                    \'contract_month\'
+                                                  END
+                                                ELSE
+                                                  \'contract_day\'
+                                                END
+                                              END AS `request_parameter`
+                                        FROM additional_coefficients AC
+                                         	INNER JOIN coefficients CF ON CF.id = AC.coefficient_id
+																	 WHERE CF.is_mandatory = 1 AND %s
+                                        GROUP BY
+                                          AC.contract_day_down, AC.contract_day_up,
+                                          AC.contract_month_down, contract_month_up,
+                                          AC.contract_year_down, AC.contract_year_up
+                                        ORDER BY
+										   AC.contract_year_down, AC.contract_year_up,
+                                           AC.contract_month_down, AC.contract_month_up,
+ 										   AC.contract_day_down, AC.contract_day_up,
+ 										   MAX(AC.priority) DESC
+                                          ) VAL
+                                          LEFT JOIN factors F ON F.name = VAL.request_parameter AND F.`default` = VAL.value';
+                        $sth = $db->query(sprintf($complexRange, $wherePart));
+                        $res = $sth->fetchAll(PDO::FETCH_ASSOC);
                         break;
                 }
+
+                //Подчищаем по приоритету
+                $cleaned = array();
+                $priority = 0;
+                foreach ($res as $item)
+                {
+                    if (array_key_exists('priority', $item))
+                    {
+                        if ($item['priority']>$priority)
+                            $priority = $item['priority'];
+                        if ($item['priority'] == $priority)
+                            array_push($cleaned, $item);
+                    }
+                    else
+                    {
+                        array_push($cleaned, $item);
+                    }
+                }
+                $res = $cleaned;
+
                 if (is_null($reference))
                     $reference = $res;
                 else
@@ -309,7 +330,8 @@ class References
                         $independentCount++;
                     array_push($referenceOut,
                     array(
-                        'request_parameter' => $paramName,
+                        'request_parameter' =>
+                            array_key_exists('request_parameter',$item)? $item['request_parameter'] : $paramName,
                         'name' => $item['name'],
                         'value' => $item['value'],
                         'is_default'=> $item['is_default'],
@@ -320,6 +342,9 @@ class References
                 if ($independentCount == count($reference))
                     $referenceOut = array();
             }
+            //TODO: Ну и конечно костыль костылей. Если это контракт, то убираем первую строчку с "Не указано", т.к. такого быть не может
+            if ($referenceDef['type'] == 'complex_range')
+               array_shift($referenceOut);
         }
         return $referenceOut;
     }
