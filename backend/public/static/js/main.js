@@ -180,13 +180,10 @@ $(function () {
 					var data = this.data.calculate || {},
 						submitReady = false;
 
-					console.log(data);				
-
 					$.get('/programs',
 						data
 					).then(function(response) {
 						if (response.Result) {
-							console.log(response.Result);
 							response.Result.references = _.toArray(response.Result.references);
 							insurance.templates.ProgramsTemplate.set({
 								programs: response.Result,
@@ -202,7 +199,6 @@ $(function () {
 
 		this.templates.ProgramsTemplate.on({
 			recalc: function(event) {
-				debugger
 				$.get('/calculate/v1');
 
 			}
