@@ -117,7 +117,8 @@ INSERT INTO `additional_coefficients` (`coefficient_id`, `tariff_program_id`, `c
   (@ksd_id, NULL,NULL, NULL, 10, 10, NULL, NULL, 0.9, 0),
   (@ksd_id, NULL,NULL, NULL, 11, 11, NULL, NULL, 0.95, 0),
   (@ksd_id, NULL,NULL, NULL, 12, 12, NULL, NULL, 1, 0),
-  (@ksd_id, @TPEconon50, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1);
+  (@ksd_id, @TPEconon50, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1),
+  (@ksd_id, @TPEconom, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1);
 
 
 -- вставка для kps (Коэфициент противоугонных средств)
