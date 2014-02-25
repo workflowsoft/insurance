@@ -14,7 +14,8 @@ $(function () {
 			visible_ts_age: 0,
 			calculate: {
 				ts_age: 0
-			}
+			},
+			ts_antitheft_id: 0
 		},
 
 		toggleLoader: function (toggle) {
@@ -23,6 +24,20 @@ $(function () {
 			var loader = $('.b-loader-backdrop');
 
 			loader.toggle(toggle);
+		},
+
+		preprocessResponse: function(data) {
+			var temp = [];
+
+			_.each(data.driver_age.values, function(item) {
+				temp.push(item);
+			}, this);
+
+			data.drivers_count.values = _.toArray(data.drivers_count.values);
+
+			data.driver_age.values = temp;
+
+			return data;
 		},
 
 		// Заводим инстансы Ractive.js
@@ -48,7 +63,7 @@ $(function () {
 					templateFactory('CalcTemplate', {
 						el: 'calc',
 						template: '#calcTemplate',
-						data: _.extend(response, this.defaults)
+						data: _.extend(this.preprocessResponse(response), this.defaults)
 					})
 
 				}.bind(this))
@@ -103,7 +118,9 @@ $(function () {
 				}
 				break;
 				case 'ts_antitheft_id':
-				tpl.set('calculate.ts_antitheft_id', $('input[name=ts_antitheft_id]:checked').val());
+				debugger;
+				
+				tpl.set('calculate.ts_antitheft_id', $('input[name=ts_antitheft_id]:checked').val());	
 				
 				break;
 			}
@@ -147,7 +164,9 @@ $(function () {
 					var data = this.data.calculate || {},
 						submitReady = false;
 
-					$.get('/calculate/v1',
+					console.log(data);				
+
+					$.get('/programs',
 						data
 					).then(function(response) {
 						if (response.Result) {

@@ -127,10 +127,17 @@
 				<div class="form-group g-clrfix">
 
 					{{#ts_antitheft.values}}
+					{{value}}
 						<div class="col-lg-3">
 							<div class="radio">
 								<label>
-									<input type="radio" name="ts_antitheft_id" checked="{{is_default}}" value={{value}}>{{name}}
+									{{#is_default}}
+										<input type="radio" name="ts_antitheft_id" checked="checked" value={{value}}>{{name}}
+									{{/is_default}}
+
+									{{^is_default}}
+										<input type="radio" name="ts_antitheft_id" value={{value}}>{{name}}
+									{{/is_default}}
 								</label>
 							</div>
 						</div>
@@ -139,7 +146,7 @@
 					<div class="col-lg-3">
 					<br />
 						<label class="checkbox-inline">
-							<input type="checkbox" checked={{calculate.commercial_carting_flag}}>ТС сдаётся в прокат
+							<input name="commercial_carting_flag" type="checkbox" checked={{calculate.commercial_carting_flag}}>ТС сдаётся в прокат
 						</label>
 					</div>
 				</div>
@@ -153,15 +160,48 @@
 				<div class="form-group g-clrfix">
 					<div class="col-lg-4">
 						<label class="control-label">Количество ЛДУ<br>&nbsp;</label>
-						<input name="drivers_count" type="text" value="{{calculate.drivers_count}}" class="form-control">
+						<select disabled={{!drivers_count}} class="form-control" value={{calculate.drivers_count}} name="drivers_count">
+								<option disabled selected>Укажите количество</option>
+							{{#drivers_count.values}}
+								{{#is_default}}
+									<option selected value={{value}}>{{name}}</option>
+								{{/is_default}}
+
+								{{^is_default}}
+									<option value={{value}}>{{name}}</option>
+								{{/is_default}}
+							{{/drivers_count.values}}
+						</select>
 					</div>
 					<div class="col-lg-4">
 						<label for="">Возраст водителей(По самому «плохому» показателю)</label>
-						<input type="text" value="{{calculate.driver_age}}" class="form-control">
+						<select disabled={{!driver_age}} class="form-control" value={{calculate.driver_age}} name="driver_age">
+							<option disabled selected>Укажите возраст</option>
+							{{#driver_age.values}}
+								{{#is_default}}
+									<option selected value={{value}}>{{name}}</option>
+								{{/is_default}}
+
+								{{^is_default}}
+									<option value={{value}}>{{name}}</option>
+								{{/is_default}}
+							{{/driver_age.values}}
+						</select>
 					</div>
 					<div class="col-lg-4">
 						<label for="">Стаж водителей(По самому «плохому» показателю)</label>
-						<input type="text" value="{{calculate.driver_exp}}" class="form-control">
+						<select disabled={{!driver_exp}} class="form-control" value={{calculate.driver_exp}} name="driver_exp">
+								<option disabled selected>Укажите количество</option>
+							{{#driver_exp.values}}
+								{{#is_default}}
+									<option selected value={{value}}>{{name}}</option>
+								{{/is_default}}
+
+								{{^is_default}}
+									<option value={{value}}>{{name}}</option>
+								{{/is_default}}
+							{{/driver_exp.values}}
+						</select>
 					</div>
 					<div class="col-lg-4">
 					</div>
@@ -174,22 +214,15 @@
 		{{/totalSum}}
 		
 		{{^additional.submitReady}}
-			<button type="submit" disabled  class="btn btn-lg btn-default pull-right">Рассчитать</button>
+			<button type="submit" disabled  class="btn btn-lg btn-default pull-right">Далее</button>
 		{{/additional.submitReady}}
 		{{#additional.submitReady}}
-			<button type="submit"  class="btn btn-lg btn-info pull-right">Рассчитать</button>
+			<button type="submit"  class="btn btn-lg btn-info pull-right">Далее</button>
 		{{/additional.submitReady}}
 	</form>
 </script>
-
-<div class="b-calc" id="calc">
-	
-</div>
-		
 		<!-- Контейнер шаблона с калькулятором -->
-		<div id="calc2" class="b-calc">
-
-		</div>
+		<div class="b-calc" id="calc"></div>
 	</div>
 	<div class="b-footer">
 	</div>
