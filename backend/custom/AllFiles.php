@@ -8,6 +8,7 @@ define('FRAPI_CACHE_ADAPTER', 'dummy');
 
 require_once CUSTOM_MODEL . DIRECTORY_SEPARATOR . 'References.php';
 require_once CUSTOM_MODEL . DIRECTORY_SEPARATOR . 'Calculation.php';
+require_once CUSTOM_MODEL . DIRECTORY_SEPARATOR . 'Configuration.php';
 
 // Other data
 

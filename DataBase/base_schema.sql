@@ -218,35 +218,35 @@ CREATE TABLE IF NOT EXISTS `factor_restricions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Определение значений одних факторов значеним других на праве перезаписи';
 
 -- Таблица факторов
+
 DROP TABLE IF EXISTS `factors`;
 CREATE TABLE IF NOT EXISTS `factors` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
   `default` int(10) unsigned,
-  `description` varchar(255)
+  `description` varchar(255),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Факторы, участвующие в расчете коэффициентов';
 
-DROP TABLE IF EXISTS `factor_references`
+-- Привязка справочников к факторам
+DROP TABLE IF EXISTS `factor_references`;
 CREATE TABLE IF NOT EXISTS `factor_references` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(50),
+  `name` varchar(50) NOT NULL,
   `reference_table` varchar(50),
-  `type` varchar(50),
+  `type` varchar(50) NOT NULL,
+  `program_specific` tinyint(1) NOT NULL,
    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Справочники в системе и их типы';
 
-DROP TABLE IF EXISTS `factor_references`
+-- Привязка справочников к факторам
+DROP TABLE IF EXISTS `factor2references`;
 CREATE TABLE IF NOT EXISTS `factor2references` (
    `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
    `factor_id` int(10) unsigned NOT NULL REFERENCES `factors`(id),
    `reference_id` int(10) unsigned NOT NULL REFERENCES `factor_references`(id),
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Привязка справочников к факторам';
-
-
-
-
 
 -- Поправочные коэфициенты с зависимостью от факторов, которые их формируют
 DROP TABLE IF EXISTS `calc_history`;
@@ -302,7 +302,6 @@ CREATE TABLE IF NOT EXISTS `calc_history` (
   `errors` VARCHAR(512),
 # прочие
   `timestamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
 
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Таблица истории калькуляций';

@@ -6,97 +6,59 @@
  * Time: 16:53
  */
 
+namespace Calculation;
+
 class Calculation {
 
-    private static $usingTables = array('additional_coefficients','tariff_coefficients');
-
-    public static function getWherePart($tableName, $parameters, $calculation)
+    public static function getWhereParts($parameters, $is_strict = false)
     {
         $simpleFormat = '(%s = %u OR %s IS NULL)';
         $simpleFormatEmpty = '%s IS NULL';
         $rangeFormat = '(%s IS NULL OR %s<=%u) AND (%s IS NULL OR %s>=%u)';
         $rangeFormatEmpty = '%s IS NULL AND %s IS NULL';
-        $additionalWhereParts = array();
-        $baseWhereParts = array();
 
-        Frapi_Internal::getCachedDbConfig()['db_database'];
+        $factors = Configuration::getFactorsDefinitions();
 
+        $whereParts = array();
 
-        if (array_key_exists('tariff_program_id', $parameters))
+        foreach($factors as $key=>$factor_def)
         {
-            array_push($baseWhereParts, sprintf($simpleFormat, 'tariff_program_id', $parameters['tariff_program_id'], 'tariff_program_id'));
-            array_push($additionalWhereParts, sprintf($simpleFormat, 'tariff_program_id', $parameters['tariff_program_id'], 'tariff_program_id'));
+            $currentPart = null;
+            $column = $factor_def['columns'][0];
+            switch ($factor_def['type'])
+            {
+                case 'simple':
+                    if (array_key_exists($key, $parameters))
+                    {
+                        $value = $parameters[$key];
+                        $currentPart = sprintf($simpleFormat, $column, $value, $column);
+                    }
+                    elseif ($is_strict)
+                        $currentPart = sprintf($simpleFormatEmpty, $column);
+                    break;
+                case 'range':
+                case 'complex_range':
+                    $column_up = $factor_def['columns'][1];
+                    if (array_key_exists($key, $parameters))
+                    {
+                        $value = $parameters[$key];
+                        $currentPart = sprintf($rangeFormat,  $column, $column, $value, $column_up, $column_up, $value);
+                    }
+                    elseif ($is_strict)
+                        $currentPart = sprintf($rangeFormatEmpty, $column, $column_up);
+                    break;
+                default:
+                    break;
+            }
+            foreach($factor_def['tables'] as $tableName)
+            {
+                if (!array_key_exists($tableName, $whereParts))
+                    $whereParts = array_merge($whereParts, array($tableName => array()));
+                if (!is_null($currentPart))
+                    array_push($whereParts[$tableName], $currentPart);
+            }
         }
-        elseif ($calculation)
-        {
-            array_push($baseWhereParts, sprintf($simpleFormatEmpty, 'tariff_program_id'));
-            array_push($additionalWhereParts, sprintf($simpleFormatEmpty, 'tariff_program_id'));
-        }
-
-        if (array_key_exists('risk_id', $parameters))
-        {
-            array_push($baseWhereParts, sprintf($simpleFormat, 'risk_id', $parameters['risk_id'], 'risk_id'));
-            array_push($additionalWhereParts, sprintf($simpleFormat, 'risk_id', $parameters['risk_id'], 'risk_id'));
-        }
-        elseif ($calculation)
-        {
-            array_push($baseWhereParts, sprintf($simpleFormatEmpty, 'risk_id'));
-            array_push($additionalWhereParts, sprintf($simpleFormatEmpty, 'risk_id'));
-        }
-
-        if (array_key_exists('tariff_def_damage_type_id', $parameters))
-        {
-            array_push($baseWhereParts, sprintf($simpleFormat, 'tariff_def_damage_type_id', $parameters['tariff_def_damage_type_id'], 'tariff_def_damage_type_id'));
-            array_push($additionalWhereParts, sprintf($simpleFormat, 'tariff_def_damage_type_id', $parameters['tariff_def_damage_type_id'], 'tariff_def_damage_type_id'));
-        }
-        elseif ($calculation)
-        {
-            array_push($baseWhereParts, sprintf($simpleFormatEmpty, 'tariff_def_damage_type_id'));
-            array_push($additionalWhereParts, sprintf($simpleFormatEmpty, 'tariff_def_damage_type_id'));
-        }
-
-        if (array_key_exists('ts_age', $parameters))
-        {
-            array_push($baseWhereParts, sprintf($simpleFormat, 'ts_age', $parameters['ts_age'], 'ts_age'));
-            array_push($additionalWhereParts, sprintf($simpleFormat, 'ts_age', $parameters['ts_age'], 'ts_age'));
-        }
-        elseif ($calculation)
-        {
-            array_push($baseWhereParts, sprintf($simpleFormatEmpty, 'ts_age'));
-            array_push($additionalWhereParts, sprintf($simpleFormatEmpty, 'ts_age'));
-        }
-
-        if (array_key_exists('ts_sum', $parameters))
-        {
-            array_push($baseWhereParts, sprintf($rangeFormat, 'ts_sum_down', 'ts_sum_down', $parameters['ts_sum'], 'ts_sum_up', 'ts_sum_up', $parameters['ts_sum']));
-        }
-        elseif ($calculation)
-        {
-            array_push($baseWhereParts, sprintf($rangeFormatEmpty, 'ts_sum_down', 'ts_sum_up'));
-        }
-
-        if (array_key_exists('ts_group_id', $parameters))
-        {
-            array_push($baseWhereParts, sprintf($simpleFormat, 'ts_group_id', $parameters['ts_group_id'], 'ts_group_id'));
-            array_push($additionalWhereParts, sprintf($simpleFormat, 'ts_group_id', $parameters['ts_group_id'], 'ts_group_id'));
-        }
-        elseif ($calculation)
-        {
-            array_push($baseWhereParts, sprintf($simpleFormatEmpty, 'ts_group_id'));
-            array_push($additionalWhereParts, sprintf($simpleFormatEmpty, 'ts_group_id'));
-        }
-
-        if (array_key_exists('ts_type_id', $parameters))
-        {
-            array_push($baseWhereParts, sprintf($simpleFormat, 'ts_type_id', $parameters['ts_type_id'], 'ts_type_id'));
-            array_push($additionalWhereParts, sprintf($simpleFormat, 'ts_type_id', $parameters['ts_type_id'], 'ts_type_id'));
-        }
-        elseif ($calculation)
-        {
-            array_push($baseWhereParts, sprintf($simpleFormatEmpty, 'ts_type_id'));
-            array_push($additionalWhereParts, sprintf($simpleFormatEmpty, 'ts_type_id'));
-        }
-
+        return $whereParts;
     }
 
     public static function  getCorrectedParameters($params)
@@ -119,14 +81,14 @@ class Calculation {
         }
         $correctionQuery = $correctionQuery . join(' OR ', $predicateArray);
 
-        $db = Frapi_Database::getInstance();
+        $db = \Frapi_Database::getInstance();
 
         $sth = $db->query($correctionQuery);
         if (!$sth) {
-            throw new Frapi_Action_Exception($correctionQuery, 'CANT_CORRECT');
+            throw new \Frapi_Action_Exception($correctionQuery, 'CANT_CORRECT');
         }
 
-        $corrections = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $corrections = $sth->fetchAll(\PDO::FETCH_ASSOC);
         $correct_errors = array();
 
         $correcting_params = array();
@@ -142,7 +104,7 @@ class Calculation {
         }
 
         if (count($correct_errors))
-            throw new Frapi_Exception(join(', ', $correct_errors), 'CANT_CORRECT');
+            throw new \Frapi_Exception(join(', ', $correct_errors), 'CANT_CORRECT');
 
         return $correcting_params;
     }
