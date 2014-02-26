@@ -216,6 +216,7 @@ DROP TABLE IF EXISTS `factors`;
 CREATE TABLE IF NOT EXISTS `factors` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
+  `title` varchar(128) NOT NULL,
   `default` int(10) unsigned,
   `description` varchar(255),
   PRIMARY KEY (`id`)
@@ -262,7 +263,7 @@ CREATE TABLE IF NOT EXISTS `calc_history` (
   `contract_day` int(2) DEFAULT NULL,
   `contract_month` int(2) DEFAULT NULL,
   `contract_year` int(2) DEFAULT NULL,
-  `drivers_count` varchar(50) COLLATE utf8_bin DEFAULT NULL,
+  `drivers_count` int(10) DEFAULT NULL,
   `driver_age` int(10) DEFAULT NULL,
   `driver_exp` int(10) DEFAULT NULL,
   `ts_antitheft_id` int(10) DEFAULT NULL REFERENCES ts_antitheft(id),

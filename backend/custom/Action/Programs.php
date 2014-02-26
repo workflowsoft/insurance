@@ -172,25 +172,31 @@ class Action_Programs extends Frapi_Action implements Frapi_Action_Interface
                         }
                         //TODO: Конец костыля для контракта
                         $referenceValues = References::getReferenceByRequestParams($param, $referenceDef, $concrete_params);
-                        if (count($referenceValues))
+                        if (count($referenceValues['values']))
                         {
                             $referenceName = $referenceDef['name'];
-                            if (!array_key_exists($referenceName, $references))
+                            if (!array_key_exists($referenceName, $references)) {
                                 $references[$referenceName] = array();
-                            $references[$referenceName] = array_merge($references[$referenceName], $referenceValues);
+                            }
+                            $references[$referenceName]['title'] = $referenceValues['title'];
+                            //Инициализируем массив значений
+                            if(empty($references[$referenceName]['values'])) {
+                                $references[$referenceName]['values'] = array();
+                            }
+                            $references[$referenceName]['values'] = array_merge($references[$referenceName]['values'], $referenceValues['values']);
                             //Добавляем параметры для рассчета
                             $paramSet = false;
-                            foreach($referenceValues as $i => $refValue)
+                            foreach($referenceValues['values'] as $i => $refValue)
                             {
                                 //Мы берем или значение по-умолчснию из справочника или первое из перечисленных, если среди них нет по-умолчанию
-                                if ($refValue['is_default'] == 1)
+                                if (!empty($refValue['is_default']) && $refValue['is_default'] == 1)
                                 {
                                     $concrete_params[$refValue['request_parameter']] = $refValue['value'];
                                     $paramSet = true;
                                 }
                                 if (!$paramSet && $i == count($referenceValues)-1)
                                 {
-                                    $concrete_params[$referenceValues[0]['request_parameter']] = $referenceValues[0]['value'];
+                                    $concrete_params[$referenceValues['values'][0]['request_parameter']] = $referenceValues['values'][0]['value'];
                                 }
                             }
                         }

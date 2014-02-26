@@ -328,12 +328,25 @@ class References
             }
             if (!is_null($reference))
             {
+                //Зафеячим заголовок справочника
+                $titleQuery = "
+                   SELECT distinct F.title
+                      FROM factors F
+                        LEFT JOIN factor2references FR ON F.id = FR.factor_id
+                        LEFT JOIN factor_references R ON R.id = FR.reference_id
+                WHERE R.name IS NOT NULL AND R.name = '" . $referenceDef['name'] . "'";
+
+                $sth = $db->query($titleQuery);
+                $res = $sth->fetch();
+                $referenceOut['title'] = $res[0];
+                $referenceOut['values'] = array();
+
                 $independentCount = 0; //Этой штукой мы будем скипать справочники от значений которых в данном контексте вообще ничего не зависит
                 foreach($reference as $item)
                 {
                     if ($item['is_any'] == 1)
                         $independentCount++;
-                    array_push($referenceOut,
+                    array_push($referenceOut['values'],
                     array(
                         'request_parameter' =>
                             array_key_exists('request_parameter',$item)? $item['request_parameter'] : $paramName,
@@ -344,8 +357,9 @@ class References
                         )
                     );
                 }
-                if ($independentCount == count($reference))
-                    $referenceOut = array();
+                if ($independentCount == count($reference)) {
+                    $referenceOut['values'] = array();
+                }
             }
         }
         return $referenceOut;
@@ -364,6 +378,7 @@ class References
         $db = Frapi_Database::getInstance();
         $ref_key = 'drivers_count';
 
+        //TODO you can use just one query
         $query = 'SELECT max(`drivers_count_up`) FROM `additional_coefficients`';
         $result = $db->query($query);
         $result = $result->fetch();
