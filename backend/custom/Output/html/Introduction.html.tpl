@@ -257,6 +257,8 @@
 					</div>
 					<div class="col-lg-3">
 						<h4><small>Стоимость полиса</small><h4>
+						<p>Сумма: {{cost.Result.Contract.Sum}}</p>
+						<p>Тариф: {{cost.Result.Contract.Tariff}}</p>
 					</div>
 				</div>
 			{{/programs}}
