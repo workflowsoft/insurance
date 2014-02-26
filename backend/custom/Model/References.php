@@ -475,12 +475,6 @@ class References
             self::$_results[$ref_key]['values'][$i]['is_default'] = 0;
             $i++;
         }
-        // последний до бесконечности
-        $max = $i;
-        self::$_results[$ref_key]['values'][$i]['name'] = $max . ' и больше';
-        self::$_results[$ref_key]['values'][$i]['value'] = $max;
-        self::$_results[$ref_key]['values'][$i]['is_default'] = 0;
-
     }
 
 } 
