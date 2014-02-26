@@ -240,17 +240,19 @@
 
 					{{#references:key}}
 						<div class="col-lg-6">	
-							<label for="">{{label}}</label>
+							<label for="">{{title}}</label>
 							<select class="form-control" name={{key}} >
-								{{#references[key]}}
-									{{#is_default}}
-										<option selected value={{value}}>{{name}}</option>
-									{{/is_default}}
+								{{#references[key].values:index}}
+									{{#references[key].values[index]}}
+										{{#is_default}}
+											<option selected value={{value}}>{{name}}</option>
+										{{/is_default}}
 
-									{{^is_default}}
-										<option value={{value}}>{{name}}</option>
-									{{/is_default}}
-								{{/references[key]}}
+										{{^is_default}}
+											<option value={{value}}>{{name}}</option>
+										{{/is_default}}
+									{{/references[key].values[index]}}
+								{{/references[key].values}}
 							</select>
 						</div>
 					{{/references}}
