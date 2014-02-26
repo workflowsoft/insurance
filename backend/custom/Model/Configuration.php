@@ -94,7 +94,8 @@ class Configuration {
         if (is_null(Configuration::$definitions))
         {
             $definitions = array();
-            $dbName = \Frapi_Internal::getCachedDbConfig()['db_database'];
+            $cnf = \Frapi_Internal::getCachedDbConfig();
+            $dbName = $cnf['db_database'];
             $tableSqls = array();
             foreach (Configuration::$factorTables as $factorTable)
             {

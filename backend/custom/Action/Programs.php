@@ -107,7 +107,8 @@ class Action_Programs extends Frapi_Action implements Frapi_Action_Interface
 
         //Формируем окончательный запрос на получение программ
 
-        $finalProgramQry = sprintf($programQry, join(' AND ', \Calculation\Calculation::getWhereParts($this->params)['tariff_coefficients']));
+        $tmp = \Calculation\Calculation::getWhereParts($this->params);
+        $finalProgramQry = sprintf($programQry, join(' AND ', $tmp['tariff_coefficients']));
         $db = Frapi_Database::getInstance();
         $sth = $db->query($finalProgramQry);
         $results = $sth->fetchAll(PDO::FETCH_ASSOC);

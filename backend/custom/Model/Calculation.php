@@ -107,10 +107,11 @@ class Calculation {
             'Coefficients' => array()
         );
 
-        $bquery = 'SELECT `value` as base_tariff FROM `tariff_coefficients` WHERE ' . join(' AND ', Calculation::getWhereParts($params, true)['tariff_coefficients']);
+        $wh = Calculation::getWhereParts($params, true);
+        $bquery = 'SELECT `value` as base_tariff FROM `tariff_coefficients` WHERE ' . join(' AND ', $wh['tariff_coefficients']);
         $aquery = 'SELECT f.`code`, f.`is_mandatory`, f.`default_value`, c.`value` FROM `coefficients` f
                       LEFT OUTER JOIN
-   	                    (SELECT `coefficient_id`, `value` FROM `additional_coefficients` WHERE ' . join(' AND ', Calculation::getWhereParts($params, true)['additional_coefficients']) .
+   	                    (SELECT `coefficient_id`, `value` FROM `additional_coefficients` WHERE ' . join(' AND ', $wh['additional_coefficients']) .
             ' ORDER BY `priority` DESC) AS c ON f.`id` = c.`coefficient_id`';
 
         $sth = $db->query($bquery);

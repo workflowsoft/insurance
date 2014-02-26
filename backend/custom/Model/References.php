@@ -88,7 +88,8 @@ class References
             $db = Frapi_Database::getInstance();
             foreach($referenceDef['tables'] as $tableName)
             {
-                $wherePart = join(' AND ', Calculation\Calculation::getWhereParts($params)[$tableName]);
+                $wh = Calculation\Calculation::getWhereParts($params);
+                $wherePart = join(' AND ', $wh[$tableName]);
                 switch($referenceDef['type'])
                 {
                     case 'simple':
