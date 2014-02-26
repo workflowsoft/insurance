@@ -93,6 +93,7 @@ class Action_Programs extends Frapi_Action implements Frapi_Action_Interface
         if ($valid instanceof Frapi_Error) {
             throw $valid;
         }
+
         /* Получить доступные программы страхования изначально
          TODO: Пока сделаем дубово. Мы знаем, что ни один из обязательных для рассчета доп. коэфициентов не влияет на список страховых программ
          TODO: Сделаем еще дубовее, мы знаем, что  все оставшиеся справочники (относящиеся к тарифной программе не влияют друг на друга). В дальнейшем это может быть не так
@@ -126,6 +127,8 @@ class Action_Programs extends Frapi_Action implements Frapi_Action_Interface
                 $references = array();
                 $concrete_params = array('tariff_program_id'=>$program['id']);
                 $concrete_params = array_merge($concrete_params, $this->params);
+                //TODO: Здесь нужна поправка на факторы, которые являются флажками и не являются справочниками, сейчас подпорка для амортизации
+                $concrete_params['amortisation'] = 0; //TODO:По-умолчниаю амортизацию не считаем
                 //Получить корректировки для тарифа, если есть корректировка, соотв. справочник уже не нужен.
                 $corrections = Calculation\Calculation::getCorrectedParameters($concrete_params);
                 //Осуществляем корректировку параметров
@@ -196,10 +199,8 @@ class Action_Programs extends Frapi_Action implements Frapi_Action_Interface
 
                 $program['references'] = $references;
                 //Рассчитываем с нужным набором параметров
-                //TODO: Здесь нужна поправка на факторы, которые являются флажками и не являются справочниками, сейчас подпорка для амортизации
-                $concrete_params['amortisation'] = 0; //TODO:По-умолчниаю амортизацию не считаем
                 $program['cost'] = \Calculation\Calculation::calculateCost($concrete_params);
-                $program['cost_params'] = $concrete_params;
+                $program['cost']['inputParams'] = $concrete_params;
             }
         }
 

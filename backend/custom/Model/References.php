@@ -263,9 +263,7 @@ class References
                                                   \'contract_day\'
                                                 END
                                               END AS `request_parameter`
-                                        FROM additional_coefficients AC
-                                         	INNER JOIN coefficients CF ON CF.id = AC.coefficient_id
-																	 WHERE CF.is_mandatory = 1 AND %s
+                                        FROM additional_coefficients AC WHERE AC.coefficient_id IN (%s) AND %s
                                         GROUP BY
                                           AC.contract_day_down, AC.contract_day_up,
                                           AC.contract_month_down, contract_month_up,
@@ -277,7 +275,14 @@ class References
  										   MAX(AC.priority) DESC
                                           ) VAL
                                           LEFT JOIN factors F ON F.name = VAL.request_parameter AND F.`default` = VAL.value';
-                        $sth = $db->query(sprintf($complexRange, $wherePart));
+                        $deps = \Calculation\Configuration::getCoefficientDependencies();
+                        $dependentCoef = array_merge(
+                            array_key_exists('contract_year',$deps)?$deps['contract_year']: array(),
+                            array_key_exists('contract_month',$deps)?$deps['contract_month']: array(),
+                            array_key_exists('contract_day',$deps)?$deps['contract_day']: array());
+                        $inPart = join(' , ', array_unique($dependentCoef));
+                        $qry = sprintf($complexRange, $inPart ,$wherePart);
+                        $sth = $db->query($qry);
                         $res = $sth->fetchAll(PDO::FETCH_ASSOC);
                         break;
                 }
@@ -342,9 +347,6 @@ class References
                 if ($independentCount == count($reference))
                     $referenceOut = array();
             }
-            //TODO: Ну и конечно костыль костылей. Если это контракт, то убираем первую строчку с "Не указано", т.к. такого быть не может
-            if ($referenceDef['type'] == 'complex_range')
-               array_shift($referenceOut);
         }
         return $referenceOut;
     }
