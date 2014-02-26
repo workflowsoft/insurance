@@ -189,6 +189,7 @@ $(function () {
 								programs: response.Result,
 								inputParams: response.inputParams
 							});
+
 						}
 					}.bind(this));
 
@@ -201,6 +202,11 @@ $(function () {
 			recalc: function(event) {
 				$.get('/calculate/v1');
 
+			},
+			toggle: function (event) {
+				$(event.node).next().toggle();
+
+				event.original.preventDefault();
 			}
 		});
 
