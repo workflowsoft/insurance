@@ -3443,8 +3443,8 @@ SELECT ts_type_id, ts_make_id FROM ts_model group by ts_make_id, ts_type_id;
 
  -- Заполняем справочник с факторами
  
- INSERT INTO `factors` (`name`, `default`, `description`) 
- 									VALUES ('ts_type_id', NULL, 'Тип ТС (Грузовик, Легковая, Мотоцикл и т.д.)');
+ INSERT INTO `factors` (`name`, `default`, `description`, `title`)
+ 									VALUES ('ts_type_id', NULL, 'Тип ТС (Грузовик, Легковая, Мотоцикл и т.д.)', 'Тип ТС');
  SET @FactorId = LAST_INSERT_ID();
  INSERT INTO `factor_references` (`name`,`reference_table`,`type`, `program_specific`)
  									VALUES ('ts_type', 'ts_type' , 'simple', 0);
@@ -3452,71 +3452,71 @@ SELECT ts_type_id, ts_make_id FROM ts_model group by ts_make_id, ts_type_id;
  INSERT INTO `factor2references` (`factor_id`, `reference_id`)
                            VALUES (@FactorId,@ReferenceId);
                            
- INSERT INTO `factors` (`name`, `default`, `description`) 
- 									VALUES ('ts_make_id', NULL, 'Марка ТС');
+ INSERT INTO `factors` (`name`, `default`, `description`, `title`)
+ 									VALUES ('ts_make_id', NULL, 'Марка ТС', 'Марка ТС');
  SET @FactorId = LAST_INSERT_ID();
  INSERT INTO `factor_references` (`name`,`reference_table`,`type`, `program_specific`)
  									VALUES ('ts_make', 'ts_make' , 'simple',0);
  SET @ReferenceId = LAST_INSERT_ID();
  INSERT INTO `factor2references` (`factor_id`, `reference_id`)
                            VALUES (@FactorId,@ReferenceId);
-                           
- INSERT INTO `factors` (`name`, `default`, `description`) 
- 									VALUES ('ts_model_id', NULL, 'Модель ТС');
+
+ INSERT INTO `factors` (`name`, `default`, `description`, `title`)
+ VALUES ('ts_model_id', NULL, 'Модель ТС', 'Модель ТС');
  SET @FactorId = LAST_INSERT_ID();
  INSERT INTO `factor_references` (`name`,`reference_table`,`type`, `program_specific`)
  									VALUES ('ts_model', 'ts_model' , 'simple', 0);
  SET @ReferenceId = LAST_INSERT_ID();
  INSERT INTO `factor2references` (`factor_id`, `reference_id`)
                            VALUES (@FactorId,@ReferenceId);
-                           
- INSERT INTO `factors` (`name`, `default`, `description`) 
- 									VALUES ('ts_modification_id', NULL, 'Модификация ТС');
+
+ INSERT INTO `factors` (`name`, `default`, `description`, `title`)
+ VALUES ('ts_modification_id', NULL, 'Модификация ТС', 'Модификация ТС');
  SET @FactorId = LAST_INSERT_ID();
  INSERT INTO `factor_references` (`name`,`reference_table`,`type`, `program_specific`)
  									VALUES ('ts_modification', 'ts_modification' , 'simple', 0);
  SET @ReferenceId = LAST_INSERT_ID();
  INSERT INTO `factor2references` (`factor_id`, `reference_id`)
                            VALUES (@FactorId,@ReferenceId);
-                           
-INSERT INTO `factors` (`name`, `default`, `description`) 
- 									VALUES ('ts_group_id', NULL, 'Группа ТС по квалификации страховой компании. Их собственная группировка (Иномарки, Наши ведра, Газели и т.д.)');
+
+ INSERT INTO `factors` (`name`, `default`, `description`, `title`)
+ VALUES ('ts_group_id', NULL, 'Группа ТС по квалификации страховой компании. Их собственная группировка (Иномарки, Наши ведра, Газели и т.д.)', 'Группа ТС');
  SET @FactorId = LAST_INSERT_ID();
  INSERT INTO `factor_references` (`name`,`reference_table`,`type`, `program_specific`)
  									VALUES ('ts_group', 'ts_group' , 'simple', 0);
  SET @ReferenceId = LAST_INSERT_ID();
  INSERT INTO `factor2references` (`factor_id`, `reference_id`)
                            VALUES (@FactorId,@ReferenceId);
-                           
-INSERT INTO `factors` (`name`, `default`, `description`) 
- 									VALUES ('tariff_def_damage_type_id', 1, 'Тип определения возмещения при наступлении страхового случая');
+
+ INSERT INTO `factors` (`name`, `default`, `description`, `title`)
+ VALUES ('tariff_def_damage_type_id', 1, 'Тип определения возмещения при наступлении страхового случая', 'Тип возмещения');
  SET @FactorId = LAST_INSERT_ID();
  INSERT INTO `factor_references` (`name`,`reference_table`,`type`, `program_specific`)
  									VALUES ('tariff_def_damage_type', 'tariff_def_damage_type' , 'simple', 1);
  SET @ReferenceId = LAST_INSERT_ID();
  INSERT INTO `factor2references` (`factor_id`, `reference_id`)
                            VALUES (@FactorId,@ReferenceId);
-                           
-INSERT INTO `factors` (`name`, `default`, `description`) 
- 									VALUES ('ts_age', NULL , 'Срок эксплуатации ТС');
+
+ INSERT INTO `factors` (`name`, `default`, `description`, `title`)
+ VALUES ('ts_age', NULL , 'Срок эксплуатации ТС', 'Срок эксплутации ТС');
  SET @FactorId = LAST_INSERT_ID();
  INSERT INTO `factor_references` (`name`,`reference_table`,`type`, `program_specific`)
  									VALUES ('ts_age', NULL , 'simple', 0);
  SET @ReferenceId = LAST_INSERT_ID();
  INSERT INTO `factor2references` (`factor_id`, `reference_id`)
                            VALUES (@FactorId,@ReferenceId);
-                           
-INSERT INTO `factors` (`name`, `default`, `description`) 
- 									VALUES ('ts_sum', NULL , 'Оценочная стоимость ТС, она же страховая сумма (та самая сумма на которую осущетсвляется страхование и которая выплачивается в случае полной гибели или угона)');
+
+ INSERT INTO `factors` (`name`, `default`, `description`, `title`)
+ VALUES ('ts_sum', NULL , 'Оценочная стоимость ТС, она же страховая сумма (та самая сумма на которую осущетсвляется страхование и которая выплачивается в случае полной гибели или угона)', 'Оценочная стоимость ТС');
  SET @FactorId = LAST_INSERT_ID();
  INSERT INTO `factor_references` (`name`,`reference_table`,`type`, `program_specific`)
  									VALUES ('ts_sum', NULL , 'range', 0);
  SET @ReferenceId = LAST_INSERT_ID();
  INSERT INTO `factor2references` (`factor_id`, `reference_id`)
                            VALUES (@FactorId,@ReferenceId);
-                           
-INSERT INTO `factors` (`name`, `default`, `description`) 
- 									VALUES ('tariff_program_id', NULL , 'Программа страхования Id из справочника, у каждой страховой свои программы');
+
+ INSERT INTO `factors` (`name`, `default`, `description`, `title`)
+ VALUES ('tariff_program_id', NULL , 'Программа страхования Id из справочника, у каждой страховой свои программы', 'Программа страхования');
  SET @FactorId = LAST_INSERT_ID();
  INSERT INTO `factor_references` (`name`,`reference_table`,`type`, `program_specific`)
  									VALUES ('tariff_program', 'tariff_program' , 'simple', 0);
@@ -3524,46 +3524,46 @@ INSERT INTO `factors` (`name`, `default`, `description`)
  INSERT INTO `factor2references` (`factor_id`, `reference_id`)
                            VALUES (@FactorId,@ReferenceId);
 
-INSERT INTO `factors` (`name`, `default`, `description`) 
- 									VALUES ('risk_id', 1 , 'Набор рисков по которому осуществляется страховое покрытие, у каждой страховой могут быть свои пакеты. Никто не мешает делать вырожденные пакеты с одним риском для случая "конструкторов" тарифов');
+ INSERT INTO `factors` (`name`, `default`, `description`, `title`)
+ VALUES ('risk_id', 1 , 'Набор рисков по которому осуществляется страховое покрытие, у каждой страховой могут быть свои пакеты. Никто не мешает делать вырожденные пакеты с одним риском для случая "конструкторов" тарифов', 'Набор рисков');
  SET @FactorId = LAST_INSERT_ID();
  INSERT INTO `factor_references` (`name`,`reference_table`,`type`, `program_specific`)
  									VALUES ('risks', 'risks' , 'simple', 1);
  SET @ReferenceId = LAST_INSERT_ID();
  INSERT INTO `factor2references` (`factor_id`, `reference_id`)
                            VALUES (@FactorId,@ReferenceId);
-                           
-INSERT INTO `factors` (`name`, `default`, `description`) 
- 									VALUES ('amortisation', NULL , 'Признак учета амортизации при выплатах по страховым случаем, связанным с ущербом');
- SET @FactorId = LAST_INSERT_ID();
- 
 
-INSERT INTO `factors` (`name`, `default`, `description`) 
- 									VALUES ('payments_without_references_id', 1 , 'Вариант выплат компенсации без предоставления справок');
+ INSERT INTO `factors` (`name`, `default`, `description`, `title`)
+ VALUES ('amortisation', NULL , 'Признак учета амортизации при выплатах по страховым случаем, связанным с ущербом', 'Амортизация');
+ SET @FactorId = LAST_INSERT_ID();
+
+
+ INSERT INTO `factors` (`name`, `default`, `description`, `title`)
+ VALUES ('payments_without_references_id', 1 , 'Вариант выплат компенсации без предоставления справок', 'Выплата без справок');
  SET @FactorId = LAST_INSERT_ID();
  INSERT INTO `factor_references` (`name`,`reference_table`,`type`, `program_specific`)
  									VALUES ('payments_without_references', 'payments_without_references' , 'simple', 1);
  SET @ReferenceId = LAST_INSERT_ID();
  INSERT INTO `factor2references` (`factor_id`, `reference_id`)
                            VALUES (@FactorId,@ReferenceId);
-                           
-INSERT INTO `factors` (`name`, `default`, `description`) 
- 									VALUES ('franchise_type_id', 1 , 'Тип франшизы');
+
+ INSERT INTO `factors` (`name`, `default`, `description`, `title`)
+ VALUES ('franchise_type_id', 1 , 'Тип франшизы', 'Тип франшизы');
  SET @FactorId = LAST_INSERT_ID();
  INSERT INTO `factor_references` (`name`,`reference_table`,`type`, `program_specific`)
  									VALUES ('franchise_type', 'franchise_type' , 'simple', 1);
  SET @ReferenceId = LAST_INSERT_ID();
  INSERT INTO `factor2references` (`factor_id`, `reference_id`)
                            VALUES (@FactorId,@ReferenceId);
-                           
-INSERT INTO `factors` (`name`, `default`, `description`) 
- 									VALUES ('contract_day', NULL , 'Длительность договора страхования, дни');
+
+ INSERT INTO `factors` (`name`, `default`, `description`, `title`)
+ VALUES ('contract_day', NULL , 'Длительность договора страхования, дни', 'Срок страхования');
  SET @FactorId = LAST_INSERT_ID();
- INSERT INTO `factors` (`name`, `default`, `description`) 
- 									VALUES ('contract_month', 12 , 'Длительность договора страхования, месяцы');
+ INSERT INTO `factors` (`name`, `default`, `description`, `title`)
+ 									VALUES ('contract_month', 12 , 'Длительность договора страхования, месяцы', 'Срок страхования');
  SET @FactorId1 = LAST_INSERT_ID();
- INSERT INTO `factors` (`name`, `default`, `description`) 
- 									VALUES ('contract_year', NULL , 'Длительность договора страхования, годы');
+ INSERT INTO `factors` (`name`, `default`, `description`, `title`)
+ VALUES ('contract_year', NULL , 'Длительность договора страхования, годы', 'Срок страхования');
  SET @FactorId2 = LAST_INSERT_ID();
  INSERT INTO `factor_references` (`name`,`reference_table`,`type`, `program_specific`)
  									VALUES ('contract', NULL , 'complex_range', 1);
@@ -3575,89 +3575,89 @@ INSERT INTO `factors` (`name`, `default`, `description`)
  INSERT INTO `factor2references` (`factor_id`, `reference_id`)
                            VALUES (@FactorId2,@ReferenceId);
 
-INSERT INTO `factors` (`name`, `default`, `description`) 
- 									VALUES ('drivers_count', 1 , 'Количество лиц, допущеных к управлению ТС');
+ INSERT INTO `factors` (`name`, `default`, `description`, `title`)
+ VALUES ('drivers_count', 1 , 'Количество лиц, допущеных к управлению ТС', 'Количество лиц, допущеных к управлению ТС');
  SET @FactorId = LAST_INSERT_ID();
  INSERT INTO `factor_references` (`name`,`reference_table`,`type`, `program_specific`)
  									VALUES ('drivers_count', NULL , 'range', 0);
  SET @ReferenceId = LAST_INSERT_ID();
  INSERT INTO `factor2references` (`factor_id`, `reference_id`)
                            VALUES (@FactorId,@ReferenceId);
- 
- INSERT INTO `factors` (`name`, `default`, `description`) 
- 									VALUES ('driver_age', NULL , 'Возраст самого юного водителя среди лиц допущеных к управлению ТС');
+
+ INSERT INTO `factors` (`name`, `default`, `description`, `title`)
+ VALUES ('driver_age', NULL , 'Возраст самого юного водителя среди лиц допущеных к управлению ТС', 'Возраст водителя (по самому плохому показателю)');
  SET @FactorId = LAST_INSERT_ID();
  INSERT INTO `factor_references` (`name`,`reference_table`,`type`, `program_specific`)
  									VALUES ('driver_age', NULL , 'range', 0);
  SET @ReferenceId = LAST_INSERT_ID();
  INSERT INTO `factor2references` (`factor_id`, `reference_id`)
                            VALUES (@FactorId,@ReferenceId);
-                           
- INSERT INTO `factors` (`name`, `default`, `description`) 
- 									VALUES ('driver_exp', NULL , 'Водительский стаж самого неопытного среди лиц допущенных к управлению ТС');
+
+ INSERT INTO `factors` (`name`, `default`, `description`, `title`)
+ VALUES ('driver_exp', NULL , 'Водительский стаж самого неопытного среди лиц допущенных к управлению ТС', 'Водительский стаж (по самому плохому показателю)');
  SET @FactorId = LAST_INSERT_ID();
  INSERT INTO `factor_references` (`name`,`reference_table`,`type`, `program_specific`)
  									VALUES ('driver_exp', NULL , 'range', 0);
  SET @ReferenceId = LAST_INSERT_ID();
  INSERT INTO `factor2references` (`factor_id`, `reference_id`)
                            VALUES (@FactorId,@ReferenceId);
-                           
- INSERT INTO `factors` (`name`, `default`, `description`) 
- 									VALUES ('ts_antitheft_id', 1 , 'Тип противоугонной системы ТС');
+
+ INSERT INTO `factors` (`name`, `default`, `description`, `title`)
+ VALUES ('ts_antitheft_id', 1 , 'Тип противоугонной системы ТС', 'Тип противоугонной системы');
  SET @FactorId = LAST_INSERT_ID();
  INSERT INTO `factor_references` (`name`,`reference_table`,`type`, `program_specific`)
  									VALUES ('ts_antitheft', 'ts_antitheft' , 'simple', 0);
  SET @ReferenceId = LAST_INSERT_ID();
  INSERT INTO `factor2references` (`factor_id`, `reference_id`)
                            VALUES (@FactorId,@ReferenceId);
-                           
- INSERT INTO `factors` (`name`, `default`, `description`) 
- 									VALUES ('is_onetime_payment', NULL , 'Оплата полиса единовременно');
- 
- INSERT INTO `factors` (`name`, `default`, `description`) 
- 									VALUES ('car_quantity', NULL , 'Количество машин, страхуемых одновременно');
+
+ INSERT INTO `factors` (`name`, `default`, `description`, `title`)
+ VALUES ('is_onetime_payment', NULL , 'Оплата полиса единовременно', 'Оплата полиса единовременно');
+
+INSERT INTO `factors` (`name`, `default`, `description`, `title`)
+VALUES ('car_quantity', NULL , 'Количество машин, страхуемых одновременно', 'Количество машин, страхуемых одновременно');
  SET @FactorId = LAST_INSERT_ID();
  INSERT INTO `factor_references` (`name`,`reference_table`,`type`, `program_specific`)
  									VALUES ('car_quantity', NULL , 'range', 0);
  SET @ReferenceId = LAST_INSERT_ID();
  INSERT INTO `factor2references` (`factor_id`, `reference_id`)
                            VALUES (@FactorId,@ReferenceId);
-                           
- INSERT INTO `factors` (`name`, `default`, `description`) 
- 									VALUES ('franchise_percent', 0 , 'Процент от страховой суммы, которую страхователь не получит в случае наступления страхового случая (безусловная франшиза) или при определенных условиях получит (условная франшиза) наличие данного параметра автоматически включает рассчет коэфициента франшизы');
+
+INSERT INTO `factors` (`name`, `default`, `description`, `title`)
+VALUES ('franchise_percent', 0 , 'Процент от страховой суммы, которую страхователь не получит в случае наступления страхового случая (безусловная франшиза) или при определенных условиях получит (условная франшиза) наличие данного параметра автоматически включает рассчет коэфициента франшизы', 'Процент франшизы');
  SET @FactorId = LAST_INSERT_ID();
  INSERT INTO `factor_references` (`name`,`reference_table`,`type`, `program_specific`)
  									VALUES ('franchise_percent', NULL , 'range', 1);
  SET @ReferenceId = LAST_INSERT_ID();
  INSERT INTO `factor2references` (`factor_id`, `reference_id`)
                            VALUES (@FactorId,@ReferenceId);
-                           
- INSERT INTO `factors` (`name`, `default`, `description`) 
- 									VALUES ('commercial_carting_flag', 0 , 'Признак того, что ТС сдается в прокат или состоит в парке такси');
 
-INSERT INTO `factors` (`name`, `default`, `description`) 
- 									VALUES ('is_legal_entity', 0 , 'Признак страхователя, Юридическое лицо');
- 
- INSERT INTO `factors` (`name`, `default`, `description`) 
- 									VALUES ('commission_percent', NULL , 'Процент комиссионного вознаграждения от суммы стоимости полиса');
+INSERT INTO `factors` (`name`, `default`, `description`, `title`)
+VALUES ('commercial_carting_flag', 0 , 'Признак того, что ТС сдается в прокат или состоит в парке такси', 'Использование ТС в коммерческих целях');
+
+INSERT INTO `factors` (`name`, `default`, `description`, `title`)
+VALUES ('is_legal_entity', 0 , 'Признак страхователя, Юридическое лицо', 'Признак страхователя, Юридическое лицо');
+
+INSERT INTO `factors` (`name`, `default`, `description`, `title`)
+VALUES ('commission_percent', NULL , 'Процент комиссионного вознаграждения от суммы стоимости полиса', 'Процент комиссионного вознаграждения от суммы стоимости полиса');
  SET @FactorId = LAST_INSERT_ID();
  INSERT INTO `factor_references` (`name`,`reference_table`,`type`, `program_specific`)
  									VALUES ('commission_percent', NULL , 'range', 0);
  SET @ReferenceId = LAST_INSERT_ID();
  INSERT INTO `factor2references` (`factor_id`, `reference_id`)
                            VALUES (@FactorId,@ReferenceId);
-                           
- INSERT INTO `factors` (`name`, `default`, `description`) 
- 									VALUES ('regres_limit_factor_id', 1 , 'Тип лимита возмещения');
+
+INSERT INTO `factors` (`name`, `default`, `description`, `title`)
+VALUES ('regres_limit_factor_id', 1 , 'Тип лимита возмещения', 'Тип лимита возмещения');
  SET @FactorId = LAST_INSERT_ID();
  INSERT INTO `factor_references` (`name`,`reference_table`,`type`, `program_specific`)
  									VALUES ('regres_limit_factor', 'regres_limit' , 'simple', 1);
  SET @ReferenceId = LAST_INSERT_ID();
  INSERT INTO `factor2references` (`factor_id`, `reference_id`)
                            VALUES (@FactorId,@ReferenceId);
-                           
- INSERT INTO `factors` (`name`, `default`, `description`) 
- 									VALUES ('additional_sum', NULL , 'Стоимость допоборудования ТС');
+
+INSERT INTO `factors` (`name`, `default`, `description`, `title`)
+VALUES ('additional_sum', NULL , 'Стоимость допоборудования ТС', 'Стоимость допоборудования ТС');
  SET @FactorId = LAST_INSERT_ID();
  INSERT INTO `factor_references` (`name`,`reference_table`,`type`, `program_specific`)
  									VALUES ('additional_sum', NULL , 'range', 0);
