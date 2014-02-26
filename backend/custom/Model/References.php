@@ -364,6 +364,7 @@ class References
         $db = Frapi_Database::getInstance();
         $ref_key = 'drivers_count';
 
+        //TODO you can use just one query
         $query = 'SELECT max(`drivers_count_up`) FROM `additional_coefficients`';
         $result = $db->query($query);
         $result = $result->fetch();
