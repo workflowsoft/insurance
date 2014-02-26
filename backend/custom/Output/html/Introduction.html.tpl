@@ -257,14 +257,25 @@
 					</div>
 					<div class="col-lg-3">
 						<h4><small>Стоимость полиса</small><h4>
-						<p><small>Сумма: {{cost.Result.Contract.Sum}}</small></p>
-						<p><small>Тариф: {{cost.Result.Contract.Tariff}}</small></p>
-						<a href="#" class="js-toggle" on-click="toggle"><small>Отладочная информация</small></a>
-						<textarea class="js-toggled g-hidden">
-							{{#cost.Result.Coefficients:key}}
-								{{key}}: {{cost.Result.Coefficients[key]}}&#13;
-							{{/cost.Result.Coefficients}}
-						</textarea>
+						<p>Сумма: {{cost.Result.Contract.Sum}}</p>
+						
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">Коэффициенты</div>
+					<div class="panel-body">
+						<table class="table table-bordered table-condensed">
+							<tr>
+								{{#cost.Result.Coefficients:key}}
+									<td>{{key}}</td>
+								{{/cost.Result.Coefficients}}
+							</tr>
+							<tr>
+								{{#cost.Result.Coefficients:key}}
+									<td>{{cost.Result.Coefficients[key]}}</td>
+								{{/cost.Result.Coefficients}}
+							</tr>
+						</table>
 					</div>
 				</div>
 			{{/programs}}
