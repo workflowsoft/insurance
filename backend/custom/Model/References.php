@@ -330,16 +330,7 @@ class References
             if (!is_null($reference))
             {
                 //Зафеячим заголовок справочника
-                $titleQuery = "
-                   SELECT distinct F.title
-                      FROM factors F
-                        LEFT JOIN factor2references FR ON F.id = FR.factor_id
-                        LEFT JOIN factor_references R ON R.id = FR.reference_id
-                WHERE R.name IS NOT NULL AND R.name = '" . $referenceDef['name'] . "'";
-
-                $sth = $db->query($titleQuery);
-                $res = $sth->fetch();
-                $referenceOut['title'] = $res[0];
+                $referenceOut['title'] = self::getTitleByReferenceName($referenceDef['name']);
                 $referenceOut['values'] = array();
 
                 $independentCount = 0; //Этой штукой мы будем скипать справочники от значений которых в данном контексте вообще ничего не зависит
@@ -491,6 +482,22 @@ class References
             self::$_results[$ref_key]['values'][$i]['is_default'] = 0;
             $i++;
         }
+    }
+
+
+    public static function getTitleByReferenceName($name) {
+        $titleQuery = "
+                   SELECT distinct F.title
+                      FROM factors F
+                        LEFT JOIN factor2references FR ON F.id = FR.factor_id
+                        LEFT JOIN factor_references R ON R.id = FR.reference_id
+                WHERE R.name IS NOT NULL AND R.name = '" . $name . "'";
+
+        $db = Frapi_Database::getInstance();
+        $sth = $db->query($titleQuery);
+        $res = $sth->fetch();
+        return $res[0];
+
     }
 
 } 
