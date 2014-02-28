@@ -158,15 +158,15 @@
 			<div class="panel-body">
 				<div class="form-group g-clrfix">
 					<div class="col-lg-4">
-						<label class="control-label">Количество ЛДУ ({{visible_drivers_count}})<br>&nbsp;</label>
+						<label class="control-label">Количество водителей<br>({{visible_drivers_count}})</label>
 						<div id="drivers_count" class="js-slider"></div>
 					</div>
 					<div class="col-lg-4">
-						<label for="">Возраст водителей(По самому «плохому» показателю) ({{visible_driver_age}})</label>
+						<label for="">Возраст самого юного водителя<br>({{visible_driver_age}})</label>
 						<div id="driver_age" class="js-slider"></div>
 					</div>
 					<div class="col-lg-4">
-						<label for="">Стаж водителей(По самому «плохому» показателю) ({{visible_driver_exp}})</label>
+						<label for="">Стаж самого неопытного водителя<br>({{visible_driver_exp}})</label>
 						<div id="driver_exp" class="js-slider"></div>
 					</div>
 					<div class="col-lg-4">
