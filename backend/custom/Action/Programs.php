@@ -197,7 +197,7 @@ class Action_Programs extends Frapi_Action implements Frapi_Action_Interface
                                     $concrete_params[$refValue['request_parameter']] = $refValue['value'];
                                     $paramSet = true;
                                 }
-                                if (!$paramSet && $i == count($referenceValues)-1)
+                                if (!$paramSet && $i == count($referenceValues['values'])-1)
                                 {
                                     $concrete_params[$referenceValues['values'][0]['request_parameter']] = $referenceValues['values'][0]['value'];
                                 }
