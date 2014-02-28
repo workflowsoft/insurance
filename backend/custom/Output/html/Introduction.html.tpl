@@ -93,7 +93,7 @@
 								<option disabled selected>Выберите категорию</option>
 							{{#ts_group.values}}
 								{{#is_default}}
-									<option selected value={{value}}>{{name}}</option>
+									<option selected="selected" value={{value}}>{{name}}</option>
 								{{/is_default}}
 
 								{{^is_default}}
@@ -230,7 +230,7 @@
 			</div>
 
 			{{#programs:num}}
-				<div class="form-group g-clrfix">
+				<form class="form-group g-clrfix" on-change="recalc" data-id="{{id}}">
 					<div class="col-lg-3">
 						<h4>
 							{{name}}
@@ -244,11 +244,11 @@
 							<select class="form-control" name={{key}} >
 								{{#references[key].values:index}}
 									{{#references[key].values[index]}}
-										{{#is_default}}
+										{{#(is_default === '1')}}
 											<option selected value={{value}}>{{name}}</option>
 										{{/is_default}}
 
-										{{^is_default}}
+										{{#(is_default === '0')}}
 											<option value={{value}}>{{name}}</option>
 										{{/is_default}}
 									{{/references[key].values[index]}}
@@ -262,7 +262,7 @@
 						<p>Сумма: {{cost.Result.Contract.Sum}}</p>
 						
 					</div>
-				</div>
+				</form>
 				<div class="panel panel-default">
 					<div class="panel-heading">Коэффициенты</div>
 					<div class="panel-body">
