@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `ts` (
   COLLATE =utf8_bin;
 
 DROP TABLE IF EXISTS `user2ts`;
-CREATE TABLE IF NOT EXISTS `ts` (
+CREATE TABLE IF NOT EXISTS `user2ts` (
   `id`      INT(10) NOT NULL AUTO_INCREMENT,
   `user_id` INT(10) NOT NULL,
   `ts_id`   INT(10) NOT NULL,
@@ -122,9 +122,7 @@ CREATE TABLE IF NOT EXISTS `ldu` (
   `driving licence` VARCHAR(32) NOT NULL,
   `exp_year_start`  YEAR(4)     NOT NULL,
 
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`order_id`) REFERENCES `order` (`id`),
-  FOREIGN KEY (`history_id`) REFERENCES `calc_history` (`id`)
+  PRIMARY KEY (`id`)
 )
   ENGINE =InnoDB
   DEFAULT CHARSET =utf8
