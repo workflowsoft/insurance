@@ -133,6 +133,10 @@ class Action_Programs extends Frapi_Action implements Frapi_Action_Interface
                 //Получить корректировки для тарифа, если есть корректировка, соотв. справочник уже не нужен.
                 $corrections = Calculation\Calculation::getCorrectedParameters($concrete_params);
                 //Осуществляем корректировку параметров
+
+                //Сначала внаглую.
+                $concrete_params['car_quantity'] = 10; //Такие дела
+
                 foreach ($corrections as $name => $value)
                 {
                     $concrete_params[$name] =  $value;
