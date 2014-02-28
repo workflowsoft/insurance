@@ -68,20 +68,21 @@
 				var tpl = this.templates.CalcTemplate;
 
 				_.each($('.js-slider'), function(el) {
-					el = $(el);
+					var reference = el.id,
+						references = tpl.get(reference);
 
-					el.slider({
-						min: 1,
-						max: tpl.get('ts_age').values.length,
+					$(el).slider({
+						min: references.values[0].value,
+						max: _.last(references.values).value,
 						slide: function(event, ui) {
-							var val = ui.value - 1,
-								agesList = tpl.get('ts_age').values,
-								newVal = _.findWhere(agesList, {
+							var val = ui.value,
+								referencesList = tpl.get(reference).values,
+								newVal = _.findWhere(referencesList, {
 									value: val
 								});
 
-							tpl.set('visible_ts_age', newVal.name);
-							tpl.set('calculate.ts_age', val);
+							tpl.set('visible_' + reference, newVal.name);
+							tpl.set('calculate.' + reference, val);
 						}
 					});
 

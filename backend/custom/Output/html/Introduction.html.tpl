@@ -158,49 +158,16 @@
 			<div class="panel-body">
 				<div class="form-group g-clrfix">
 					<div class="col-lg-4">
-						<label class="control-label">Количество ЛДУ<br>&nbsp;</label>
-						<select disabled={{!drivers_count}} class="form-control" value={{calculate.drivers_count}} name="drivers_count">
-								<option disabled selected>Укажите количество</option>
-							{{#drivers_count.values}}
-								{{#is_default}}
-									<option selected value={{value}}>{{name}}</option>
-								{{/is_default}}
-
-								{{^is_default}}
-									<option value={{value}}>{{name}}</option>
-								{{/is_default}}
-							{{/drivers_count.values}}
-						</select>
+						<label class="control-label">Количество ЛДУ ({{visible_drivers_count}})<br>&nbsp;</label>
+						<div id="drivers_count" class="js-slider"></div>
 					</div>
 					<div class="col-lg-4">
-						<label for="">Возраст водителей(По самому «плохому» показателю)</label>
-						<select disabled={{!driver_age}} class="form-control" value={{calculate.driver_age}} name="driver_age">
-							<option disabled selected>Укажите возраст</option>
-							{{#driver_age.values}}
-								{{#is_default}}
-									<option selected value={{value}}>{{name}}</option>
-								{{/is_default}}
-
-								{{^is_default}}
-									<option value={{value}}>{{name}}</option>
-								{{/is_default}}
-							{{/driver_age.values}}
-						</select>
+						<label for="">Возраст водителей(По самому «плохому» показателю) ({{visible_driver_age}})</label>
+						<div id="driver_age" class="js-slider"></div>
 					</div>
 					<div class="col-lg-4">
-						<label for="">Стаж водителей(По самому «плохому» показателю)</label>
-						<select disabled={{!driver_exp}} class="form-control" value={{calculate.driver_exp}} name="driver_exp">
-								<option disabled selected>Укажите количество</option>
-							{{#driver_exp.values}}
-								{{#is_default}}
-									<option selected value={{value}}>{{name}}</option>
-								{{/is_default}}
-
-								{{^is_default}}
-									<option value={{value}}>{{name}}</option>
-								{{/is_default}}
-							{{/driver_exp.values}}
-						</select>
+						<label for="">Стаж водителей(По самому «плохому» показателю) ({{visible_driver_exp}})</label>
+						<div id="driver_exp" class="js-slider"></div>
 					</div>
 					<div class="col-lg-4">
 					</div>
