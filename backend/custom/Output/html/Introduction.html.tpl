@@ -57,7 +57,7 @@
 								{{/is_default}}
 
 								{{#is_default}}
-									<option selected="selected" value={{value}}>{{name}}</option>
+									<option selected value={{value}}>{{name}}</option>
 								{{/is_default}}
 							{{/ts_type.values}}
 						</select>
