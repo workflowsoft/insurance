@@ -142,10 +142,12 @@ class Action_Programs extends Frapi_Action implements Frapi_Action_Interface
                         if ($referenceDef)
                         {
                             $referenceName = $referenceDef['name'];
-                            if (!array_key_exists($referenceName, $references))
-                                $references[$referenceName] = array();
-                            $references[$referenceName] =
-                                array_merge($references[$referenceName],
+                            $references[$referenceName]['values'] = array();
+                            $references[$referenceName]['values'][0] = array();
+                            $references[$referenceName]['title'] = References::getTitleByReferenceName($referenceName);
+
+                            $references[$referenceName]['values'][0] =
+                                array_merge($references[$referenceName]['values'][0],
                                     array(
                                         'request_parameter' => $name,
                                         'name' => References::getNameByValue($referenceDef, $value),
@@ -173,6 +175,9 @@ class Action_Programs extends Frapi_Action implements Frapi_Action_Interface
                         }
                         //TODO: Конец костыля для контракта
                         $referenceValues = References::getReferenceByRequestParams($param, $referenceDef, $concrete_params);
+                        if($program['id'] == 5) {
+                            xdebug_break();
+                        }
                         if (count($referenceValues['values']))
                         {
                             $referenceName = $referenceDef['name'];

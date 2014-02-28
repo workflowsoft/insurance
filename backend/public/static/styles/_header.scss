@@ -3,9 +3,9 @@
 	position: relative;
 	padding: 2px 16px;
 	@include border-radius(8px);
-	background-color: #f0f8ff; // Old browsers
-	@include filter-gradient(#f0f8ff, #ffffff, vertical); // IE6-9
-	@include background-image(linear-gradient(top,  #f0f8ff 0%,#ffffff 100%));
+	background-color: #D2F2FF; // Old browsers
+	@include filter-gradient(#D2F2FF, #ffffff, vertical); // IE6-9
+	@include background-image(linear-gradient(top,  #D2F2FF 0%,#ffffff 100%));
 
 
 	.page-header {

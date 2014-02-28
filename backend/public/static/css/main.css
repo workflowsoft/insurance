@@ -1,6 +1,6 @@
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/blocks\/\*\.png}line{font-family:\0000342}}
-.blocks-sprite {
-  background: url('../img/blocks-s7d29a9affd.png') no-repeat;
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/blocks\/\*\.png}line{font-family:\0000350}}
+.blocks-sprite, .b-icon--logo {
+  background: url('../img/blocks-s8587b987f4.png') no-repeat;
 }
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_reset\.scss}line{font-family:\000039}}
@@ -217,14 +217,14 @@ body {
   -ms-border-radius: 8px;
   -o-border-radius: 8px;
   border-radius: 8px;
-  background-color: #f0f8ff;
+  background-color: #D2F2FF;
   *zoom: 1;
-  filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFF0F8FF', endColorstr='#FFFFFFFF');
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f0f8ff), color-stop(100%, #ffffff));
-  background-image: -webkit-linear-gradient(top, #f0f8ff 0%, #ffffff 100%);
-  background-image: -moz-linear-gradient(top, #f0f8ff 0%, #ffffff 100%);
-  background-image: -o-linear-gradient(top, #f0f8ff 0%, #ffffff 100%);
-  background-image: linear-gradient(top, #f0f8ff 0%, #ffffff 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFD2F2FF', endColorstr='#FFFFFFFF');
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #d2f2ff), color-stop(100%, #ffffff));
+  background-image: -webkit-linear-gradient(top, #d2f2ff 0%, #ffffff 100%);
+  background-image: -moz-linear-gradient(top, #d2f2ff 0%, #ffffff 100%);
+  background-image: -o-linear-gradient(top, #d2f2ff 0%, #ffffff 100%);
+  background-image: linear-gradient(top, #d2f2ff 0%, #ffffff 100%);
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_header\.scss}line{font-family:\0000311}}
 .b-header .page-header {
@@ -359,4 +359,11 @@ body {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_icons\.scss}line{font-family:\000031}}
 .b-icon {
   display: block;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_icons\.scss}line{font-family:\000035}}
+.b-icon--logo {
+  background-position: 0 -500px;
+  width: 269px;
+  height: 139px;
 }

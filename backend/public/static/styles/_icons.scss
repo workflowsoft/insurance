@@ -3,5 +3,7 @@
 }
 
 .b-icon--logo {
-
+	@include blocks-sprite(logo);
+	width: blocks-sprite-width(logo);
+	height: blocks-sprite-height(logo);
 }

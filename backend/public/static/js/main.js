@@ -12,6 +12,9 @@ $(function () {
 
 		defaults: {
 			visible_ts_age: 0,
+			visible_drivers_count: 1,
+			visible_driver_age: 18,
+			visible_driver_exp: 0,
 			calculate: {
 				commercial_carting_flag: 0,
 				ts_age: 0
