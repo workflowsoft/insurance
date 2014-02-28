@@ -175,9 +175,6 @@ class Action_Programs extends Frapi_Action implements Frapi_Action_Interface
                         }
                         //TODO: Конец костыля для контракта
                         $referenceValues = References::getReferenceByRequestParams($param, $referenceDef, $concrete_params);
-                        if($program['id'] == 5) {
-                            xdebug_break();
-                        }
                         if (count($referenceValues['values']))
                         {
                             $referenceName = $referenceDef['name'];
