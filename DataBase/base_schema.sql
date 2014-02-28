@@ -297,6 +297,7 @@ CREATE TABLE IF NOT EXISTS `calc_history` (
   `sum_additional` double,
   `errors` VARCHAR(512),
 # прочие
+# add user_id
   `timestamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
   PRIMARY KEY (`id`)
