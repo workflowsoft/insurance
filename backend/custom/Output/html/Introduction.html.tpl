@@ -190,7 +190,7 @@
 
 <script id="programsTemplate" type="ractive">
 	<h2><small>Калькулятор тарифов по страхованию средств наземного транспорта</small></h2>
-	<form id="programsForm" role="form" class="g-clrfix" on-submit="re" on-change="recalc">
+	<form id="programsForm" role="form" class="g-clrfix" on-submit="re" on-change="recalc" on-reset="reset">
 		<div class="panel panel-info">
 			<div class="panel-heading">
 				<h3 class="panel-title">Страховые программы</h3>
@@ -248,6 +248,12 @@
 					</div>
 				</div>
 			{{/programs}}
+			{{#programsLoaded}}
+				<div class="b-programs-buttons g-clrfix">
+					<button type="reset" class="btn btn-lg btn-default pull-left">Сбросить</button>
+					<button type="submit" class="btn btn-lg btn-info pull-right">Пересчитать</button>
+				</div>
+			{{/programsLoaded}}
 			
 		</div>
 	</form>

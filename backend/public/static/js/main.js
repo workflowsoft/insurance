@@ -190,7 +190,8 @@ $(function () {
 							response.Result.references = _.toArray(response.Result.references);
 							insurance.templates.ProgramsTemplate.set({
 								programs: response.Result,
-								inputParams: response.inputParams
+								inputParams: response.inputParams,
+								programsLoaded: true
 							});
 
 						}
@@ -205,6 +206,13 @@ $(function () {
 			recalc: function(event) {
 				$.get('/calculate/v1');
 
+			},
+
+			reset: function(event) {
+				var defaults = _.clone(this.get('programs'));
+				
+				this.set('programs', []);
+				this.set(defaults);
 			}
 		});
 
