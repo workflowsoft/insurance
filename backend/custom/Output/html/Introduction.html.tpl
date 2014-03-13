@@ -197,7 +197,7 @@
 			</div>
 
 			{{#programs:num}}
-				<form class="form-group g-clrfix" on-change="recalc" data-id="{{id}}">
+				<form class="form-group g-clrfix" data-program-key={{num}} on-change="recalc" data-id="{{id}}">
 					<div class="col-lg-3">
 						<h4>
 							{{name}}
@@ -230,6 +230,10 @@
 						
 					</div>
 				</form>
+				<div class="b-programs-buttons g-clrfix">
+					<button disabled="disabled" class="btn btn-md btn-default pull-left js-reset" on-click="resetProgram">Сбросить</button>
+					<button disabled="disabled" class="btn btn-md btn-info pull-right js-recalc" on-click="recalcProgram">Пересчитать</button>
+				</div>
 				<div class="panel panel-default">
 					<div class="panel-heading">Коэффициенты</div>
 					<div class="panel-body">
@@ -248,12 +252,6 @@
 					</div>
 				</div>
 			{{/programs}}
-			{{#programsLoaded}}
-				<div class="b-programs-buttons g-clrfix">
-					<button type="reset" class="btn btn-lg btn-default pull-left">Сбросить</button>
-					<button type="submit" class="btn btn-lg btn-info pull-right">Пересчитать</button>
-				</div>
-			{{/programsLoaded}}
 			
 		</div>
 	</form>

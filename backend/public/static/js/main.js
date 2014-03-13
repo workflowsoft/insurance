@@ -204,15 +204,24 @@ $(function () {
 
 		this.templates.ProgramsTemplate.on({
 			recalc: function(event) {
-				$.get('/calculate/v1');
-
+				var buttonConatiner = $(event.node).next();
+				
+				buttonConatiner.find('.btn').attr('disabled') && buttonConatiner.find('.btn').removeAttr('disabled');			
 			},
 
-			reset: function(event) {
-				var defaults = _.clone(this.get('programs'));
-				
-				this.set('programs', []);
-				this.set(defaults);
+			resetProgram: function(event) {
+				var keypath = event.keypath,
+					defaults = _.clone(this.get(keypath));
+
+				this.set(keypath, {});
+				this.set(keypath, defaults);
+
+				event.original.preventDefault();
+			},
+
+			recalcProgram: function(event) {
+
+				event.original.preventDefault();
 			}
 		});
 
