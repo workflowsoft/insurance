@@ -67,8 +67,7 @@ class References
     public static function getNameByValue($referenceDef, $value)
     {
         $result = $value;
-        if ($referenceDef['type'] == 'simple' && array_key_exists('reference_table', $referenceDef))
-        {
+        if ($referenceDef['type'] == 'simple' && array_key_exists('reference_table', $referenceDef)) {
             $db = Frapi_Database::getInstance();
             $sth = $db->query(sprintf('SELECT name FROM %s WHERE id = %u', $referenceDef['reference_table'], $value));
             $result = $sth->fetchColumn();
@@ -83,21 +82,17 @@ class References
         $reference = null;
         $referenceOut = array();
         $res = array();
-        if ($referenceDef)
-        {
+        if ($referenceDef) {
             $db = Frapi_Database::getInstance();
-            foreach($referenceDef['tables'] as $tableName)
-            {
+            foreach ($referenceDef['tables'] as $tableName) {
                 $wh = Calculation\Calculation::getWhereParts($params);
                 $wherePart = join(' AND ', $wh[$tableName]);
-                switch($referenceDef['type'])
-                {
+                switch ($referenceDef['type']) {
                     case 'simple':
-                        if (array_key_exists('reference_table', $referenceDef))
-                        {
-                                /*column, ref_table, column, table, where, column, column, column, name */
-                                //TODO: Запрос будет сложнее, нужно еще учитывать разрешимость конечного рассчета
-                                $simpleQuery = 'SELECT GF.name,GF.id as value, CASE WHEN F.`default` IS NULL THEN 0 ELSE 1 END AS is_default, GF.is_any FROM
+                        if (array_key_exists('reference_table', $referenceDef)) {
+                            /*column, ref_table, column, table, where, column, column, column, name */
+                            //TODO: Запрос будет сложнее, нужно еще учитывать разрешимость конечного рассчета
+                            $simpleQuery = 'SELECT GF.name,GF.id as value, CASE WHEN F.`default` IS NULL THEN 0 ELSE 1 END AS is_default, GF.is_any FROM
                                                   (SELECT  GF1.id, GF1.name, MIN(GF1.is_any) AS is_any FROM
                                                       (SELECT T.id, T.name, CASE WHEN G.%s IS NULL THEN 1 ELSE 0 END AS is_any FROM %s T
                                                         INNER JOIN (SELECT %s FROM %s AC WHERE %s GROUP BY AC.%s) G
@@ -106,10 +101,10 @@ class References
                                                    GROUP BY GF1.id, GF1.name
                                                   )GF LEFT JOIN factors F
                                                     ON F.`default` = GF.id AND F.name = \'%s\'';
-                                $column = $referenceDef['columns'][0];
-                                $sth = $db->query(sprintf($simpleQuery, $column, $referenceDef['reference_table'], $column, $tableName, $wherePart, $column, $column, $column, $paramName));
-                                $res = $sth->fetchAll(PDO::FETCH_ASSOC);
-                            }
+                            $column = $referenceDef['columns'][0];
+                            $sth = $db->query(sprintf($simpleQuery, $column, $referenceDef['reference_table'], $column, $tableName, $wherePart, $column, $column, $column, $paramName));
+                            $res = $sth->fetchAll(PDO::FETCH_ASSOC);
+                        }
                         break;
                     case 'range':
                         // $col_down, $col_up, $col_down, $col_up, $col_down, $col_up, $col_up, $col_down, $col_down, $col_up, $tableName, $wherePart, $col_down, $col_up, $col_down, $name, $col_down, $col_up, $col_down, $col_down, $col_up, $col_up, $col_down, $col_up
@@ -150,8 +145,8 @@ class References
                                                     (VAL.%s IS NULL AND VAL.%s IS NULL AND F.`default` = 0)
                                               )';
                         $sth = $db->query(sprintf($rangeQuery, $col_down, $col_up, $col_down, $col_up, $col_down, $col_up, $col_up, $col_down,
-                                                               $col_down, $col_up, $tableName, $wherePart, $col_down, $col_up, $col_down, $paramName, $col_down, $col_up,
-                                                               $col_down, $col_down, $col_up, $col_up, $col_down, $col_up));
+                            $col_down, $col_up, $tableName, $wherePart, $col_down, $col_up, $col_down, $paramName, $col_down, $col_up,
+                            $col_down, $col_down, $col_up, $col_up, $col_down, $col_up));
                         $res = $sth->fetchAll(PDO::FETCH_ASSOC);
                         break;
                     case 'complex_range':
@@ -278,11 +273,11 @@ class References
                                           LEFT JOIN factors F ON F.name = VAL.request_parameter AND F.`default` = VAL.value';
                         $deps = \Calculation\Configuration::getCoefficientDependencies();
                         $dependentCoef = array_merge(
-                            array_key_exists('contract_year',$deps)?$deps['contract_year']: array(),
-                            array_key_exists('contract_month',$deps)?$deps['contract_month']: array(),
-                            array_key_exists('contract_day',$deps)?$deps['contract_day']: array());
+                            array_key_exists('contract_year', $deps) ? $deps['contract_year'] : array(),
+                            array_key_exists('contract_month', $deps) ? $deps['contract_month'] : array(),
+                            array_key_exists('contract_day', $deps) ? $deps['contract_day'] : array());
                         $inPart = join(' , ', array_unique($dependentCoef));
-                        $qry = sprintf($complexRange, $inPart ,$wherePart);
+                        $qry = sprintf($complexRange, $inPart, $wherePart);
                         $sth = $db->query($qry);
                         $res = $sth->fetchAll(PDO::FETCH_ASSOC);
                         break;
@@ -291,17 +286,13 @@ class References
                 //Подчищаем по приоритету
                 $cleaned = array();
                 $priority = 0;
-                foreach ($res as $item)
-                {
-                    if (array_key_exists('priority', $item))
-                    {
-                        if ($item['priority']>$priority)
+                foreach ($res as $item) {
+                    if (array_key_exists('priority', $item)) {
+                        if ($item['priority'] > $priority)
                             $priority = $item['priority'];
                         if ($item['priority'] == $priority)
                             array_push($cleaned, $item);
-                    }
-                    else
-                    {
+                    } else {
                         array_push($cleaned, $item);
                     }
                 }
@@ -309,15 +300,11 @@ class References
 
                 if (is_null($reference))
                     $reference = $res;
-                else
-                {
+                else {
                     $newReference = array();
-                    foreach($reference as $old)
-                    {
-                        foreach($res as $new)
-                        {
-                            if ($old['value'] == $new['value'])
-                            {
+                    foreach ($reference as $old) {
+                        foreach ($res as $new) {
+                            if ($old['value'] == $new['value']) {
                                 $old['is_any'] = min($old['is_any'], $new['is_any']);
                                 array_push($newReference, $old);
                                 break;
@@ -327,25 +314,23 @@ class References
                     $reference = $newReference;
                 }
             }
-            if (!is_null($reference))
-            {
+            if (!is_null($reference)) {
                 //Зафеячим заголовок справочника
                 $referenceOut['title'] = self::getTitleByReferenceName($referenceDef['name']);
                 $referenceOut['values'] = array();
 
                 $independentCount = 0; //Этой штукой мы будем скипать справочники от значений которых в данном контексте вообще ничего не зависит
-                foreach($reference as $item)
-                {
+                foreach ($reference as $item) {
                     if ($item['is_any'] == 1)
                         $independentCount++;
                     array_push($referenceOut['values'],
-                    array(
-                        'request_parameter' =>
-                            array_key_exists('request_parameter',$item)? $item['request_parameter'] : $paramName,
-                        'name' => $item['name'],
-                        'value' => $item['value'],
-                        'is_default'=> $item['is_default'],
-                        'is_price_changing' => $item['is_any'] == 1? false: true
+                        array(
+                            'request_parameter' =>
+                                array_key_exists('request_parameter', $item) ? $item['request_parameter'] : $paramName,
+                            'name' => $item['name'],
+                            'value' => $item['value'],
+                            'is_default' => $item['is_default'],
+                            'is_price_changing' => $item['is_any'] == 1 ? false : true
                         )
                     );
                 }
@@ -363,6 +348,7 @@ class References
         self::_getDriversAge();
         self::_getDriversExp();
         self::_getTsAge();
+        self::_getPrograms();
     }
 
     private static function _getDriversCount()
@@ -484,8 +470,20 @@ class References
         }
     }
 
+    private static function _getPrograms()
+    {
+        $db = Frapi_Database::getInstance();
+        $ref_key = 'programs';
 
-    public static function getTitleByReferenceName($name) {
+        $query = 'SELECT * FROM `tariff_program`';
+        $result = $db->query($query);
+        $result = $result->fetchAll(PDO::FETCH_ASSOC);
+        self::$_results[$ref_key] = $result;
+    }
+
+
+    public static function getTitleByReferenceName($name)
+    {
         $titleQuery = "
                    SELECT distinct F.title
                       FROM factors F

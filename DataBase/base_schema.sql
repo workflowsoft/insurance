@@ -53,6 +53,7 @@ DROP TABLE IF EXISTS `tariff_program`;
 CREATE TABLE IF NOT EXISTS `tariff_program` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(50) COLLATE utf8_bin NOT NULL,
+  `description` TEXT COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Варианты тарифных планов';
 
