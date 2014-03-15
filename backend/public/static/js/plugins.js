@@ -62,6 +62,7 @@
 						}.bind(this));
 					}
 				});
+				return this;
 			},
 
 			initSliders: function() {
@@ -87,10 +88,21 @@
 					});
 
 				});
+
+				return this;
+			},
+
+			bootstrapTooltips: function() {
+
+				$('.js-popover').popover();
+
+				return this;
 			}
 		});
 
-		insurance.initSuggest();
-		insurance.initSliders();
+		insurance
+			.initSuggest()
+			.initSliders()
+			.bootstrapTooltips();
 	})
 }());

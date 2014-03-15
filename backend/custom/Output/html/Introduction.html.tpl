@@ -202,13 +202,19 @@
 						<h4>
 							{{name}}
 						</h4>
+						<button type="button" class="btn js-popover btn-default" data-container="body" data-toggle="popover" data-placement="right" data-content="{{description}}">
+ 							О программе
+						</button>
+						
 					</div>
 					<div class="col-lg-6">
+
+					<input type="hidden" name="tariff_program_id" value="{{id}}">
 
 					{{#references:key}}
 						<div class="col-lg-6">	
 							<label for="">{{title}}</label>
-							<select class="form-control" name={{key}} >
+							<select class="form-control" name={{requestName}} >
 								{{#references[key].values:index}}
 									{{#references[key].values[index]}}
 										{{#(is_default === '1' || is_default === 1)}}
@@ -223,11 +229,16 @@
 							</select>
 						</div>
 					{{/references}}
+						<div class="col-lg-6">
+							<br />
+							<label class="checkbox-inline">
+								<input name="amortisation" type="checkbox">Утрата товарной стоимости
+							</label>
+						</div>
 					</div>
 					<div class="col-lg-3">
 						<h4><small>Стоимость полиса</small><h4>
 						<p>Сумма: {{cost.Result.Contract.Sum}}</p>
-						
 					</div>
 				</form>
 				<div class="b-programs-buttons g-clrfix">

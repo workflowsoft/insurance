@@ -137,7 +137,6 @@ $(function () {
 				}
 				break;
 				case 'ts_antitheft_id':
-				debugger;
 				
 				tpl.set('calculate.ts_antitheft_id', $('input[name=ts_antitheft_id]:checked').val());	
 				
@@ -188,12 +187,23 @@ $(function () {
 					).then(function(response) {
 						if (response.Result) {
 							response.Result.references = _.toArray(response.Result.references);
+
+							// [TODO] Избавиться от этой хуйни, когда будет слаться с бэка
+							_.each(response.Result, function(program) {
+								program.description = _.findWhere(insurance.templates.CalcTemplate.get('programs'), {id: program.id}).description;
+
+								_.each(program.references, function(reference) {
+									reference.requestName = reference.values[0].request_parameter;
+								});
+							});
+
 							insurance.templates.ProgramsTemplate.set({
 								programs: response.Result,
 								inputParams: response.inputParams,
 								programsLoaded: true
 							});
 
+							insurance.bootstrapTooltips();
 						}
 					}.bind(this));
 
@@ -220,6 +230,20 @@ $(function () {
 			},
 
 			recalcProgram: function(event) {
+				var formData = $(event.node)
+					.closest('.b-programs-buttons')
+					.prev('.form-group')
+					.serializeArray(),
+					recalcData = _.clone(insurance.templates.CalcTemplate.get('calculate')),
+					keypath = event.keypath;
+
+				_.each(formData, function(formEl) {
+					recalcData[formEl.name] = formEl.value;
+				});
+
+				$.get('/calculate/v1', recalcData).then(function(response) {
+					this.set(keypath + '.cost', response);				
+				}.bind(this));
 
 				event.original.preventDefault();
 			}
