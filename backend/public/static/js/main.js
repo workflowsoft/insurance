@@ -27,6 +27,8 @@ $(function () {
 			var loader = $('.b-loader-backdrop');
 
 			loader.toggle(toggle);
+
+			return this;
 		},
 
 		preprocessResponse: function(data) {
@@ -182,6 +184,7 @@ $(function () {
 					var data = this.data.calculate || {},
 						submitReady = false;
 
+					insurance.toggleLoader(true);
 					$.get('/programs',
 						data
 					).then(function(response) {
@@ -202,8 +205,11 @@ $(function () {
 								inputParams: response.inputParams,
 								programsLoaded: true
 							});
+							
+							insurance
+								.toggleLoader(false)
+								.bootstrapTooltips();
 
-							insurance.bootstrapTooltips();
 						}
 					}.bind(this));
 
@@ -241,8 +247,10 @@ $(function () {
 					recalcData[formEl.name] = formEl.value;
 				});
 
+				insurance.toggleLoader(true);
 				$.get('/calculate/v1', recalcData).then(function(response) {
-					this.set(keypath + '.cost', response);				
+					this.set(keypath + '.cost', response);
+					insurance.toggleLoader(false);
 				}.bind(this));
 
 				event.original.preventDefault();
