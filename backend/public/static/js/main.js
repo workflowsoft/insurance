@@ -251,7 +251,14 @@ $(function () {
 				$.get('/calculate/v1', recalcData).then(function(response) {
 					this.set(keypath + '.cost', response);
 					insurance.toggleLoader(false);
-				}.bind(this));
+				}.bind(this), function(event, error, message) {
+					noty({
+						text: message,
+						type: 'error'
+					});
+
+					insurance.toggleLoader(false);
+				});
 
 				event.original.preventDefault();
 			}

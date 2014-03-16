@@ -20,6 +20,7 @@
 <script src="static/js/vendor/lodash.min.js"></script>
 <script src="static/js/jquery/jquery-1.9.1.min.js"></script>
 <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<script src="static/js/jquery/jquery.noty.packaged.min.js"></script>
 <script src="static/js/vendor/bootstrap.min.js"></script>
 </head>
 <body class="l-body">
@@ -119,7 +120,7 @@
 							<span class="input-group-addon">
 							<input name="additional_equip" checked={{additional.equip}} type="checkbox">
 							</span>
-							<input type="text" disabled="{{!additional.equip}}" class="form-control" />
+							<input type="text" name="additional_sum" value="{{calculate.additional_sum}}" disabled="{{!additional.equip}}" class="form-control" />
 						</div>
 					</div>
 				</div>
@@ -239,6 +240,10 @@
 					<div class="col-lg-3">
 						<h4><small>Стоимость полиса</small><h4>
 						<p>Сумма: {{cost.Result.Contract.Sum}}</p>
+						{{#cost.Result.Additional}}
+						<h4><small>Стоимость доп.оборудования</small><h4>
+						<p>Сумма: {{cost.Result.Additional.Sum}}</p>
+						{{/cost.Result.Additional}}
 					</div>
 				</form>
 				<div class="b-programs-buttons g-clrfix">
