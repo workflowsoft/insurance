@@ -8,7 +8,7 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>Insurance, bitch!</title>
+<title>Insurance</title>
 <meta name="description" content="">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,600,700' rel='stylesheet' type='text/css'>
@@ -19,8 +19,7 @@
 
 <script src="static/js/vendor/lodash.min.js"></script>
 <script src="static/js/jquery/jquery-1.9.1.min.js"></script>
-<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-<script src="static/js/jquery/jquery.noty.packaged.min.js"></script>
+<script src="static/js/jquery/jquery-ui.min.js"></script>
 <script src="static/js/vendor/bootstrap.min.js"></script>
 </head>
 <body class="l-body">
@@ -31,7 +30,7 @@
 	<div class="b-header">
 		<div class="page-header">
 			<h1>Insurance</h1>
-			<h4><small>Get insured or die trying</small></h4>
+			<h4><small>Калькулятор тарифов по страхованию средств наземного транспорта</small></h4>
 		</div>
 	</div>
 	<div class="l-content">
@@ -40,7 +39,6 @@
 		</div>
 
 <script id="calcTemplate" type="ractive">
-	<h2><small>Калькулятор тарифов по страхованию средств наземного транспорта</small></h2>
 	<form id="calcForm" role="form" class="g-clrfix" on-submit="getTotal" on-change="processFormData">
 		<div class="panel panel-info">
 			<div class="panel-heading">
@@ -190,6 +188,7 @@
 </script>
 
 <script id="programsTemplate" type="ractive">
+{{#programs:num}}
 	<h2><small>Калькулятор тарифов по страхованию средств наземного транспорта</small></h2>
 	<form id="programsForm" role="form" class="g-clrfix" on-submit="re" on-change="recalc" on-reset="reset">
 		<div class="panel panel-info">
@@ -197,14 +196,14 @@
 				<h3 class="panel-title">Страховые программы</h3>
 			</div>
 
-			{{#programs:num}}
+			
 				<form class="form-group g-clrfix" data-program-key={{num}} on-change="recalc" data-id="{{id}}">
 					<div class="col-lg-3">
 						<h4>
 							{{name}}
 						</h4>
 						<button type="button" class="btn js-popover btn-default" data-container="body" data-toggle="popover" data-placement="right" data-content="{{description}}">
- 							О программе
+ 							<span class="glyphicon glyphicon-info-sign"></span> О программе
 						</button>
 						
 					</div>
@@ -267,11 +266,11 @@
 						</table>
 					</div>
 				</div>
-			{{/programs}}
+			
 			
 		</div>
 	</form>
-
+{{/programs}}
 </script>
 		<!-- Контейнер шаблона с калькулятором -->
 		<div class="b-calc" id="calc"></div>
@@ -303,8 +302,10 @@
 	</div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<script src="static/js/jquery/jquery.noty.packaged.min.js"></script>
 <script src="static/js/core/Ractive.js"></script>
 <script src="static/js/main.js"></script>
 <script src="static/js/plugins.js"></script>
+<script src="static/js/jquery/jquery.overrides.js"></script>
 </body>
 </html>
