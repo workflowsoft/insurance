@@ -3,7 +3,7 @@ esurance
 #Групповое страхование
 
 Статус проекта:
-https://www.codeship.io/projects/22513550-91d2-0131-39b3-06509d92804f/status
+![alt tag](https://www.codeship.io/projects/22513550-91d2-0131-39b3-06509d92804f/status)
 
 ##Для развертывания проекта нужно.
 * Развернуть API
