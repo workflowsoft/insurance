@@ -192,11 +192,14 @@ $(function () {
 							response.Result.references = _.toArray(response.Result.references);
 
 							// [TODO] Избавиться от этой хуйни, когда будет слаться с бэка
+							// UPD Эта хуйня никогда не будет слаться с бэка :(
 							_.each(response.Result, function(program) {
+								// Перебрасываем на верхний уровень каждой из программ поле описание из соотвествующего в темплейте CalcTemplate
 								program.description = _.findWhere(insurance.templates.CalcTemplate.get('programs'), {id: program.id}).description;
 
 								_.each(program.references, function(reference) {
-									reference.requestName = reference.values[0].request_parameter;
+									// Выставляем на верхний уровень справочника requestName, чтобы проставить его в имя контрола. Берём его из request_parameter у того значения, которое имеет is_default: 1
+									reference.requestName = _.findWhere(reference.values, {is_default: 1});
 								});
 							});
 
@@ -220,9 +223,17 @@ $(function () {
 
 		this.templates.ProgramsTemplate.on({
 			recalc: function(event) {
-				var buttonConatiner = $(event.node).next();
-				
-				buttonConatiner.find('.btn').attr('disabled') && buttonConatiner.find('.btn').removeAttr('disabled');			
+				var buttonConatiner = $(event.node).next(),
+					target = event.original.target;
+				// Если что-то изменилось, делаем активными кнопки «пересчитать» и «сбросить»
+				buttonConatiner.find('.btn').attr('disabled') && buttonConatiner.find('.btn').removeAttr('disabled');
+
+				// А вдруг изменился селетбокс?
+				// Тогда надо бы просетить в имя селектбокса то, что соответствует выбранному значению.
+				if (~target.type.indexOf('select') && target.selectedOptions.length) {
+					// [TODO] впилить проверку на то, что имена уже одинаковые когда пхпшник вылечится от алкоголизма
+					$(target).closest('select').attr('name', $(target.selectedOptions).data('requestName'));
+				}
 			},
 
 			resetProgram: function(event) {
