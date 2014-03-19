@@ -4,7 +4,7 @@ use `ubercalc`;
 SET @kuts_id = (SELECT id FROM coefficients WHERE code='kuts');
 
 INSERT INTO `additional_coefficients` (`coefficient_id`, `amortisation`, `value`) VALUES
-  (@kuts_id, 0, 1.3);
+  (@kuts_id, 1, 1.3);
 
 -- Вставка для kf - коэф. франшизы
 SET @kf_id = (SELECT id FROM coefficients WHERE code='kf');
@@ -242,4 +242,11 @@ VALUES
 -- При коэфициенте использования ТС больше 1,7 обязательна франшиза >=2%
 INSERT INTO `factor_restricions` (`factor_name`, `dependent_factor_name`, `factor_value_down`, `dependent_factor_down`, `conditional`, `dependent_factor_value`)
 VALUES ('ki_ts', 'franchise_percent', 1.7, 2, 1, 2);
+
+--Принудительное выставление количества автомобилей в парке = 10, если это физлицо
+
+INSERT INTO `factor_restricions` (`factor_name`, `dependent_factor_name`, `factor_value`, `dependent_factor_value`)
+VALUES
+  ('is_legal_entity', 'car_quantity', 0, 10);
+
 -- EOF

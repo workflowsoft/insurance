@@ -329,7 +329,7 @@ class References
                                 array_key_exists('request_parameter', $item) ? $item['request_parameter'] : $paramName,
                             'name' => $item['name'],
                             'value' => $item['value'],
-                            'is_default' => $item['is_default'],
+                            'is_default' => intval($item['is_default']),
                             'is_price_changing' => $item['is_any'] == 1 ? false : true
                         )
                     );

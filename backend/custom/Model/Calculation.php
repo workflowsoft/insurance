@@ -78,6 +78,16 @@ class Calculation {
 
     public static function calculateCost($params, &$calcErrors = array())
     {
+        //TODO: Убрать костыль, когда фронт начнет всегда слать amortisation и is_legal_entity
+        if (!isset($params['amortisation']))
+        {
+            $params['amortisation'] = 0;
+        }
+        if (!isset($params['is_legal_entity']))
+        {
+            $params['is_legal_entity'] = 0;
+        }
+
         $data = array();
         $calc_history = new \CalcHistory;
         $db = \Frapi_Database::getInstance();
@@ -193,7 +203,8 @@ class Calculation {
             //А если это коэф. утраты товарной стоимости, то он почему-то прибавляется. С этим надо бы разобрваться
             if ($key == 'kuts' && $multiplier > 1)
                 $base_tariff = $base_tariff + $multiplier;
-            $base_tariff = $base_tariff * $multiplier;
+            else
+                $base_tariff = $base_tariff * $multiplier;
         }
         $sum = $params['ts_sum'];
         $data['Result']['Contract'] = array(
