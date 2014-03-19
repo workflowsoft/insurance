@@ -188,20 +188,18 @@
 </script>
 
 <script id="programsTemplate" type="ractive">
+{{#programsLoaded}}
+	<h2><small>Подходящие страховые программы</small></h2>
+{{/programsLoaded}}
 {{#programs:num}}
-	<h2><small>Калькулятор тарифов по страхованию средств наземного транспорта</small></h2>
 	<form id="programsForm" role="form" class="g-clrfix" on-submit="re" on-change="recalc" on-reset="reset">
 		<div class="panel panel-info">
 			<div class="panel-heading">
-				<h3 class="panel-title">Страховые программы</h3>
+				<h3 class="panel-title">{{name}}</h3>
 			</div>
 
-			
 				<form class="form-group g-clrfix" data-program-key={{num}} on-change="recalc" data-id="{{id}}">
 					<div class="col-lg-3">
-						<h4>
-							{{name}}
-						</h4>
 						<button type="button" class="btn js-popover btn-default" data-container="body" data-toggle="popover" data-placement="right" data-content="{{description}}">
  							<span class="glyphicon glyphicon-info-sign"></span> О программе
 						</button>
