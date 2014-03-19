@@ -215,11 +215,11 @@
 							<select class="form-control" name={{requestName}} >
 								{{#references[key].values:index}}
 									{{#references[key].values[index]}}
-										{{#(is_default === '1' || is_default === 1)}}
+										{{#(is_default === 1)}}
 											<option data-request-name={{request_parameter}} selected value={{value}}>{{name}}</option>
 										{{/is_default}}
 
-										{{#(is_default === '0')}}
+										{{#(is_default === 0)}}
 											<option data-request-name={{request_parameter}} value={{value}}>{{name}}</option>
 										{{/is_default}}
 									{{/references[key].values[index]}}
