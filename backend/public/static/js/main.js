@@ -199,7 +199,7 @@ $(function () {
 
 								_.each(program.references, function(reference) {
 									// Выставляем на верхний уровень справочника requestName, чтобы проставить его в имя контрола. Берём его из request_parameter у того значения, которое имеет is_default: 1
-									reference.requestName = _.findWhere(reference.values, {is_default: 1});
+									reference.requestName = _.findWhere(reference.values, {is_default: 1}).request_parameter;
 								});
 							});
 
