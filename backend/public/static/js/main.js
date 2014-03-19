@@ -244,8 +244,10 @@ $(function () {
 					keypath = event.keypath;
 
 				_.each(formData, function(formEl) {
+					(formEl.value == 'on') && (formEl.value = 1);
+
 					recalcData[formEl.name] = formEl.value;
-				});
+				});				
 
 				insurance.toggleLoader(true);
 				$.get('/calculate/v1', recalcData).then(function(response) {

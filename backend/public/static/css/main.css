@@ -1,6 +1,6 @@
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/blocks\/\*\.png}line{font-family:\0000350}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/blocks\/\*\.png}line{font-family:\0000358}}
 .blocks-sprite, .b-icon--logo {
-  background: url('../img/blocks-s8587b987f4.png') no-repeat;
+  background: url('../img/blocks-sca83d3ba24.png') no-repeat;
 }
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_reset\.scss}line{font-family:\000039}}
@@ -176,7 +176,11 @@ body {
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_blocks\.scss}line{font-family:\000033}}
 .l-body {
-  background-image: url(../img/blocks/white_wall_hash.png);
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(255, 209, 111, 0.02)), color-stop(100%, rgba(255, 209, 111, 0.02))), url(../img/blocks/lightpaperfibers.png);
+  background-image: -webkit-linear-gradient(top, rgba(255, 209, 111, 0.02) 0%, rgba(255, 209, 111, 0.02) 100%), url(../img/blocks/lightpaperfibers.png);
+  background-image: -moz-linear-gradient(top, rgba(255, 209, 111, 0.02) 0%, rgba(255, 209, 111, 0.02) 100%), url(../img/blocks/lightpaperfibers.png);
+  background-image: -o-linear-gradient(top, rgba(255, 209, 111, 0.02) 0%, rgba(255, 209, 111, 0.02) 100%), url(../img/blocks/lightpaperfibers.png);
+  background-image: linear-gradient(top, rgba(255, 209, 111, 0.02) 0%, rgba(255, 209, 111, 0.02) 100%), url(../img/blocks/lightpaperfibers.png);
 }
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_blocks\.scss}line{font-family:\000037}}
@@ -265,6 +269,9 @@ body {
 .b-footer {
   position: relative;
   height: 40px;
+  padding: 10px;
+  text-align: center;
+  color: #999999;
 }
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_loader\.scss}line{font-family:\000031}}
@@ -372,7 +379,7 @@ body {
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_icons\.scss}line{font-family:\000035}}
 .b-icon--logo {
-  background-position: 0 -500px;
+  background-position: 0 -800px;
   width: 269px;
   height: 139px;
 }

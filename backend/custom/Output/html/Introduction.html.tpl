@@ -277,6 +277,7 @@
 		<div class="b-programs" id="programs"></div>
 	</div>
 	<div class="b-footer">
+		© twistedmotions | 2014
 	</div>
 </div>
 

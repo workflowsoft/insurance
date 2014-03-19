@@ -1,7 +1,7 @@
 $dark-blue: #31708F;
 
 .l-body {
-	background-image: url(../img/blocks/white_wall_hash.png);
+	@include background-image(linear-gradient(top, rgba(255, 209, 111, 0.02) 0%, rgba(255, 209, 111, 0.02) 100%),  url(../img/blocks/lightpaperfibers.png));
 }
 
 .l-content {
