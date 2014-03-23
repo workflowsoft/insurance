@@ -23,6 +23,33 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
         'ts_antitheft_id',
     );
 
+    protected $allParams = array(
+            'ts_make_id',
+            'ts_model_id',
+            'ts_type_id',
+            'ts_modification_id',
+            'ts_group_id',
+            'tariff_program_id',
+            'risk_id',
+            'tariff_def_damage_type_id',
+            'ts_age',
+            'ts_sum',
+            'amortisation',
+            'payments_without_references_id',
+            'franchise_type_id',
+            'regres_limit_factor_id',
+            'contract_day',
+            'contract_month',
+            'contract_year',
+            'drivers_count',
+            'driver_age',
+            'driver_exp',
+            'ts_antitheft_id',
+            'franchise_percent',
+            'commercial_carting_flag',
+            'additional_sum',
+        );
+
     /**
      * @var array
      */
@@ -98,6 +125,13 @@ class Action_Calculate extends Frapi_Action implements Frapi_Action_Interface
      */
     public function executeGet()
     {
+        //TODO вынести в отдельный метод родителя
+        foreach($this->params as $k => $p) {
+            if(!in_array($k, $this->allParams)) {
+                unset($this->params[$k]);
+            }
+        }
+
         $this->hasRequiredParameters($this->requiredParams);
         $this->data = \Calculation\Calculation::calculateCost($this->params, $this->_calcErrors);
         return $this->toArray();

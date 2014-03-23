@@ -227,7 +227,15 @@ class Calculation {
 
     public static function getCorrectedParameters($params)
     {
-        $correctionQuery = 'SELECT `factor_name` as `source`, `dependent_factor_name` as `name`, `dependent_factor_value` as `value`, `conditional` FROM `factor_restricions` WHERE ';
+        $correctionQuery = "
+            SELECT
+                `factor_name` as `source`,
+                `dependent_factor_name` as `name`,
+                `dependent_factor_value` as `value`,
+                `conditional`
+            FROM
+                `factor_restricions`
+            WHERE ";
         $predicateArray = array();
         foreach ($params as $key => $value) {
             if (is_bool($value)) {
