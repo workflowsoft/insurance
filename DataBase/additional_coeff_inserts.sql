@@ -243,7 +243,7 @@ VALUES
 INSERT INTO `factor_restricions` (`factor_name`, `dependent_factor_name`, `factor_value_down`, `dependent_factor_down`, `conditional`, `dependent_factor_value`)
 VALUES ('ki_ts', 'franchise_percent', 1.7, 2, 1, 2);
 
---Принудительное выставление количества автомобилей в парке = 10, если это физлицо
+-- Принудительное выставление количества автомобилей в парке = 10, если это физлицо
 
 INSERT INTO `factor_restricions` (`factor_name`, `dependent_factor_name`, `factor_value`, `dependent_factor_value`)
 VALUES

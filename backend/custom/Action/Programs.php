@@ -28,6 +28,23 @@ class Action_Programs extends Frapi_Action implements Frapi_Action_Interface
         'driver_exp'
         );
 
+    protected $allParams = array(
+        'ts_age',
+        'ts_sum',
+        'ts_antitheft_id',
+        'commercial_carting_flag',
+        'drivers_count',
+        'driver_age',
+        'driver_exp',
+        'ts_type_id',
+        'ts_make_id',
+        'ts_model_id',
+        'ts_modification_id',
+        'ts_group_id',
+        'additional_sum',
+
+    );
+
     /**
      * The data container to use in toArray()
      * 
@@ -89,6 +106,12 @@ class Action_Programs extends Frapi_Action implements Frapi_Action_Interface
      */
     public function executeGet()
     {
+        foreach($this->params as $k => $p) {
+            if(!in_array($k, $this->allParams)) {
+                unset($this->params[$k]);
+            }
+        }
+
         $valid = $this->hasRequiredParameters($this->requiredParams);
         if ($valid instanceof Frapi_Error) {
             throw $valid;
