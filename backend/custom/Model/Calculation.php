@@ -14,7 +14,7 @@ class Calculation {
     {
         $simpleFormat = '(%s = %u OR %s IS NULL)';
         $simpleFormatEmpty = '%s IS NULL';
-        $rangeFormat = '(%s IS NULL OR %s<=%u) AND (%s IS NULL OR %s>=%u)';
+        $rangeFormat = '(%s IS NULL OR %s<=%0.7f) AND (%s IS NULL OR %s>=%0.7f)';
         $rangeFormatEmpty = '%s IS NULL AND %s IS NULL';
 
         $factors = Configuration::getFactorsDefinitions();
