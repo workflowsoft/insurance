@@ -383,3 +383,8 @@ body {
   width: 269px;
   height: 139px;
 }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_link\.scss}line{font-family:\000031}}
+.b-link {
+  cursor: pointer;
+}

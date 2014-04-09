@@ -143,9 +143,8 @@
 
 					<div class="col-lg-3">
 					<br />
-						<label class="checkbox-inline">
-							<input name="commercial_carting_flag" type="checkbox" checked={{calculate.commercial_carting_flag}}>ТС сдаётся в прокат
-						</label>
+						<input name="commercial_carting_flag" type="hidden" value={{calculate.commercial_carting_flag}}>
+						<a class="js-popover b-link" data-container="body" data-toggle="popover" data-placement="left" data-content="К сожалению, на данный момент транспортные средства, сдающиеся в прокат или используемые для комерческого извоза не подпадают под предложение страхования от нашего сервиса"><span class="glyphicon glyphicon-exclamation-sign">&nbsp;Коммерческий извоз</a>
 					</div>
 				</div>
 			</div>
@@ -209,7 +208,7 @@
 					<input type="hidden" name="tariff_program_id" value="{{id}}">
 
 					{{#references:key}}
-						<div class="col-lg-6">	
+						<div class="col-lg-6">
 							<label for="">{{title}}</label>
 							<select class="form-control" name={{requestName}} >
 								{{#references[key].values:index}}
@@ -226,6 +225,7 @@
 							</select>
 						</div>
 					{{/references}}
+						<!--Утрата товарной стоимости не страхуется -->
 						<!--div class="col-lg-6">
 							<br />
 							<label class="checkbox-inline">
