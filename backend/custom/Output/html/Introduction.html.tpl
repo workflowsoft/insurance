@@ -177,7 +177,7 @@
 		{{#totalSum}}
 			<h2 class="b-total_sum">Стоимость полиса составит {{totalSum}} рублей.</h2>
 		{{/totalSum}}
-		
+
 		{{^additional.submitReady}}
 			<button type="submit" disabled  class="btn btn-lg btn-default pull-right">Далее</button>
 		{{/additional.submitReady}}
@@ -203,7 +203,6 @@
 						<button type="button" class="btn js-popover btn-default" data-container="body" data-toggle="popover" data-placement="right" data-content="{{description}}">
  							<span class="glyphicon glyphicon-info-sign"></span> О программе
 						</button>
-						
 					</div>
 					<div class="col-lg-6">
 
@@ -227,12 +226,12 @@
 							</select>
 						</div>
 					{{/references}}
-						<div class="col-lg-6">
+						<!--div class="col-lg-6">
 							<br />
 							<label class="checkbox-inline">
 								<input name="amortisation" type="checkbox">Утрата товарной стоимости
 							</label>
-						</div>
+						</div-->
 					</div>
 					<div class="col-lg-3">
 						<h4><small>Стоимость полиса</small><h4>
@@ -264,8 +263,6 @@
 						</table>
 					</div>
 				</div>
-			
-			
 		</div>
 	</form>
 {{/programs}}
