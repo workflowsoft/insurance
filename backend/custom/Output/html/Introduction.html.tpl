@@ -234,11 +234,18 @@
 						</div-->
 					</div>
 					<div class="col-lg-3">
-						<h4><small>Стоимость полиса</small><h4>
-						<p>Сумма: {{cost.Result.Contract.Sum}}</p>
+						<h4>
+							<small>Стоимость полиса</small>
+							<p>{{cost.Result.Contract.Sum}}&nbsp;<span class="rur">p<span>уб.</span></span></p>
+						</h4>
 						{{#cost.Result.Additional}}
-						<h4><small>Стоимость доп.оборудования</small><h4>
-						<p>Сумма: {{cost.Result.Additional.Sum}}</p>
+							<h4>
+								<small>Стоимость доп.оборудования</small>
+								<p>{{cost.Result.Additional.Sum}}&nbsp;<span class="rur">p<span>уб.</span></span></p>
+								<small>Суммарная стоимость:</small>
+								<p>{{cost.Result.Additional.Sum + cost.Result.Contract.Sum}}&nbsp;<span class="rur">p<span>уб.</span></span></p>
+
+							</h4>
 						{{/cost.Result.Additional}}
 					</div>
 				</form>

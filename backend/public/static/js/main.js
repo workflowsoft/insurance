@@ -120,7 +120,7 @@ $(function () {
 				el = form[name],
 				val = el.value,
 				tpl = this.templates.CalcTemplate;
-			
+
 			switch(name) {
 				case 'ts_type_id':
 
@@ -132,16 +132,16 @@ $(function () {
 				break;
 
 				case 'ts_sum':
-				if (_.isNaN(parseInt(val))) {			
+				if (_.isNaN(parseInt(val))) {
 					tpl.set('calculate.ts_sum', '');
 				} else {
 					tpl.set('calculate.ts_sum', parseInt(val));
 				}
 				break;
 				case 'ts_antitheft_id':
-				
-				tpl.set('calculate.ts_antitheft_id', $('input[name=ts_antitheft_id]:checked').val());	
-				
+
+				tpl.set('calculate.ts_antitheft_id', $('input[name=ts_antitheft_id]:checked').val());
+
 				break;
 			}
 		},
@@ -208,7 +208,7 @@ $(function () {
 								inputParams: response.inputParams,
 								programsLoaded: true
 							});
-							
+
 							insurance
 								.toggleLoader(false)
 								.bootstrapTooltips();
@@ -258,7 +258,7 @@ $(function () {
 					(formEl.value == 'on') && (formEl.value = 1);
 
 					recalcData[formEl.name] = formEl.value;
-				});				
+				});
 
 				insurance.toggleLoader(true);
 				$.get('/calculate/v1', recalcData).then(function(response) {

@@ -33,7 +33,7 @@
 						});
 					},
 					select: function(event, item) {
-						template.set('calculate.ts_make', item.item.id);					
+						template.set('calculate.ts_make', item.item.id);
 					}
 				});
 

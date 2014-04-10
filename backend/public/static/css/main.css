@@ -388,3 +388,28 @@ body {
 .b-link {
   cursor: pointer;
 }
+
+@font-face {
+  font-family: "Rubl Sign";
+  src: url(http://www.artlebedev.ru/ruble.eot);
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_common\.scss}line{font-family:\000032}}
+span.rur {
+  font-family: "Rubl Sign";
+  text-transform: uppercase;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_common\.scss}line{font-family:\000036}}
+span.rur span {
+  position: absolute;
+  overflow: hidden;
+  width: .45em;
+  height: 1em;
+  margin: .1ex 0 0 -.55em;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/wart\/webdev\/insurance\/backend\/public\/static\/styles\/_common\.scss}line{font-family:\0000314}}
+span.rur span:before {
+  content: '\2013';
+}
