@@ -87,6 +87,10 @@ class Calculation {
         {
             $params['is_legal_entity'] = 0;
         }
+        if (!isset($params['car_quantity']))
+        {
+            $params['car_quantity'] = 10; //У нас максимальная парковость, если не указано явно
+        }
 
         $data = array();
         $calc_history = new \CalcHistory;
@@ -199,17 +203,33 @@ class Calculation {
         }
         //Основной рассчет. Надо тупо перемножить все коэфициенты :) Получить тариф, умножить на страховую сумму и разделить на 100, магия, чо
         $base_tariff = 1;
+        $kuts = null;
         foreach ($result as $key => $multiplier) {
             //А если это коэф. утраты товарной стоимости, то он почему-то прибавляется. С этим надо бы разобрваться
             if ($key == 'kuts' && $multiplier > 1)
-                $base_tariff = $base_tariff + $multiplier;
+                $kuts = $multiplier;
             else
                 $base_tariff = $base_tariff * $multiplier;
         }
+        $base_tariff = Round($base_tariff,2);
+
+        //Добавляем коэфициент утраты товарной стоимости после округления основного тарифа
+        if (!is_null($kuts))
+            $base_tariff = $base_tariff + $kuts;
+
+        //TODO: Костыль страховой. Тариф не может быть меньше 4-ех
+        $realTariff = $base_tariff;
+        if ($base_tariff<4)
+        {
+            $base_tariff = 4;
+        }
+
         $sum = $params['ts_sum'];
         $data['Result']['Contract'] = array(
             'Tariff' => $base_tariff,
-            'Sum' => Round($sum * $base_tariff / 100, 2)
+            'Sum' => Round($sum * $base_tariff / 100, 2),
+            'RealTariff' => $realTariff,
+            'RealSum' => Round($sum * $realTariff / 100, 2)
         );
         //Если есть франшиза, её тоже надо отобразить нормально
         if (isset($params['franchise_percent']))
